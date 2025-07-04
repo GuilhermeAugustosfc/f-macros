@@ -1,0 +1,27 @@
+{
+  "name": "f_inspect",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@module-federation/enhanced": "^0.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.3"
+  },
+  "devDependencies": {
+    "@module-federation/rsbuild-plugin": "^0.15.0",
+    "@rsbuild/core": "^1.2.15",
+    "@rsbuild/plugin-react": "^1.1.1",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "~18.3.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
+  },
+  "packageManager": "pnpm@8.15.4+sha512.0bd3a9be9eb0e9a692676deec00a303ba218ba279d99241475616b398dbaeedd11146f92c2843458f557b1d127e09d4c171e105bdcd6b61002b39685a8016b9e"
+}

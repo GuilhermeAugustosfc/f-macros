@@ -1,0 +1,93 @@
+{
+  "id": "f_inspect",
+  "name": "f_inspect",
+  "metaData": {
+    "name": "f_inspect",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "1.0.0",
+      "buildName": "f_inspect"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "@mf-types.zip",
+      "api": "@mf-types.d.ts"
+    },
+    "globalName": "f_inspect",
+    "pluginVersion": "0.15.0",
+    "prefetchInterface": false,
+    "publicPath": "auto"
+  },
+  "shared": [],
+  "remotes": [],
+  "exposes": [
+    {
+      "path": "./Component",
+      "id": "f_inspect:Component",
+      "name": "Component",
+      "requires": [],
+      "file": "src/components/ProviderComponent.tsx",
+      "assets": {
+        "js": {
+          "sync": [
+            "static/js/async/lib-react.3361f372.js",
+            "static/js/async/__federation_expose_Component.f6e12f64.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [
+            "static/css/async/__federation_expose_Component.4f1887cc.css"
+          ],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Home",
+      "id": "f_inspect:Home",
+      "name": "Home",
+      "requires": [],
+      "file": "src/pages/Home.tsx",
+      "assets": {
+        "js": {
+          "sync": [
+            "static/js/async/lib-react.3361f372.js",
+            "static/js/async/__federation_expose_Home.3cae6a3e.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./routes",
+      "id": "f_inspect:routes",
+      "name": "routes",
+      "requires": [],
+      "file": "src/routes/index.tsx",
+      "assets": {
+        "js": {
+          "sync": [
+            "static/js/async/lib-react.3361f372.js",
+            "static/js/async/__federation_expose_routes.8127b8f2.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    }
+  ]
+}
