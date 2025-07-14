@@ -5,32 +5,32 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <title>f-inspect</title>
-  <link rel="stylesheet" href="index.css">
+  <!-- <link rel="stylesheet" href="index.css"> -->
 </head>
 
 <body>
-  <div id="loading-content">
+  <!-- <div id="loading-content">
     <div id="loading">
       <div class="spinner"></div>
       <span class="loading-text">Carregando F-inspect ...</span>
     </div>
-  </div>
-
+  </div> -->
+  <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 
-  <script type="module">
-    import '/src/main.tsx';
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const app = document.getElementById('root');
-      const loading = document.getElementById('loading-content');
-      if (app && loading) {
-        app.style.display = 'block';
-        loading.remove();
-      }
-    });
-  </script>
+  <!-- <script type="module" src="/src/main.tsx">
+    // window.addEventListener('DOMContentLoaded', () => {
+      // const app = document.getElementById('root');
+      // const loading = document.getElementById('loading-content');
+      // if (app && loading) {
+        // app.style.display = 'block';
+        // loading.remove();
+      // }
+    // });
+  </script> -->
 </body>
 
 </html>
