@@ -1,16 +1,22 @@
-import './App.css';
-import Provider from './components/ProviderComponent';
+import { initInstance } from '@ftdata/http';
+import './reset.css';
+import Routes from './routes';
+import { Suspense } from 'react';
+import LoadingFallback from './components/LoadingFallback';
+
+export const t = (str: string) => {
+  return str;
+};
+
+export const instance = initInstance({
+  baseUrl: 'https://api-fulltrack4.ftdata.com.br',
+});
 
 const App = () => {
   return (
-    <div className="content">
-      <div>
-    <div>
-      teste
-    </div>
-      <Provider />
-      </div>
-    </div>
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes />
+    </Suspense>
   );
 };
 

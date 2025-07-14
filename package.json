@@ -1,27 +1,45 @@
 {
-  "name": "f_inspect",
+  "name": "f-inspect",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.13.1",
+  "type": "module",
   "scripts": {
-    "dev": "rsbuild dev --open",
-    "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
-    "@module-federation/enhanced": "^0.16.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^7.6.3"
+    "@ftdata/http": "file:ftdata-http-1.0.0.tgz",
+    "@ftdata/icons": "^2.8.1",
+    "@ftdata/styleguide": "^2.8.1",
+    "@ftdata/tokens": "^2.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "@module-federation/rsbuild-plugin": "^0.15.0",
-    "@rsbuild/core": "^1.2.15",
-    "@rsbuild/plugin-react": "^1.1.1",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "~18.3.1",
-    "typescript": "^5.7.2",
-    "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1"
-  },
-  "packageManager": "pnpm@8.15.4+sha512.0bd3a9be9eb0e9a692676deec00a303ba218ba279d99241475616b398dbaeedd11146f92c2843458f557b1d127e09d4c171e105bdcd6b61002b39685a8016b9e"
+    "@eslint/js": "^9.30.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^9.30.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.35.1",
+    "vite": "^7.0.4",
+    "vite-plugin-svgr": "^4.3.0",
+    "vitest": "^3.2.4"
+  }
 }

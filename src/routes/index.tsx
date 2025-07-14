@@ -1,24 +1,21 @@
-// src/routes/index.ts
-const ProviderNotFound = () => <h2>Not Found Provider</h2>;
+import type React from 'react';
+import AuthRoutes from './auth.routes';
+import styled from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
 
-const providerRoutes = [
-  {
-    path: '/f-inspect',
-    children: [
-      {
-        path: '',
-        element: <h4>Dashboard Overview</h4>,
-      },
-      {
-        path: 'settings',
-        element: <h4>Dashboard Settings</h4>,
-      },
-    ],
-  },
-  {
-    path:"*",
-    element:  <ProviderNotFound />
-  },
-];
+const ModuleContent = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
 
-export default providerRoutes;
+const Routes: React.FC = () => {
+  return (
+    <ModuleContent>
+      <BrowserRouter>
+        <AuthRoutes />
+      </BrowserRouter>
+    </ModuleContent>
+  );
+};
+
+export default Routes;
