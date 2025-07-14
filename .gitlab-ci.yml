@@ -1,0 +1,32 @@
+variables:
+  AWS_REGION: "us-east-1"
+  IMAGE_NAME: ""
+  CLUSTER: ""
+  SERVICE: ""
+  DOCKERFILE: ""
+
+  AWS_REGION_HOMOLOG: "us-east-1"
+  IMAGE_NAME_HOMOLOG: "f-inspect"
+  SERVICE_HOMOLOG: "f-inspect"
+  CLUSTER_HOMOLOG: "WEB-DEV"
+  DOCKERFILE_HOMOLOG: "Dockerfile"
+include:
+  - project: "backend/automation/pipeline-base"
+    file: "ecs/.gitlab-ci.yml"
+stages:
+  - start #deixe em primeiro
+  - test
+  - error_handling #required
+  - deploy #required deixe por ultimo
+test:
+  stage: test
+  script:
+    - echo 'run test here'
+    - echo 'another here'
+  only: #branch roda apenas nessas branch
+    - master
+    - main
+    - homol
+    - develop
+  tags: #tags prod ou homolog
+    - homolog
