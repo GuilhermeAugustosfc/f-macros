@@ -11,7 +11,7 @@ const ModuleContent = styled.div`
 const Routes: React.FC = () => {
   return (
     <ModuleContent>
-      <BrowserRouter>
+      <BrowserRouter basename="/inspect">
         <AuthRoutes />
       </BrowserRouter>
     </ModuleContent>
