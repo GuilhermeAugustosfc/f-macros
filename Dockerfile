@@ -2,13 +2,11 @@
 FROM node:20 AS builder
 
 WORKDIR /app
+COPY . .
 
-# Habilita o corepack e ativa o pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copia arquivos de dependência e instala
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN pnpm i
+RUN pnpm run build
 
 # Copia todo o código-fonte e gera o build
 COPY . .
