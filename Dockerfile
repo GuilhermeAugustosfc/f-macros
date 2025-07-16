@@ -12,7 +12,7 @@ RUN pnpm run build
 FROM nginx:1.25-alpine
 
 # Copia os arquivos de build para /inspect
-COPY --from=build-deps /app/dist /usr/share/nginx/html/inspect
+COPY --from=build-deps /app/dist /usr/share/nginx/html/f-inspect
 
 # Copia a configuração customizada
 COPY nginx.conf /etc/nginx/conf.d/default.conf

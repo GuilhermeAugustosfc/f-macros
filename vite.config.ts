@@ -4,6 +4,6 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  base: '/inspect/',
+  base: '/f-inspect/',
   plugins: [react(), svgr()],
 });
