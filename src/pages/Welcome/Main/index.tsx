@@ -1,4 +1,4 @@
-import { Button, Paragraph, Title } from '@ftdata/styleguide';
+import { Button, Paragraph, Title } from '@ftdata/ui';
 import {
   CardContainer,
   CardContent,

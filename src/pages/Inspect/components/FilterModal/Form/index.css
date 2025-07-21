@@ -1,0 +1,48 @@
+.rs-picker-popup-daterange {
+    z-index: 999999 !important;
+}
+
+.rs-input-group {
+    flex-direction: row-reverse;
+}
+
+.rs-input-group {
+    color: #b1b7bb;
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+
+    background-color: #ffffff;
+    border-color: #b1b7bb;
+    border-left: none;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.rs-input {
+    color: hsl(0, 0%, 20%) !important;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 160%;
+}
+
+.rs-input:focus {
+    border-color: hsl(0, 0%, 20%) !important;
+}
+
+.rs-input-group-addon {
+    padding: 10px 0px 10px 15px !important;
+}
+
+.rs-btn-close {
+    color: #26333b !important;
+}
+
+.rs-btn-close:hover {
+    color: #26333b !important;
+}

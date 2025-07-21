@@ -1,4 +1,4 @@
-import { Loading } from '@ftdata/styleguide';
+import { Loading } from '@ftdata/ui';
 import { ComponentLoading } from './styles';
 import type { JSX } from 'react';
 

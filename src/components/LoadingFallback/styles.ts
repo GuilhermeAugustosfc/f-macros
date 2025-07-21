@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as tokens from '@ftdata/tokens';
+import * as tokens from '@ftdata/f-tokens';
 
 export const ComponentLoading = styled.div`
   height: 97vh;

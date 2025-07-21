@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as styleguide from '@ftdata/tokens';
+import * as styleguide from '@ftdata/f-tokens';
 
 export const Container = styled.div`
   padding: 1.5rem;
@@ -69,10 +69,17 @@ export const ContainerImage = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  /* background: rgba(225, 145, 153, 0.1); */
-  width: 100%;
+  background: #e191991a;
   height: 200px;
+  width: 22.563rem;
+  height: 14.375rem;
+
   @media (max-width: 1024px) {
     height: 150px;
+  }
+
+  & > svg {
+    width: 100%;
+    height: 100%;
   }
 `;

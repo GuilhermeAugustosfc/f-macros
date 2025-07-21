@@ -1,0 +1,25 @@
+import { type JSX } from 'react';
+import { ContainerCountAccess } from './styles';
+import { type ICountData } from '../../../../shared/DataStructure';
+import { t } from '../../../../App';
+
+export default function CountAccess({ access, available, unavailable }: ICountData): JSX.Element {
+  return (
+    <ContainerCountAccess>
+      <div className="count-access">
+        <div>
+          <p>{t('total_hits')}</p>
+          <span>{access ?? 0}</span>
+        </div>
+        <div>
+          <p>{t('free')}</p>
+          <span>{available ?? 0}</span>
+        </div>
+        <div>
+          <p>{t('used')}</p>
+          <span>{unavailable ?? 0}</span>
+        </div>
+      </div>
+    </ContainerCountAccess>
+  );
+}

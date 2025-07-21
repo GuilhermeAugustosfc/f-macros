@@ -1,10 +1,13 @@
-import { Button, Paragraph, Title } from '@ftdata/styleguide';
+import { Button, Paragraph, Title } from '@ftdata/ui';
 import { Container, ContainerButtonConfiguration, ContainerPresentation } from './style';
 import { t } from '../../../App';
-import { Icon } from '@ftdata/icons';
-import * as styleguide from '@ftdata/tokens';
+import { Icon } from '@ftdata/f-icons';
+import * as styleguide from '@ftdata/f-tokens';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Container>
       <ContainerPresentation>
@@ -17,7 +20,11 @@ const Header: React.FC = () => {
       </ContainerPresentation>
       <ContainerButtonConfiguration>
         <Icon name="ui settings" color={styleguide.COLOR_NEUTRAL_DAY} />
-        <Button variant="primary" color={styleguide.COLOR_NEUTRAL_DAY}>
+        <Button
+          variant="primary"
+          color={styleguide.COLOR_NEUTRAL_DAY}
+          onClick={() => navigate('/settings')}
+        >
           {t('settings')}
         </Button>
       </ContainerButtonConfiguration>

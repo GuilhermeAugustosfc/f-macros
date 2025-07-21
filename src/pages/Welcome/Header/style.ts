@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as styleguide from '@ftdata/tokens';
+import * as styleguide from '@ftdata/f-tokens';
 
 export const Container = styled.div`
   display: flex;
