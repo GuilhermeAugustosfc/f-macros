@@ -19,9 +19,10 @@ import './index.css';
 import { addDays, endOfDay, startOfDay, subDays } from 'date-fns';
 import { Icon } from '@ftdata/f-icons';
 import moment from 'moment';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 const Form: React.FC<FormProps> = ({ close }: FormProps) => {
+  const { t } = useTranslation();
   const { selectOptions, errors, loading, setErrors } = useFormLogic();
   const {
     setHasFilter,

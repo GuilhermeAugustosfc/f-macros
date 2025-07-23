@@ -93,14 +93,14 @@ export const ContainerContent = styled.div`
     width: 100%;
     overflow: auto;
     display: inline-grid;
-    max-height: 60vh;
+    max-height: 53vh;
 
     @media screen and (max-height: 900px) {
-      max-height: 50vh;
+      max-height: 45vh;
     }
 
     @media screen and (max-height: 850px) {
-      max-height: 45vh;
+      max-height: 40vh;
     }
 
     @media screen and (max-height: 700px) {

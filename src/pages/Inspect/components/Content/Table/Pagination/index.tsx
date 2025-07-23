@@ -5,7 +5,7 @@ import { type Table } from '@tanstack/react-table';
 import { NextIcon, PreviousIcon } from '../../../svg';
 import type { DataTableItem } from '../../types';
 import { TableContext } from 'src/contexts/table';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   table: Table<DataTableItem>;
@@ -13,13 +13,14 @@ interface Props {
 
 const Pagination: React.FC<Props> = ({ table }: Props) => {
   const { dataTable, pagination, setPagination } = useContext(TableContext);
+  const { t } = useTranslation();
 
   return (
     <ContainerPagination>
       <DivLeft>
         <p>{t('displaying')}</p>
 
-        <Select
+        <select
           value={pagination.pageSize}
           onChange={(e) => {
             setPagination({
@@ -34,7 +35,7 @@ const Pagination: React.FC<Props> = ({ table }: Props) => {
               {pageSize}
             </option>
           ))}
-        </Select>
+        </select>
         <span>
           de
           <span style={{ marginLeft: '5px', marginRight: '5px' }}>{dataTable.total}</span>
@@ -67,40 +68,78 @@ const Pagination: React.FC<Props> = ({ table }: Props) => {
 
 const ContainerPagination = styled.div`
   display: flex;
+  gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem 3.5rem;
   font-size: ${styleguide.FONT_SIZE_SM};
   font-weight: 500;
-  background: ${styleguide.COLOR_NEUTRAL_DAY};
-  position: fixed;
-  width: 100%;
+  color: ${styleguide.COLOR_NEUTRAL_DUSK};
+  // width: 100%;
   bottom: 0;
+  right: 0;
+  left: 3.5rem;
+  position: absolute;
+  padding: 24px 32px;
+  box-shadow: 0px 8px 16px 0px rgba(107, 117, 124, 0.32);
+  background: #fff;
+  z-index: 10;
 `;
 
 const DivLeft = styled.div`
   display: flex;
-  gap: 0.4rem;
+  gap: 0.75rem;
   align-items: center;
+
+  select {
+    border-radius: 0.25rem;
+    border: 1px solid ${styleguide.COLOR_NEUTRAL_MEDIUM};
+    background-color: transparent;
+    width: 4rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+  }
 `;
 
-const Select = styled.select`
-  border-radius: 0.25rem;
-  border: 1px solid ${styleguide.COLOR_NEUTRAL_MEDIUM};
-  background-color: transparent;
-  width: 4rem;
-  height: 2.5rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 500;
-  text-align: center;
-`;
-
-const DivRight = styled.div`
+export const DivRight = styled.div`
   display: flex;
   gap: 0.625rem;
   align-items: center;
+
+  .pageCurrent,
+  .pageAfter,
+  .pageNext {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.25rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .pageAfter,
+  .pageNext {
+    color: #6b757c;
+  }
+
+  .pageCurrent {
+    background: ${styleguide.COLOR_BRAND_MEDIUM};
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.25rem;
+    width: 2rem;
+    height: 2rem;
+  }
 `;
 
 const Button = styled.button`

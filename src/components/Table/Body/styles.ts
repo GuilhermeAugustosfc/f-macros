@@ -1,23 +1,36 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import * as tokens from '@ftdata/f-tokens';
+interface TBodyProps {
+  bordeColor: string;
+}
 
-export const TBody = styled.tbody`
+export const TBody = styled.tbody<TBodyProps>`
   border-radius: 0.25rem;
-  border-width: 1px;
   font-size: 0.875rem;
   line-height: 1.25rem;
-
   font-weight: 600;
-  border-color: 1px solid ${tokens.COLOR_NEUTRAL_LIGHT};
+  border: 1px solid ${({ bordeColor }) => (bordeColor ? bordeColor : tokens.COLOR_NEUTRAL_LIGHT)};
 `;
 
-export const TrBody = styled.tr<{ isEven: boolean }>`
+const animationAddBody = keyframes`
+    from {
+        opacity: 0;
+    }
+`;
+interface TrBodyProps {
+  isEven: boolean;
+  color: string;
+}
+export const TrBody = styled.tr<TrBodyProps>`
   height: 4rem;
-  background: ${({ isEven }) => (isEven ? 'rgba(136, 145, 159, 0.08)' : '')};
+  background: ${({ isEven, color }) => (isEven ? color : '')};
+  animation: ${animationAddBody} 0.5s ease-in;
+  color: ${tokens.COLOR_NEUTRAL_DUSK};
 
   td {
-    color: ${tokens.COLOR_NEUTRAL_DUSK};
-    padding: 1rem;
-    text-align: left;
+    width: 159px;
+    padding-left: 1rem;
+    margin: 0 16px;
+    text-align: start;
   }
 `;

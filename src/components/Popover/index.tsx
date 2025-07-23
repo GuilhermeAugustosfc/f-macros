@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import * as styleguide from '@ftdata/f-tokens';
 import { Icon } from '@ftdata/f-icons';
 import type { JSX } from 'react';
-import { t } from 'src/App';
 import type { IconsNames } from 'node_modules/@ftdata/f-icons/dist/types/IconsNames';
+import { useTranslation } from '@ftdata/core';
 
 interface ContainerProps {
   backgroundType: string;
@@ -71,6 +71,8 @@ export const Popover = ({
   iconName,
   type,
 }: Props): JSX.Element | null => {
+  const { t } = useTranslation();
+
   return (
     <Container backgroundType={type}>
       <div>

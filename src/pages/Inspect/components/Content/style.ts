@@ -1,29 +1,18 @@
 import styled from 'styled-components';
 import * as styleguide from '@ftdata/f-tokens';
 
-export const ContainerSpan = styled.div`
-  height: auto;
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  max-height: calc(-9rem + 100vh);
 
-export const Container = styled.div``;
-
-export const TitleSpan = styled.span`
-  margin-bottom: 0.625rem;
-  font-size: ${styleguide.FONT_SIZE_MD};
-  font-family: ${styleguide.FONT_FAMILY_01};
-  font-weight: ${styleguide.FONT_WEIGHT_BOLD};
-  line-height: ${styleguide.LINE_HEIGHT_TIGHT};
-  color: ${styleguide.COLOR_NEUTRAL_DUSK};
-`;
-
-export const SubTitleSpan = styled.span`
-  font-size: ${styleguide.FONT_SIZE_SM};
-  font-family: ${styleguide.FONT_FAMILY_01};
-  font-weight: ${styleguide.FONT_WEIGHT_BOLD};
-  line-height: ${styleguide.LINE_HEIGHT_TIGHT};
-  color: ${styleguide.COLOR_NEUTRAL_DARKER};
+  & > div {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export const ButtonImportVideo = styled.div``;

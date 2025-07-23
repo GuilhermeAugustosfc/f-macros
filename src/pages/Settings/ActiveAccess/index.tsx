@@ -32,7 +32,9 @@ import { Store } from 'react-notifications-component';
 import Table from '../../../components/Table';
 import { type ActivatedAccessItem } from '../../../shared/DataStructure';
 import CountAccess from './CountAccess';
-import { t } from '../../../App';
+import { useTranslation } from '@ftdata/core';
+import Empty from '../Empty';
+import { Pagination } from 'src/components/Table/Pagination';
 
 export const INITIAL_DATA_COUNT = {
   access: 0,
@@ -41,6 +43,7 @@ export const INITIAL_DATA_COUNT = {
 };
 
 export function ActiveAccess(): JSX.Element {
+  const { t } = useTranslation();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filterValue, setFilterValue] = useState('');
   const columns = ColumnsFunction();
@@ -159,19 +162,19 @@ export function ActiveAccess(): JSX.Element {
             </ContainerActions>
           </ContainerInformation>
         </ContainerHeader>
-        <ContainerTableGrid>
-          {isLoading ? (
-            <ContainerLoading>
-              <Loading size={'xl'} variant={'light'} />
-            </ContainerLoading>
-          ) : (
-            listAccess &&
-            listAccess.length > 0 && (
-              <Table<ActivatedAccessItem> table={table} setSorting={setSorting} />
-            )
-          )}
-        </ContainerTableGrid>
+        {isLoading ? (
+          <ContainerLoading>
+            <Loading size={'xl'} variant={'light'} />
+          </ContainerLoading>
+        ) : listAccess && listAccess?.length > 0 ? (
+          <ContainerTableGrid>
+            <Table<ActivatedAccessItem> table={table} setSorting={setSorting} pagination={<></>} />
+          </ContainerTableGrid>
+        ) : (
+          <Empty />
+        )}
       </ContainerTabContent>
+      {!isLoading && listAccess && listAccess.length > 0 && <Pagination table={table} />}
     </>
   );
 }

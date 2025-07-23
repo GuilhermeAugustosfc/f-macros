@@ -1,15 +1,16 @@
 import { type JSX } from 'react';
-import Previous from '../../../assets/previous';
-import Next from '../../../assets/next';
 import type { Table } from '@tanstack/react-table';
 import { ContainerPagination, DivLeft, DivRight } from './styles';
-import { t } from '../../../App';
+import Previous from './previous';
+import Next from './next';
+import { useTranslation } from '@ftdata/core';
 
 interface Props<T> {
   table: Table<T>;
 }
 
 export const Pagination = <T,>({ table }: Props<T>): JSX.Element => {
+  const { t } = useTranslation();
   const pageSize = table.getState().pagination.pageIndex + 1;
 
   return (
@@ -34,6 +35,7 @@ export const Pagination = <T,>({ table }: Props<T>): JSX.Element => {
         </select>
         <span>{t('records_per_page')}</span>
       </DivLeft>
+
       <DivRight>
         <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           <Previous />

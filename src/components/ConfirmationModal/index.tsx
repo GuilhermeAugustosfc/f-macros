@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { MyButton } from '../MyButton';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -22,6 +22,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   title,
   message,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <CSSTransition in={isOpen} timeout={100} classNames="modal" unmountOnExit>
       <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={title} style={modalStyles}>

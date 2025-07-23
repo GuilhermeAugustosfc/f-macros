@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { type TableVideoItem } from 'src/types/filter';
 import { Checkbox } from '@ftdata/ui';
 import moment from 'moment';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 const columnHelper = createColumnHelper<TableVideoItem>();
 
@@ -11,6 +11,7 @@ export const ColumnsFunction = (
   setCheckbox: React.Dispatch<React.SetStateAction<(string | number)[]>>,
   checkbox: Array<string | number>,
 ): any => {
+  const { t } = useTranslation();
   const columns = useMemo(
     () => [
       columnHelper.accessor('file_name', {

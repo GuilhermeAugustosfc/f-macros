@@ -10,10 +10,11 @@ import * as styleguide from '@ftdata/f-tokens';
 import { TimeoutContent, UnreachableContent } from '../../../UnreachableContent';
 import type { JSX } from 'react';
 import type { EmptyStateProps } from '../../RequestVideos';
-import { t } from 'src/App';
 import type { IconsNames } from 'node_modules/@ftdata/f-icons/dist/types/IconsNames';
+import { useTranslation } from '@ftdata/core';
 
 export const ComponentLoading = (): JSX.Element => {
+  const { t } = useTranslation();
   return (
     <LoadingContainer>
       <Loading

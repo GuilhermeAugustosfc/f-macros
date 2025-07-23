@@ -2,11 +2,12 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@ftdata/ui';
 import { DivActive, SpanActive, SpanCustomer } from './styles';
 import { type ActivatedAccessItem } from '../../../../shared/DataStructure';
-import { t } from '../../../../App';
+import { useTranslation } from '@ftdata/core';
 
 const columnHelper = createColumnHelper<ActivatedAccessItem>();
 
 export const ColumnsFunction = () => {
+  const { t } = useTranslation();
   const columns = [
     columnHelper.accessor('checkbox', {
       cell: (info) => (

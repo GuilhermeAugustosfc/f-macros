@@ -4,16 +4,12 @@ import {
   ContainerButton,
   ContainerHeaderContent,
   ContainerLayoutGrid,
-  ContainerSpan,
   ContainerTable,
-  SubTitleSpan,
-  TitleSpan,
 } from './style';
-import { Button } from '@ftdata/ui';
+import { Button, Loading } from '@ftdata/ui';
 import { Icon } from '@ftdata/f-icons';
 import * as styleguide from '@ftdata/f-tokens';
 import Empty from '../Empty';
-import Table from './Table';
 import {
   deleteAllVideos,
   deleteVideos,
@@ -25,7 +21,24 @@ import 'react-notifications-component/dist/theme.css';
 import { Popover } from 'src/components/Popover';
 import { TableContext } from 'src/contexts/table';
 import { ConfirmationModal } from 'src/components/ConfirmationModal';
-import { t } from 'src/App';
+import ConsolidatedData from './ConsolidatedData';
+import { useTranslation } from '@ftdata/core';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type SortingState,
+} from '@tanstack/react-table';
+import { ColumnsFunction } from './Table/columns';
+import { useQuery } from 'react-query';
+import { fetchListAccess } from 'src/components/Apis';
+import { ContainerLoading, ContainerTableGrid } from 'src/pages/Settings/styles';
+import type { DataTableItem } from './types';
+import TableComponent from 'src/components/Table';
+import { Pagination } from 'src/components/Table/Pagination';
 
 type PropsLayout = {
   handleOpenModal: () => void;
@@ -61,52 +74,78 @@ export const notification = (
 };
 
 const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
-  const { checkbox, dataTable, setDataTable, sorting, search, setIsLoading, pagination } =
+  const { t } = useTranslation();
+  const { search, setSearch, sorting, setSorting, dataTable, pagination, setDataTable } =
     useContext(TableContext);
-  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [emptyState, setEmptyState] = useState<boolean>(false);
+  const columns = ColumnsFunction();
 
-  useEffect(() => {
-    fetchData();
-  }, [sorting, search, pagination]);
+  const {
+    data,
+    isLoading,
+    // refetch: refetchListAccess,
+  } = useQuery(
+    'inspectList',
+    async () => {
+      const response = await getDataTable({ search, sorting, pagination });
+      return response.data.data;
+    },
+    { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 100 },
+  );
 
-  const fetchData = () => {
-    setIsLoading(true);
-    getDataTable({ search, sorting, pagination })
-      .then((data) => {
-        if (data.status == 204) {
-          if (search.value == '') {
-            setEmptyState(true);
-            setIsLoading(false);
-            return;
-          }
+  const table = useReactTable<DataTableItem>({
+    data: data || [],
+    columns: columns,
+    state: {
+      globalFilter: search,
+      sorting,
+    },
+    onSortingChange: setSorting,
+    globalFilterFn: (row, _columnID, value: string) => {
+      const plate = `${row.original.plate.toLocaleLowerCase()} - ${row.original.ativo.toLocaleLowerCase()}`;
+      const isPlate = plate.includes(value.toLocaleLowerCase());
+      const isClient = row.original.client.toLocaleLowerCase().includes(value.toLocaleLowerCase());
+      return isPlate || isClient;
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    debugTable: true,
+  });
 
-          setDataTable({
-            data: [],
-            total: 0,
-          });
+  // useEffect(() => {
+  //   fetchData();
+  // }, [sorting, search, pagination]);
 
-          setIsLoading(false);
-        }
+  // const fetchData = () => {
+  //   getDataTable({ search, sorting, pagination })
+  //     .then((data) => {
+  //       if (data.status == 204) {
+  //         if (search.value == '') {
+  //           setEmptyState(true);
+  //           return;
+  //         }
 
-        if (data.status == 200 && data.data && data.data.data) {
-          if (data.data.total == 0 && search.value == '') {
-            setEmptyState(true);
-            setIsLoading(false);
-            return;
-          }
+  //         setDataTable({
+  //           data: [],
+  //           total: 0,
+  //         });
+  //       }
 
-          setEmptyState(false);
-          setDataTable(data.data);
-          setIsLoading(false);
-        }
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-  };
+  //       if (data.status == 200 && data.data && data.data.data) {
+  //         if (data.data.total == 0 && search.value == '') {
+  //           setEmptyState(true);
+  //           return;
+  //         }
+
+  //         setEmptyState(false);
+  //         setDataTable(data.data);
+  //       }
+  //     })
+  //     .catch(() => {});
+  // };
 
   // const debouncedFetch = debounce((query: any) => {
   //   setSearch({
@@ -123,7 +162,7 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
   const deleteVideosPlayback = () => {
     setLoadingDelete(true);
     setModalIsOpen(false);
-    if (checkbox == 'all') {
+    if (table.getIsAllRowsSelected()) {
       deleteAllVideos()
         .then((response) => {
           setLoadingDelete(false);
@@ -140,7 +179,6 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
                 t('please_check_your_connection_and_try_again'),
                 'danger',
               );
-          fetchData();
         })
         .catch((err) => {
           setLoadingDelete(false);
@@ -155,8 +193,8 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
       return;
     }
 
-    if (Array.isArray(checkbox)) {
-      deleteVideos(checkbox)
+    if (table.getIsSomeRowsSelected()) {
+      deleteVideos(table.getSelectedRowModel().rows.map((row) => row.original.id))
         .then((response) => {
           setLoadingDelete(false);
           response.status === 200
@@ -172,7 +210,6 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
                 t('please_check_your_connection_and_try_again'),
                 'danger',
               );
-          fetchData();
         })
         .catch((err) => {
           notification(
@@ -187,69 +224,11 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
     }
   };
 
-  const downloadVideos = (videoId?: number[]) => {
-    setLoadingDownload(true);
-    const download =
-      videoId && videoId.length > 0 ? videoId : Array.isArray(checkbox) ? checkbox : [];
-    putVideosDownload(download)
-      .then((response) => {
-        response.status === 200
-          ? notification(
-              'Download',
-              t('video_download_requested_successfully') + '!',
-              '',
-              'success',
-            )
-          : notification(
-              t('download_failed'),
-              t('an_unexpected_problem_has_occurred'),
-              t('please_check_your_connection_and_try_again'),
-              'danger',
-            );
-
-        setLoadingDownload(false);
-      })
-      .catch((err) => {
-        setLoadingDownload(false);
-        notification(
-          t('download_failed'),
-          t('an_unexpected_problem_has_occurred'),
-          t('please_check_your_connection_and_try_again'),
-          'danger',
-        );
-        console.log(err);
-      });
-  };
-
   return (
     <div>
       <ContainerHeaderContent>
-        <ContainerSpan>
-          <TitleSpan>{t('playback')}</TitleSpan>
-          <SubTitleSpan>{t('video_history_for_accurate_event_analysis')}</SubTitleSpan>
-        </ContainerSpan>
-
-        <ContainerButton>
-          {Array.isArray(checkbox) && checkbox.length > 0 && (
-            <Button
-              onClick={() => downloadVideos()}
-              variant="primary"
-              small
-              loading={loadingDownload}
-              disabled={
-                checkbox.length > 5 ||
-                dataTable.data.filter(
-                  (check: { id: string; status: string }) =>
-                    checkbox.includes(check.id) && check.status == '2',
-                ).length > 0
-              }
-            >
-              <Icon name="ui download-save-simple" color="#fff" />
-              <span> {t('download')} </span>
-            </Button>
-          )}
-
-          {(checkbox.length > 0 || checkbox == 'all') && (
+        {/* <ContainerButton>
+          {(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (
             <Button
               variant="primary"
               small
@@ -265,18 +244,25 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
               <span> {t('delete_selected')} </span>
             </Button>
           )}
-        </ContainerButton>
+        </ContainerButton> */}
       </ContainerHeaderContent>
 
-      <ConfirmationModal
-        isOpen={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        onConfirm={deleteVideosPlayback}
-        title={t('do_you_really_want_to_delete_this_record')}
-        message={t('really_want_delete_type_confirm')}
-      />
+      <ConsolidatedData />
 
-      <ContainerActionContent>
+      {isLoading ? (
+        <ContainerLoading>
+          <Loading size={'xl'} variant={'light'} />
+        </ContainerLoading>
+      ) : data && table ? (
+        <ContainerTableGrid>
+          <TableComponent<DataTableItem> table={table} setSorting={setSorting} pagination={<></>} />
+        </ContainerTableGrid>
+      ) : (
+        <div></div>
+        // <Empty />
+      )}
+
+      {/* <ContainerActionContent>
         {!emptyState ? (
           <div style={{ width: '100%' }}>
             <ContainerTable>
@@ -288,7 +274,17 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
         ) : (
           <Empty openModal={handleOpenModal} />
         )}
-      </ContainerActionContent>
+      </ContainerActionContent> */}
+
+      <ConfirmationModal
+        isOpen={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        onConfirm={deleteVideosPlayback}
+        title={t('do_you_really_want_to_delete_this_record')}
+        message={t('really_want_delete_type_confirm')}
+      />
+
+      {!isLoading && <Pagination table={table} />}
     </div>
   );
 };

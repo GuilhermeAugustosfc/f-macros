@@ -9,7 +9,7 @@ import ContentTable from '../Table/Content';
 import { getVideostracker, setVideostracker } from 'src/services/reports/filter';
 import moment from 'moment';
 import { type TableVideoItem } from 'src/types/filter';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 type PropsVideo = {
   close: () => void;
@@ -25,6 +25,7 @@ type PropsVideo = {
 export type EmptyStateProps = 'success' | 'noData' | 'error' | 'timeout' | null;
 
 export const RequestVideos = ({ close, backToForm, setErrors }: PropsVideo): JSX.Element => {
+  const { t } = useTranslation();
   const { client, ativo, period, channel, setAlertState } = useContext(ReportsContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingRequest, setLoadingRequest] = useState<boolean>(false);

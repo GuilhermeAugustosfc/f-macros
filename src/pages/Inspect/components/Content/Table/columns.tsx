@@ -1,11 +1,10 @@
-import React, { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@ftdata/ui';
-import type { chechBox, DataTableItem } from '../types';
+import type { DataTableItem } from '../types';
 import { ContainerTH, SpanStatus } from './styles';
 import { PlayCircleIcon } from '../../svg';
-import { TableContext } from 'src/contexts/table';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
@@ -17,11 +16,8 @@ declare module '@tanstack/react-table' {
 
 const columnHelper = createColumnHelper<DataTableItem>();
 
-export const ColumnsFunction = (
-  setCheckbox: React.Dispatch<React.SetStateAction<chechBox>>,
-  checkbox: chechBox,
-): ColumnDef<DataTableItem, any>[] => {
-  const { setDataSelected } = useContext(TableContext);
+export const ColumnsFunction = (): ColumnDef<DataTableItem, any>[] => {
+  const { t } = useTranslation();
   const indexStatus = [t('in_processing'), t('available'), t('processing_error')];
 
   const columns = useMemo(
@@ -29,37 +25,31 @@ export const ColumnsFunction = (
       columnHelper.accessor('id', {
         cell: (info) => (
           <ContainerTH style={{ justifyContent: 'center' }}>
-            <Checkbox
+            {/* <Checkbox
               label=""
-              checked={
-                checkbox.includes(info.row.getValue('id')) ||
-                (checkbox == 'all' && info.row.getValue('status') == '1')
-              }
               disabled={info.row.getValue('status') == '0'}
-              onChange={() => {
-                const dataIdRow: string = info.row.getValue('id');
-                if (checkbox == 'all') return setCheckbox([dataIdRow]);
-                if (!checkbox.includes(dataIdRow)) {
-                  setCheckbox([...checkbox, dataIdRow]);
-                  return;
-                }
-
-                setCheckbox(checkbox.filter((value) => value != dataIdRow));
-              }}
+              onChange={() => info.row.toggleSelected()}
+              checked={info.row.getIsSelected()}
               type="checkbox"
               name=""
               id={info.getValue()}
-            />
+            /> */}
           </ContainerTH>
         ),
-        header: () => (
-          <ContainerTH style={{ marginLeft: '0.4rem' }}>
+        header: (info) => (
+          <ContainerTH
+            style={{ marginLeft: '0.4rem' }}
+            // onClick={() => {
+            //   info.table.toggleAllRowsSelected();
+            // }}
+          >
             <Checkbox
               label=""
               onChange={() => {
                 return;
               }}
-              checked={checkbox == 'all'}
+              // checked={info.table.getIsAllRowsSelected()}
+              checked={false}
               type="checkbox"
               name=""
             />
@@ -170,11 +160,6 @@ export const ColumnsFunction = (
               justifyContent: 'center',
               cursor: info.row.getValue('status') == '1' ? 'pointer ' : 'not-allowed',
             }}
-            onClick={() => {
-              if (info.row.getValue('status') == '1') {
-                setDataSelected(info.row._valuesCache as unknown as DataTableItem);
-              }
-            }}
             className="font-semibold"
           >
             <PlayCircleIcon color={info.row.getValue('status') == '1' ? '#26333B' : '#B1B7BB'} />
@@ -188,7 +173,7 @@ export const ColumnsFunction = (
         meta: { isHidden: false, noSorting: true },
       }),
     ],
-    [checkbox],
+    [],
   );
 
   return columns;

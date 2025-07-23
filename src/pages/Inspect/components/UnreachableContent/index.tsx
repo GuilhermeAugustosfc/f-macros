@@ -1,9 +1,10 @@
 import React from 'react';
 import { Container } from './styles';
 import { TimeoutIcon, UnreachableContentIcon } from '../svg';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 export const UnreachableContent: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Container>
       <UnreachableContentIcon />
@@ -14,6 +15,7 @@ export const UnreachableContent: React.FC = () => {
 };
 
 export const TimeoutContent: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Container>
       <TimeoutIcon />

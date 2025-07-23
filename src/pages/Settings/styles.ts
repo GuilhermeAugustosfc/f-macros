@@ -14,6 +14,7 @@ export const ContentTabs = styled.div`
 
 export const ContainerInformation = styled.div`
   .count-access {
+    height: 2rem;
     display: flex;
     padding: 4px 8px;
     justify-content: center;
@@ -164,6 +165,7 @@ export const ContainerLoading = styled.div`
 `;
 
 export const GridContainer = styled.div`
+  transform: translateZ(0);
   display: grid;
   grid-template-areas:
     'title'
@@ -192,12 +194,15 @@ export const ContentContainerGrid = styled.div`
 `;
 
 export const ContainerTabContent = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'header'
-    'table';
+  background-color: ${styleguide.COLOR_NEUTRAL_DAY};
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  max-height: calc(100vh - 5.5rem - 3.5rem);
+  overflow-y: auto;
+  padding: 0 1.5rem;
+  width: 100%;
 `;
 
 export const ContainerHeader = styled.div`
@@ -207,6 +212,5 @@ export const ContainerHeader = styled.div`
 `;
 
 export const ContainerTableGrid = styled.div`
-  width: 100%;
-  grid-area: table;
+  padding-bottom: 6rem;
 `;

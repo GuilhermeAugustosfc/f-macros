@@ -6,8 +6,7 @@ export const Tbody = styled.tbody`
   line-height: 1.25rem;
   font-weight: 600;
   text-align: left;
-  border-left: 1px solid ${styleguide.COLOR_NEUTRAL_LIGHT};
-  border-bottom: 1px solid ${styleguide.COLOR_NEUTRAL_LIGHT};
+  border: 1px solid ${styleguide.COLOR_NEUTRAL_LIGHT};
 `;
 
 export const TrBody = styled.tr`
@@ -18,19 +17,13 @@ export const TrBody = styled.tr`
   font-style: normal;
   font-weight: 500;
   line-height: 150%; /* 21px */
-
-  & > td:first-child {
-    border-right: none;
-  }
-
+  border: none;
   & > td:nth-child(2) {
     padding-left: 0;
   }
 `;
 
 export const TdBody = styled.td<{ widthCell: string }>`
-  border-right: 1px solid #b1b7bb;
-  border-bottom: 1px solid #b1b7bb;
   font-weight: bold;
   min-width: ${(props) => props.widthCell};
   padding: 0.75rem;

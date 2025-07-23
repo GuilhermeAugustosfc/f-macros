@@ -1,10 +1,6 @@
 import { type SortingState } from '@tanstack/react-table';
 import React, { createContext, type Dispatch, type SetStateAction, useState } from 'react';
-import type {
-  chechBox,
-  DataTableItem,
-  DataTableItemResponse,
-} from 'src/pages/Inspect/components/Content/types';
+import type { DataTableItemResponse } from 'src/pages/Inspect/components/Content/types';
 
 interface ITableContext {
   dataTable: DataTableItemResponse;
@@ -15,8 +11,6 @@ interface ITableContext {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   sorting: SortingState;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
-  checkbox: chechBox;
-  setCheckbox: React.Dispatch<React.SetStateAction<chechBox>>;
   search: {
     value: string;
     label: string;
@@ -27,12 +21,6 @@ interface ITableContext {
       label: string;
     }>
   >;
-  lastId: number | null;
-  setLastId: React.Dispatch<React.SetStateAction<number | null>>;
-  dataSelected: DataTableItem | null;
-  setDataSelected: React.Dispatch<React.SetStateAction<DataTableItem | null>>;
-  indexedData: Record<'file_name', string>;
-  setIdexedData: React.Dispatch<React.SetStateAction<Record<'file_name', string>>>;
   pagination: { pageIndex: number; pageSize: number };
   setPagination: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
 }
@@ -46,7 +34,6 @@ const TableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const [totalRows, setTotalRows] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [checkbox, setCheckbox] = useState<chechBox>([]);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: 'insert_at',
@@ -66,12 +53,6 @@ const TableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     pageIndex: 0,
   });
 
-  const [lastId, setLastId] = useState<number | null>(null);
-  const [dataSelected, setDataSelected] = useState<DataTableItem | null>(null);
-  const [indexedData, setIdexedData] = useState<Record<'file_name', string>>(
-    {} as Record<string, string>,
-  );
-
   return (
     <TableContext.Provider
       value={{
@@ -83,16 +64,8 @@ const TableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         setIsLoading,
         sorting,
         setSorting,
-        checkbox,
-        setCheckbox,
         search,
         setSearch,
-        lastId,
-        setLastId,
-        dataSelected,
-        setDataSelected,
-        indexedData,
-        setIdexedData,
         pagination,
         setPagination,
       }}

@@ -7,19 +7,16 @@ import {
   ContentWrapper,
   StyledButton,
   TextContent,
-  Title3,
 } from './style';
-import { t } from '../../../App';
 import HomePage from '../../../assets/svgs/emptyStates/homePage.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '@ftdata/core';
 
 const ManagementReports: React.FC = () => {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   return (
     <Container>
-      <Title3>{t('play_videos_of_routes_and_check_occurrences')}</Title3>
-
       <ContentWrapper>
         <CardContainer>
           <ContainerImage>

@@ -10,10 +10,9 @@ import { UnreachableContent } from '../../UnreachableContent';
 import { Loading } from '@ftdata/ui';
 
 const Table: React.FC = () => {
-  const { checkbox, setCheckbox, dataTable, isLoading, sorting, pagination, setPagination } =
-    useContext(TableContext);
+  const { dataTable, isLoading, sorting, pagination, setPagination } = useContext(TableContext);
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const columns = ColumnsFunction(setCheckbox, checkbox);
+  const columns = ColumnsFunction();
   const pageIndex = pagination.pageIndex;
   const pageSize = pagination.pageSize;
 
@@ -34,8 +33,6 @@ const Table: React.FC = () => {
         pageIndex: newPagination.pageIndex,
         pageSize: newPagination.pageSize,
       });
-
-      if (checkbox !== 'all') setCheckbox([]);
     },
   });
 

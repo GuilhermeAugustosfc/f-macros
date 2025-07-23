@@ -12,11 +12,11 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@ftdata/core": "^0.0.2",
-    "@ftdata/f-icons": "^0.0.1",
+    "@ftdata/core": "^0.0.4",
+    "@ftdata/f-icons": "^0.0.2",
     "@ftdata/f-tokens": "^0.0.1",
     "@ftdata/http": "^0.0.1",
-    "@ftdata/ui": "^0.0.2",
+    "@ftdata/ui": "^0.0.5",
     "@headlessui/react": "^2.2.4",
     "@tanstack/react-table": "^8.21.3",
     "DateRangePicker": "link:rsuite/esm/DateRangePicker",

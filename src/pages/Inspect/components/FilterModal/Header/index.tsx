@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { HeaderContainer } from './styles';
 import { ReportsContext } from '../../../../../contexts/reports';
 import { Icon } from '@ftdata/f-icons';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   close: () => void;
 }
 
 export const Header: React.FC<Props> = ({ close }: Props) => {
+  const { t } = useTranslation();
   const { clearFilter, hasFilter } = useContext(ReportsContext);
   return (
     <HeaderContainer>

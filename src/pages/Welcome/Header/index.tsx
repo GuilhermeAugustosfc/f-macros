@@ -1,12 +1,13 @@
 import { Button, Paragraph, Title } from '@ftdata/ui';
 import { Container, ContainerButtonConfiguration, ContainerPresentation } from './style';
-import { t } from '../../../App';
 import { Icon } from '@ftdata/f-icons';
 import * as styleguide from '@ftdata/f-tokens';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '@ftdata/core';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Container>

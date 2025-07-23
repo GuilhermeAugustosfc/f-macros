@@ -4,13 +4,14 @@ import { Button, Paragraph, Title } from '@ftdata/ui';
 import styled from 'styled-components';
 import { EmptyReportIcon } from '../svg';
 import { Icon } from '@ftdata/f-icons';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   openModal: () => void;
 }
 
 const Empty: React.FC<Props> = ({ openModal }: Props) => {
+  const { t } = useTranslation();
   return (
     <ContainerEmpty>
       <EmptyReportIcon />

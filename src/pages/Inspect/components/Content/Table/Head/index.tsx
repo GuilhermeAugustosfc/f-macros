@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Head: React.FC<Props> = ({ table }: Props) => {
-  const { checkbox, setCheckbox, setSorting } = useContext(TableContext);
+  const { setSorting } = useContext(TableContext);
 
   const handleSort = (columnId: string, currentSort: string | false) => {
     const sortingStates = {
@@ -18,7 +18,6 @@ const Head: React.FC<Props> = ({ table }: Props) => {
       asc: { desc: true },
       desc: { desc: false },
     };
-    setCheckbox([]);
     setSorting([{ id: columnId, ...sortingStates[currentSort as keyof typeof sortingStates] }]);
   };
 
@@ -40,7 +39,6 @@ const Head: React.FC<Props> = ({ table }: Props) => {
                   widthCell={objectWidths[header.column.id as keyof typeof objectWidths]}
                   onClick={() => {
                     if (header.column.id == 'id') {
-                      setCheckbox(checkbox == 'all' ? [] : 'all');
                       return;
                     }
 

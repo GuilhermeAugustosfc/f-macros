@@ -5,7 +5,7 @@ import type {
   SelectOption,
 } from 'src/pages/Inspect/components/FilterModal/Form/types';
 import type { Range as DateRange } from 'react-date-range';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
 
 interface IReportsContext {
   client: SelectOption;
@@ -27,6 +27,7 @@ interface IReportsContext {
 const ReportsContext = createContext<IReportsContext>({} as IReportsContext);
 
 const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { t } = useTranslation();
   const emptyValue = { value: '', label: t('select') };
   const [client, setClient] = useState<SelectOption>(emptyValue);
   const [period, setPeriod] = useState<DateRange | null>({

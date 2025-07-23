@@ -1,7 +1,7 @@
 import React, { type JSX } from 'react';
 import { type SortingState, type Table, flexRender } from '@tanstack/react-table';
-import OrderIndicator from '../OrderIndicator';
 import { THead, ThInfo } from './styles';
+import OrderIndicator from '../OrderIndicator';
 
 interface Props<T> {
   table: Table<T>;
@@ -22,7 +22,7 @@ const Head = <T,>({ table, setSorting }: Props<T>): JSX.Element => {
             <th key={header.id} colSpan={header.colSpan}>
               {header.isPlaceholder ? null : (
                 <ThInfo
-                  sort={header.column.getCanSort().toString() || 'true'}
+                  sort={header.column.getCanSort()}
                   onClick={() => {
                     if (!header.column.getIsSorted()) {
                       setSorting([{ id: header.column.id, desc: false }]);
@@ -39,8 +39,7 @@ const Head = <T,>({ table, setSorting }: Props<T>): JSX.Element => {
                   {flexRender(header.column.columnDef.header, header.getContext())}
 
                   {header.id != 'checkbox' &&
-                    header.column.getIsSorted() !== false &&
-                    OrderIndicatorObj[header.column.getIsSorted() || 'asc']}
+                    OrderIndicatorObj[(header.column.getIsSorted() as 'asc' | 'desc') || 'false']}
                 </ThInfo>
               )}
             </th>

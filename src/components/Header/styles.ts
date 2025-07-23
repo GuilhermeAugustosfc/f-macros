@@ -18,30 +18,38 @@ export const HeaderContainer = styled.header<JustifyProps>`
   border-bottom: 0.0625rem solid ${styleguide.COLOR_NEUTRAL_LIGHT};
   padding: 1rem 1.5rem;
   display: flex;
-  height: 3.5rem;
   justify-content: ${(props) => props.justifyContent || 'flex-start'};
 
-  & > div {
-    display: flex;
-    background: ${styleguide.COLOR_BRAND_MEDIUM};
-    border-radius: ${styleguide.BORDER_RADIUS_SM};
-    color: ${styleguide.COLOR_NEUTRAL_DAY};
-    padding: 16px 8px;
-    gap: 8px;
-    align-items: center;
-
-    & > button {
-      padding: 0;
-    }
-
-    & > button:focus {
-      border: none;
-      border-style: hidden !important;
-    }
-
-    & > svg {
-    }
+  & > div > button {
+    width: 11.813rem;
+    height: 2.5rem;
+    gap: 0.5rem;
+    font-size: ${styleguide.FONT_SIZE_SM};
   }
+`;
+
+export const ContainerSpan = styled.div`
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2.125rem 0rem 1.5rem;
+`;
+
+export const TitleSpan = styled.span`
+  margin-bottom: 0.625rem;
+  font-size: ${styleguide.FONT_SIZE_MD};
+  font-family: ${styleguide.FONT_FAMILY_01};
+  font-weight: ${styleguide.FONT_WEIGHT_BOLD};
+  line-height: ${styleguide.LINE_HEIGHT_TIGHT};
+  color: ${styleguide.COLOR_NEUTRAL_DUSK};
+`;
+
+export const SubTitleSpan = styled.span`
+  font-size: ${styleguide.FONT_SIZE_SM};
+  font-family: ${styleguide.FONT_FAMILY_01};
+  font-weight: ${styleguide.FONT_WEIGHT_BOLD};
+  line-height: ${styleguide.LINE_HEIGHT_TIGHT};
+  color: ${styleguide.COLOR_NEUTRAL_DARKER};
 `;
 
 export const TitleHeader = styled.h2`
@@ -72,22 +80,33 @@ export const KnowMore = styled.div`
 export const FilterContainer = styled.div`
   padding: 1rem 1.5rem;
   display: flex;
-  flex-wrap: wrap;
   row-gap: 1rem;
-  // justify-content: space-between;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid ${styleguide.COLOR_NEUTRAL_LIGHT};
   min-height: 6rem;
 
   & > div:first-child {
-    font-size: ${styleguide.FONT_SIZE_MD};
-    font-weight: ${styleguide.FONT_WEIGHT_MEDIUM};
-    font-family: ${styleguide.FONT_FAMILY_01};
-    color: ${styleguide.COLOR_NEUTRAL_DARKER};
-    display: inline-flex;
-    align-items: center;
-    max-width: fit-content;
-    white-space: nowrap;
+    display: flex;
+
+    & > div {
+      gap: 0.75rem;
+    }
+
+    & > span:first-child {
+      font-size: ${styleguide.FONT_SIZE_MD};
+      font-weight: ${styleguide.FONT_WEIGHT_MEDIUM};
+      font-family: ${styleguide.FONT_FAMILY_01};
+      color: ${styleguide.COLOR_NEUTRAL_DARKER};
+      display: inline-flex;
+      align-items: center;
+      max-width: fit-content;
+      white-space: nowrap;
+    }
+  }
+
+  @media (max-width: 850px) {
+    flex-wrap: wrap;
   }
 `;
 
@@ -98,7 +117,7 @@ export const FilterIconSearch = styled.div`
 `;
 
 export const Filters = styled.div`
-  max-width: 54rem;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   margin: 0 1rem;

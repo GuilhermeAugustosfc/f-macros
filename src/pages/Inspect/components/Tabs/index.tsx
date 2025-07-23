@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
 
-import { PlaybackReportIcon } from '../svg';
+import CheckDone from 'src/assets/svgs/check-done.svg?react';
+import CheckList from 'src/assets/svgs/filter-icon.svg?react';
+import SettingsIcon from 'src/assets/svgs/settings-key.svg?react';
 import { TabButton, TabContainer } from './style';
-import { Icon } from '@ftdata/f-icons';
-import { t } from 'src/App';
+import { useTranslation } from '@ftdata/core';
+import { useNavigate } from 'react-router-dom';
 
-const Tabs: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'report' | 'live' | 'playback'>('playback');
+export type ActiveTab = 'inspection_record' | 'plan_inspection' | 'fault_history';
+export type PropsTab = {
+  activeTab: ActiveTab;
+};
+
+const Tabs: React.FC<PropsTab> = ({ activeTab }: PropsTab) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <TabContainer>
       <TabButton
-        isActive={activeTab === 'report'}
-        onClick={() => window.open(window.location.origin + '/relatorios/infracao')}
+        isActive={activeTab === 'inspection_record'}
+        //  onClick={() => navigate('/inspect')}
       >
-        <Icon name="ui warning-triangle" />
-        <span style={{ marginTop: '0.2rem' }}>{t('violations_report')}</span>
+        <CheckDone />
+        <span>{t('inspection_record')}</span>
       </TabButton>
       <TabButton
-        isActive={activeTab === 'live'}
-        onClick={() => open(window.location.origin + '/mapaGeral_v3/#/')}
+        isActive={activeTab === 'plan_inspection'}
+        onClick={() => navigate('/plan_inspection')}
       >
-        <Icon name="ui video-camera" />
-        <span>{t('live')}</span>
+        <CheckList />
+        <span style={{ marginTop: '0.2rem' }}>{t('inspection_plan')}</span>
       </TabButton>
-      <TabButton isActive={activeTab === 'playback'} onClick={() => setActiveTab('playback')}>
-        <PlaybackReportIcon />
-        <span>{t('playback')}</span>
+      <TabButton
+        isActive={activeTab === 'fault_history'}
+        // onClick={() => navigate('/fault_history')}
+      >
+        <SettingsIcon />
+        <span>{t('fault_history')}</span>
       </TabButton>
     </TabContainer>
   );

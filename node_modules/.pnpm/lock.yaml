@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@ftdata/core':
-        specifier: ^0.0.2
-        version: 0.0.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        specifier: ^0.0.4
+        version: 0.0.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@ftdata/f-icons':
-        specifier: ^0.0.1
-        version: 0.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^0.0.2
+        version: 0.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ftdata/f-tokens':
         specifier: ^0.0.1
         version: 0.0.1
@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       '@ftdata/ui':
-        specifier: ^0.0.2
-        version: 0.0.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^0.0.5
+        version: 0.0.5(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@headlessui/react':
         specifier: ^2.2.4
         version: 2.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -568,8 +568,8 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  '@ftdata/core@0.0.2':
-    resolution: {integrity: sha512-MCGsCpEb29HbRuc9o0Kqretr90zVYyaOPU2ld1OOsD4PY1ENxOd0nAmXAlmQKZG6SAqNoj0alWDjZ9Ku7Ka6lQ==}
+  '@ftdata/core@0.0.4':
+    resolution: {integrity: sha512-CeSSDt+Cqo7vBtiOG9J4YmndOUDDluC7+cMRaszCSrO7g+PIrRqw9fiaGX9yshZukZRO2OXSreUnriKYuSFFAA==}
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
@@ -580,14 +580,26 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
+  '@ftdata/f-icons@0.0.2':
+    resolution: {integrity: sha512-o3nenIxjToGiISQK0eQOlka1FJiZ4RyM6bEGxueICqTx2KN5X4MFV6eKJ/2rZ+1fKlsU4DgZsoWVpFTcYTkuvA==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+
   '@ftdata/f-tokens@0.0.1':
     resolution: {integrity: sha512-CJSULOxV/wDYZNPuc6PglQldCNIeeS+/lJLFKHLkjbIAjLAV6eCHkcbP134KE/AMTrTP0yhQflQ6b6ZFGCGICw==}
 
   '@ftdata/http@0.0.1':
     resolution: {integrity: sha512-bXCkQ9JtXFua9E5VPsHT6/MPgnOWL63kqecWlbVyhNbsUQSYsjU/DqCrpV+I6jgY5sE1C7sY9EuLCKxQn/HiPQ==}
 
-  '@ftdata/ui@0.0.2':
-    resolution: {integrity: sha512-10eUXCuFLfu5gxDCPtkAaV9LXokF8Q41nE73XrTpriu9NPmrpIVTMvGSPvQ3dwGXiOO2Z7nQUpMf88IBjorOFw==}
+  '@ftdata/ui@0.0.4':
+    resolution: {integrity: sha512-Hu4vKDwYXPYcEVkfR39+z8/oDFiYNgFKaSnM6kTHVGjAwAqa/VnnXI4Hz11Pr741CkPjF53TIrkklbCgQw8Ycw==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+
+  '@ftdata/ui@0.0.5':
+    resolution: {integrity: sha512-rah34olUV3X6Md35vxJNUq9caFrAYePiC2364yMGurVpLERAXsGv1t/EozSKY6sgTRZ8kYS9HX0T/rc7lw0kPA==}
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
@@ -2984,12 +2996,12 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@ftdata/core@0.0.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+  '@ftdata/core@0.0.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
     dependencies:
       '@ftdata/f-icons': 0.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ftdata/f-tokens': 0.0.1
       '@ftdata/http': 0.0.1
-      '@ftdata/ui': 0.0.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@ftdata/ui': 0.0.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ftdata/utils': 1.0.0
       axios: 1.10.0
       i18next: 25.3.2(typescript@5.8.3)
@@ -3011,6 +3023,11 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
+  '@ftdata/f-icons@0.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
   '@ftdata/f-tokens@0.0.1': {}
 
   '@ftdata/http@0.0.1':
@@ -3020,9 +3037,22 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ftdata/ui@0.0.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@ftdata/ui@0.0.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@ftdata/f-icons': 0.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@ftdata/f-icons': 0.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@ftdata/f-tokens': 0.0.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-input-mask-next: 3.0.0-alpha.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-select: 5.10.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-window: 1.8.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
+  '@ftdata/ui@0.0.5(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@ftdata/f-icons': 0.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ftdata/f-tokens': 0.0.1
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)

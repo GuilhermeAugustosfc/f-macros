@@ -2,22 +2,19 @@ import styled from 'styled-components';
 import * as tokens from '@ftdata/f-tokens';
 
 export const ContainerPagination = styled.div`
+  box-shadow: 0px 8px 16px 0px rgba(107, 117, 124, 0.32);
   display: flex;
+  padding: 1.5rem 2rem;
   gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
   font-size: ${tokens.FONT_SIZE_SM};
   font-weight: 500;
-  color: ${tokens.COLOR_NEUTRAL_DUSK};
-  width: 100%;
+  background: ${tokens.COLOR_NEUTRAL_DAY};
   bottom: 0;
+  left: 0;
   right: 0;
-  padding: 24px 32px;
-  box-shadow: 0px 8px 16px 0px rgba(107, 117, 124, 0.32);
-  background: #fff;
-  position: absolute;
-  bottom: 0;
-  z-index: 10;
+  position: fixed;
 `;
 
 export const DivRight = styled.div`

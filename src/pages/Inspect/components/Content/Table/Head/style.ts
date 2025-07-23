@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-
+import * as tokens from '@ftdata/f-tokens';
 export const Thead = styled.thead`
   text-align: left;
-  color: rgb(255, 255, 255);
-  background: rgb(59, 72, 91);
+  color: ${tokens.COLOR_NEUTRAL_DARKER};
+  background-color: ${tokens.COLOR_NEUTRAL_DAY};
   font-size: 0.75rem;
   font-style: normal;
   font-weight: 600;
@@ -12,7 +12,7 @@ export const Thead = styled.thead`
 
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 4;
 
   & > tr > th:first-child {
     padding-left: 0.8% !important;
@@ -35,7 +35,6 @@ export const Th = styled.th<{ widthCell: string }>`
   height: 3.5rem;
   font-weight: 600;
   cursor: pointer;
-  border-right: 1px solid rgb(177, 183, 187);
   min-width: ${(props) => props.widthCell};
   overflow: hidden;
   text-overflow: ellipsis;

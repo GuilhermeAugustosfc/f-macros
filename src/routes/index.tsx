@@ -7,6 +7,8 @@ import instance from 'src/services/instance';
 import { AppCore, DEFAULT_CONFIG } from '@ftdata/core';
 import Inspect from 'src/pages/Inspect';
 import { Settings } from 'src/pages/Settings';
+import PlanInspection from 'src/pages/PlanInspection';
+import FaultHistory from 'src/pages/FaultHistory';
 
 const Routes: React.FC = () => {
   const queryClient = new QueryClient();
@@ -15,7 +17,6 @@ const Routes: React.FC = () => {
     <ReportsProvider>
       <TableProvider>
         <QueryClientProvider client={queryClient}>
-          {/* <AuthRoutes /> */}
           <AppCore
             config={{
               ...DEFAULT_CONFIG,
@@ -27,6 +28,14 @@ const Routes: React.FC = () => {
                 {
                   path: '/inspect',
                   element: <Inspect />,
+                },
+                {
+                  path: '/plan_inspection',
+                  element: <PlanInspection />,
+                },
+                {
+                  path: '/fault_history',
+                  element: <FaultHistory />,
                 },
                 {
                   path: '/settings',
@@ -43,9 +52,7 @@ const Routes: React.FC = () => {
               httpInstance: instance,
               namespace: '114',
             }}
-          >
-            <div></div>
-          </AppCore>
+          />
         </QueryClientProvider>
       </TableProvider>
     </ReportsProvider>

@@ -14,7 +14,7 @@ interface TabButtonProps {
 
 export const TabButton = styled.button<TabButtonProps>`
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: 0.375rem;
   color: ${(props) =>
     props.isActive ? styleguide.COLOR_ACCENT_MEDIUM : styleguide.COLOR_NEUTRAL_DARKER};
@@ -29,6 +29,11 @@ export const TabButton = styled.button<TabButtonProps>`
   border-bottom: 0.1875rem solid
     ${(props) => (props.isActive ? styleguide.COLOR_ACCENT_MEDIUM : 'transparent')};
   transition: all 0.3s ease;
+
+  & > svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 
   svg path {
     stroke: ${(props) =>

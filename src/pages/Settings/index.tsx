@@ -10,9 +10,10 @@ import { Tab } from './Tab';
 import { Title } from '@ftdata/ui';
 import { ActiveAccess } from './ActiveAccess';
 import KeyIcon from '../../assets/svgs/key.svg?react';
-import { t } from '../../App';
+import { useTranslation } from '@ftdata/core';
 
 export const Settings = (): JSX.Element => {
+  const { t } = useTranslation();
   return (
     <GridContainer>
       <TittleContainerGrid>

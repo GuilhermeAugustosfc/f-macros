@@ -1,9 +1,11 @@
 import { type JSX } from 'react';
 import { ContainerCountAccess } from './styles';
 import { type ICountData } from '../../../../shared/DataStructure';
-import { t } from '../../../../App';
+import { useTranslation } from '@ftdata/core';
 
 export default function CountAccess({ access, available, unavailable }: ICountData): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <ContainerCountAccess>
       <div className="count-access">

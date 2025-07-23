@@ -8,7 +8,7 @@ interface Props {
 
 const OrderIndicator: React.FC<Props> = ({ asc, desc }: Props) => {
   const color = {
-    active: styleguide.COLOR_NEUTRAL_DARK,
+    active: styleguide.COLOR_NEUTRAL_MEDIUM,
     inactive: styleguide.COLOR_NEUTRAL_LIGHT,
   };
 

@@ -6,7 +6,7 @@ export const THead = styled.thead`
   line-height: 1.25rem;
   text-align: left;
   color: ${tokens.COLOR_NEUTRAL_DARKER};
-  height: 4rem;
+  height: 5.25rem;
   position: sticky;
   top: 0;
   background-color: ${tokens.COLOR_NEUTRAL_DAY};
@@ -14,23 +14,22 @@ export const THead = styled.thead`
   z-index: 1;
 
   th {
-    padding-bottom: 0.5rem;
+    width: 129px;
+    padding: 24px 0;
     font-weight: 600;
+    padding-left: 1rem;
     cursor: pointer;
   }
 `;
 
 const styles = {
   display: 'flex',
-  paddingTop: '0.25rem',
-  paddingBottom: '0.25rem',
-  paddingLeft: '1rem',
-  gap: '0.75rem',
   alignItems: 'center',
+  gap: '12px',
   cursor: 'pointer',
   userSelect: 'none',
 };
 
-export const ThInfo = styled.div<{ sort: string }>`
+export const ThInfo = styled.div<{ sort: boolean }>`
   ${({ sort }) => (sort ? styles : {})}
 `;
