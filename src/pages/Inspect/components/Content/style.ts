@@ -4,7 +4,7 @@ import * as styleguide from '@ftdata/f-tokens';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: auto;
   width: 100%;
   height: 100%;
   max-height: calc(-9rem + 100vh);

@@ -28,11 +28,31 @@ export const HeaderContainer = styled.header<JustifyProps>`
   }
 `;
 
+export const ContainerButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  & > button {
+    width: 11.813rem;
+    height: 2.5rem;
+    gap: 0.5rem;
+    font-size: ${styleguide.FONT_SIZE_SM};
+  }
+`;
+
 export const ContainerSpan = styled.div`
-  height: auto;
   display: flex;
   flex-direction: column;
+`;
+
+export const ContainerDescription = styled.div`
+  display: flex;
+  flex-direction: row;
   padding: 1.5rem 2.125rem 0rem 1.5rem;
+  height: auto;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const TitleSpan = styled.span`

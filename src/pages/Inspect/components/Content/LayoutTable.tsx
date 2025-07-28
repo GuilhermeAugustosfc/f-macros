@@ -1,23 +1,6 @@
-import { useContext, useEffect, useState, type JSX } from 'react';
-import {
-  ContainerActionContent,
-  ContainerButton,
-  ContainerHeaderContent,
-  ContainerLayoutGrid,
-  ContainerTable,
-} from './style';
-import { Button, Loading } from '@ftdata/ui';
-import { Icon } from '@ftdata/f-icons';
-import * as styleguide from '@ftdata/f-tokens';
-import Empty from '../Empty';
-import {
-  deleteAllVideos,
-  deleteVideos,
-  getDataTable,
-  putVideosDownload,
-} from 'src/services/reports/playback';
-import { type NOTIFICATION_TYPE, Store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
+import { useContext, useState, type JSX } from 'react';
+import { ContainerHeaderContent } from './style';
+import { deleteAllVideos, deleteVideos, getDataTable } from 'src/services/reports/playback';
 import { Popover } from 'src/components/Popover';
 import { TableContext } from 'src/contexts/table';
 import { ConfirmationModal } from 'src/components/ConfirmationModal';
@@ -25,20 +8,17 @@ import ConsolidatedData from './ConsolidatedData';
 import { useTranslation } from '@ftdata/core';
 import {
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnDef,
-  type SortingState,
 } from '@tanstack/react-table';
 import { ColumnsFunction } from './Table/columns';
 import { useQuery } from 'react-query';
-import { fetchListAccess } from 'src/components/Apis';
 import { ContainerLoading, ContainerTableGrid } from 'src/pages/Settings/styles';
 import type { DataTableItem } from './types';
 import TableComponent from 'src/components/Table';
 import { Pagination } from 'src/components/Table/Pagination';
+import { Loading } from '@ftdata/ui';
 
 type PropsLayout = {
   handleOpenModal: () => void;
@@ -48,38 +28,24 @@ export const notification = (
   headerTitle: string,
   title: string,
   message: string,
-  type: NOTIFICATION_TYPE,
-): void => {
-  Store.addNotification({
-    content: (
-      <Popover
-        title={headerTitle}
-        subTitle={title}
-        description={message}
-        iconName={type == 'danger' ? 'ui warning-circle' : 'ui checkmark-done-check'}
-        type={type}
-      />
-    ),
-    type: type,
-    insert: 'top',
-    container: 'top-right',
-    animationIn: ['animate__animated', 'animate__fadeIn'],
-    animationOut: ['animate__animated', 'animate__fadeOut'],
-    dismiss: {
-      pauseOnHover: false,
-      duration: 2000,
-      onScreen: false,
-    },
-  });
+  type: 'success' | 'danger' = 'success',
+) => {
+  return (
+    <Popover
+      id={1}
+      iconName="arw arrange-filter-sort-alt"
+      title={headerTitle}
+      subTitle={title}
+      description={message}
+      type={type}
+    />
+  );
 };
 
-const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
+const LayoutTable = ({}: PropsLayout): JSX.Element => {
   const { t } = useTranslation();
-  const { search, setSearch, sorting, setSorting, dataTable, pagination, setDataTable } =
-    useContext(TableContext);
-  const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
+  const { search, sorting, setSorting, pagination } = useContext(TableContext);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [emptyState, setEmptyState] = useState<boolean>(false);
   const columns = ColumnsFunction();
 
   const {
@@ -160,12 +126,10 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
   // };
 
   const deleteVideosPlayback = () => {
-    setLoadingDelete(true);
     setModalIsOpen(false);
     if (table.getIsAllRowsSelected()) {
       deleteAllVideos()
         .then((response) => {
-          setLoadingDelete(false);
           response.status === 200
             ? notification(
                 t('deleting_videos'),
@@ -181,7 +145,6 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
               );
         })
         .catch((err) => {
-          setLoadingDelete(false);
           notification(
             t('video_deletion_failed'),
             t('an_unexpected_problem_has_occurred'),
@@ -196,7 +159,6 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
     if (table.getIsSomeRowsSelected()) {
       deleteVideos(table.getSelectedRowModel().rows.map((row) => row.original.id))
         .then((response) => {
-          setLoadingDelete(false);
           response.status === 200
             ? notification(
                 t('deleting_videos'),
@@ -218,7 +180,6 @@ const LayoutTable = ({ handleOpenModal }: PropsLayout): JSX.Element => {
             t('please_check_your_connection_and_try_again'),
             'danger',
           );
-          setLoadingDelete(false);
           console.log(err);
         });
     }

@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@ftdata/ui';
-import type { DataTableItem } from '../types';
-import { ContainerTH, SpanStatus } from './styles';
-import { PlayCircleIcon } from '../../svg';
 import { useTranslation } from '@ftdata/core';
+import type { DataTableItem } from 'src/pages/Inspect/components/Content/types';
+import { ContainerTH, SpanStatus } from 'src/pages/Inspect/components/Content/Table/styles';
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
@@ -162,7 +161,7 @@ export const ColumnsFunction = (): ColumnDef<DataTableItem, any>[] => {
             }}
             className="font-semibold"
           >
-            <PlayCircleIcon color={info.row.getValue('status') == '1' ? '#26333B' : '#B1B7BB'} />
+            {String(info.row.getValue('status'))}
           </ContainerTH>
         ),
         header: () => (

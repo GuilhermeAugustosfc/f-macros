@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   Container,
+  ContainerButtons,
+  ContainerDescription,
   ContainerSpan,
   ContainerTabs,
   HeaderContainer,
@@ -16,6 +18,7 @@ import { useTranslation } from '@ftdata/core';
 
 interface Props {
   title: string;
+  extraButtons?: React.ReactNode;
   buttonDownload?: boolean;
   tab: ActiveTab;
   children?: React.ReactNode;
@@ -26,7 +29,14 @@ function IconComponent() {
   return <Icon name="ui download-save-simple" />;
 }
 
-const Header: React.FC<Props> = ({ title, children, tab, subTitle, buttonDownload }: Props) => {
+const Header: React.FC<Props> = ({
+  title,
+  children,
+  tab,
+  subTitle,
+  buttonDownload,
+  extraButtons,
+}: Props) => {
   const { t } = useTranslation();
   return (
     <Container>
@@ -53,10 +63,14 @@ const Header: React.FC<Props> = ({ title, children, tab, subTitle, buttonDownloa
         <Tabs activeTab={tab} />
       </ContainerTabs>
 
-      <ContainerSpan>
-        <TitleSpan>{title}</TitleSpan>
-        <SubTitleSpan>{subTitle}</SubTitleSpan>
-      </ContainerSpan>
+      <ContainerDescription>
+        <ContainerSpan>
+          <TitleSpan>{title}</TitleSpan>
+          <SubTitleSpan>{subTitle}</SubTitleSpan>
+        </ContainerSpan>
+
+        {extraButtons && <ContainerButtons> {extraButtons} </ContainerButtons>}
+      </ContainerDescription>
     </Container>
   );
 };

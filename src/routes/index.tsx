@@ -9,6 +9,7 @@ import Inspect from 'src/pages/Inspect';
 import { Settings } from 'src/pages/Settings';
 import PlanInspection from 'src/pages/PlanInspection';
 import FaultHistory from 'src/pages/FaultHistory';
+import RegisterPlanInspection from 'src/pages/PlanInspection/Register';
 
 const Routes: React.FC = () => {
   const queryClient = new QueryClient();
@@ -32,6 +33,14 @@ const Routes: React.FC = () => {
                 {
                   path: '/plan_inspection',
                   element: <PlanInspection />,
+                },
+                {
+                  path: '/plan_inspection/add',
+                  element: <RegisterPlanInspection />,
+                },
+                {
+                  path: '/plan_inspection/edit/:id?',
+                  element: <RegisterPlanInspection />,
                 },
                 {
                   path: '/fault_history',

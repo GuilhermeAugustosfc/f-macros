@@ -29,7 +29,7 @@ const TableComponent = <T,>({
   return (
     <TableContainer>
       <TableWrapper>
-        <table>
+        <table id="print-content">
           {head ? (
             head
           ) : (

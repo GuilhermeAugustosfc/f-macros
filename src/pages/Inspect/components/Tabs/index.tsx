@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import CheckDone from 'src/assets/svgs/check-done.svg?react';
+// import CheckDone from 'src/assets/svgs/check-done.svg?react';
 import CheckList from 'src/assets/svgs/filter-icon.svg?react';
-import SettingsIcon from 'src/assets/svgs/settings-key.svg?react';
+// import SettingsIcon from 'src/assets/svgs/settings-key.svg?react';
 import { TabButton, TabContainer } from './style';
 import { useTranslation } from '@ftdata/core';
 import { useNavigate } from 'react-router-dom';
@@ -18,13 +18,13 @@ const Tabs: React.FC<PropsTab> = ({ activeTab }: PropsTab) => {
 
   return (
     <TabContainer>
-      <TabButton
+      {/* <TabButton
         isActive={activeTab === 'inspection_record'}
         //  onClick={() => navigate('/inspect')}
       >
         <CheckDone />
         <span>{t('inspection_record')}</span>
-      </TabButton>
+      </TabButton> */}
       <TabButton
         isActive={activeTab === 'plan_inspection'}
         onClick={() => navigate('/plan_inspection')}
@@ -32,13 +32,13 @@ const Tabs: React.FC<PropsTab> = ({ activeTab }: PropsTab) => {
         <CheckList />
         <span style={{ marginTop: '0.2rem' }}>{t('inspection_plan')}</span>
       </TabButton>
-      <TabButton
+      {/* <TabButton
         isActive={activeTab === 'fault_history'}
         // onClick={() => navigate('/fault_history')}
       >
         <SettingsIcon />
         <span>{t('fault_history')}</span>
-      </TabButton>
+      </TabButton> */}
     </TabContainer>
   );
 };

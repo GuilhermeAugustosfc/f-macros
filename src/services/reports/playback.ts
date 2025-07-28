@@ -30,11 +30,7 @@ export function geturlVideo(videoId: string): Promise<AxiosResponse<any>> {
   return instance.get(`https://api-mdvr.fulltrackapp.com/playbacks/view/${videoId}`);
 }
 
-export function getDataTable({
-  search,
-  sorting,
-  pagination,
-}: FilterTable): Promise<AxiosResponse<DataTableItemResponse>> {
+export const getParams = ({ search, sorting, pagination }: FilterTable): string => {
   let sortingFilter = '';
   if (sorting && sorting?.length > 0) {
     sortingFilter = `&order=${sorting[0].desc ? 'DESC' : 'ASC'}&order_by=${sorting[0].id}`;
@@ -45,14 +41,17 @@ export function getDataTable({
     searchFilter = `&search_text=${search.value}&search_by=${search.label}`;
   }
 
+  return `limit=${pagination.pageSize}&offset=${
+    pagination.pageIndex * pagination.pageSize + sortingFilter + searchFilter
+  }`;
+};
+
+export function getDataTable({
+  search,
+  sorting,
+  pagination,
+}: FilterTable): Promise<AxiosResponse<DataTableItemResponse>> {
   return instance.get(
-    `https://api-mdvr.fulltrackapp.com/playbacks/?${
-      'limit=' +
-      pagination.pageSize +
-      '&offset=' +
-      pagination.pageIndex * pagination.pageSize +
-      sortingFilter +
-      searchFilter
-    }`,
+    `https://api-mdvr.fulltrackapp.com/playbacks/?${getParams({ search, sorting, pagination })}`,
   );
 }

@@ -28,7 +28,6 @@ import {
 import SearchIcon from '../../../assets/svgs/search-loupe.svg?react';
 import CloseIcon from '.././../../assets/svgs/close.svg?react';
 import { useQuery } from 'react-query';
-import { Store } from 'react-notifications-component';
 import Table from '../../../components/Table';
 import { type ActivatedAccessItem } from '../../../shared/DataStructure';
 import CountAccess from './CountAccess';
@@ -99,24 +98,7 @@ export function ActiveAccess(): JSX.Element {
   };
 
   const notificationSuccess = (action: string) => {
-    return Store.addNotification({
-      content: (
-        <div>
-          <span> Sucesso </span>
-          <span>{action === 'activate' ? 'Ativado' : 'Desativado'} com sucesso!</span>
-        </div>
-      ),
-      type: 'success',
-      insert: 'top',
-      container: 'top-right',
-      animationIn: ['animate__animated', 'animate__slideInRight'],
-      animationOut: ['animate__animated', 'animate__slideOutRight'],
-      dismiss: {
-        pauseOnHover: false,
-        duration: 6000,
-        onScreen: false,
-      },
-    });
+    return action;
   };
 
   return (

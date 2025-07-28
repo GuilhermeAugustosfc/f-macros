@@ -7,9 +7,10 @@ import { useTranslation } from '@ftdata/core';
 
 interface Props<T> {
   table: Table<T>;
+  totalRows?: number;
 }
 
-export const Pagination = <T,>({ table }: Props<T>): JSX.Element => {
+export const Pagination = <T,>({ table, totalRows }: Props<T>): JSX.Element => {
   const { t } = useTranslation();
   const pageSize = table.getState().pagination.pageIndex + 1;
 
@@ -18,7 +19,7 @@ export const Pagination = <T,>({ table }: Props<T>): JSX.Element => {
       <DivLeft>
         <p>
           {t('displaying_page')} {pageSize} {t('of_2')} {table.getState().pagination.pageSize} de{' '}
-          {Object.values(table.getRowModel().rowsById).length} {t('records')}
+          {totalRows ?? table.getRowModel().rows.length} {t('records')}
         </p>
 
         <select

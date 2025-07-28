@@ -2,10 +2,10 @@ import React, { useRef } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
-import { MyButton } from '../MyButton';
+import { MyButton } from '../../../../../components/MyButton';
 import { useTranslation } from '@ftdata/core';
 
-interface ConfirmationModalProps {
+interface ModalRegisterProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -15,7 +15,7 @@ interface ConfirmationModalProps {
 
 Modal.setAppElement('#root');
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+export const ModalRegister: React.FC<ModalRegisterProps> = ({
   isOpen,
   onClose,
   onConfirm,

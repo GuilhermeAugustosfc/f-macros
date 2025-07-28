@@ -1,10 +1,9 @@
 import { Paragraph, Title } from '@ftdata/ui';
 import styled from 'styled-components';
 import * as styleguide from '@ftdata/f-tokens';
-import { Icon } from '@ftdata/f-icons';
-import type { JSX } from 'react';
-import type { IconsNames } from 'node_modules/@ftdata/f-icons/dist/types/IconsNames';
+import { Icon, type IconsNames } from '@ftdata/f-icons';
 import { useTranslation } from '@ftdata/core';
+import type { JSX } from 'react';
 
 interface ContainerProps {
   backgroundType: string;
@@ -16,7 +15,7 @@ const Container = styled.div<ContainerProps>`
   justify-content: space-between;
   border-radius: 8px;
   background: ${(props) =>
-    props.backgroundType == 'danger'
+    props.backgroundType === 'danger'
       ? styleguide.COLOR_DANGER_DARKER
       : styleguide.COLOR_SUCCESS_DARKER};
   box-shadow: 0px 4px 8px 0px rgba(107, 117, 124, 0.32);
@@ -57,36 +56,41 @@ const Container = styled.div<ContainerProps>`
 `;
 
 type Props = {
+  id: string | number;
   description?: string;
   title: string;
   subTitle: string;
   iconName: IconsNames;
-  type: string;
+  type: 'success' | 'danger';
+  closeToast?: () => void;
 };
 
 export const Popover = ({
-  description,
   title,
   subTitle,
+  description,
   iconName,
   type,
-}: Props): JSX.Element | null => {
-  const { t } = useTranslation();
+  closeToast,
+}: Props): JSX.Element => {
+  const { t } = useTranslation('114');
 
   return (
-    <Container backgroundType={type}>
-      <div>
+    <>
+      <Container backgroundType={type}>
         <div>
-          <Icon color="#FFF" name={iconName} />
-          <span>{title}</span>
+          <div>
+            <Icon color="#FFF" name={iconName} />
+            <span>{title}</span>
+          </div>
+          <Icon color="#FFF" name="ui delete-disabled" onClick={closeToast} />
         </div>
-        <Icon color="#FFF" name="ui delete-disabled" />
-      </div>
-      <div>
-        <Title size="sm">{subTitle}</Title>
-        <Paragraph size="caption">{description}</Paragraph>
-        <span>{t('just_now')}</span>
-      </div>
-    </Container>
+        <div>
+          <Title size="sm">{subTitle}</Title>
+          <Paragraph size="caption">{description}</Paragraph>
+          <span>{t('just_now')}</span>
+        </div>
+      </Container>
+    </>
   );
 };

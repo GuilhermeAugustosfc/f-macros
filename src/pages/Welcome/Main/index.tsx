@@ -29,7 +29,7 @@ const ManagementReports: React.FC = () => {
               <Paragraph size="sm">{t('description_text_finspect')}</Paragraph>
             </TextContent>
 
-            <StyledButton onClick={() => navigate('/inspect')}>
+            <StyledButton onClick={() => navigate('/plan_inspection')}>
               <Button variant="primary">{t('access')}</Button>
             </StyledButton>
           </CardContent>
