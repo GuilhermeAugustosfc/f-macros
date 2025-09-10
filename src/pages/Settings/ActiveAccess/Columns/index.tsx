@@ -1,9 +1,17 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@ftdata/ui';
 import { DivActive, SpanActive, SpanCustomer } from './styles';
-import { type ActivatedAccessItem } from '../../../../shared/DataStructure';
 import { useTranslation } from '@ftdata/core';
 
+interface ActivatedAccessItem {
+  checkbox: boolean;
+  ativo_id: string;
+  client: string;
+  plate: string;
+  activation_date: string;
+  deactivation_date: string;
+  is_active: number;
+}
 const columnHelper = createColumnHelper<ActivatedAccessItem>();
 
 export const ColumnsFunction = () => {
@@ -38,7 +46,7 @@ export const ColumnsFunction = () => {
     columnHelper.accessor('plate', {
       cell: (info) => (
         <span>
-          {info.getValue().toString()} - {info.row.original.ativo}
+          {info.getValue().toString()} - {info.row.original.ativo_id}
         </span>
       ),
       header: () => <span>{t('plate')}</span>,

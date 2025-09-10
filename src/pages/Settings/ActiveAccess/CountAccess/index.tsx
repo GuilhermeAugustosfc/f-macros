@@ -1,6 +1,10 @@
 import { type JSX } from 'react';
 import { ContainerCountAccess } from './styles';
-import { type ICountData } from '../../../../shared/DataStructure';
+interface ICountData {
+  access: number;
+  available: number;
+  unavailable: number;
+}
 import { useTranslation } from '@ftdata/core';
 
 export default function CountAccess({ access, available, unavailable }: ICountData): JSX.Element {

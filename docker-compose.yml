@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: f-inspect-dev
+    container_name: f-macros-dev
     volumes:
       - .:/app
       - /app/node_modules
@@ -19,6 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: f-inspect-prod
+    container_name: f-macros-prod
     ports:
       - "8080:80"

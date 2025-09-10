@@ -1,5 +1,5 @@
 {
-  "name": "f-inspect",
+  "name": "f-macros",
   "private": true,
   "version": "0.0.0",
   "packageManager": "pnpm@10.13.1",

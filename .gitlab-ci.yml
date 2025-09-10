@@ -6,8 +6,8 @@ variables:
   DOCKERFILE: ""
 
   AWS_REGION_HOMOLOG: "us-east-1"
-  IMAGE_NAME_HOMOLOG: "f-inspect"
-  SERVICE_HOMOLOG: "f-inspect"
+  IMAGE_NAME_HOMOLOG: "f-macros"
+  SERVICE_HOMOLOG: "f-macros"
   CLUSTER_HOMOLOG: "WEB-DEV"
   DOCKERFILE_HOMOLOG: "Dockerfile"
 include:
