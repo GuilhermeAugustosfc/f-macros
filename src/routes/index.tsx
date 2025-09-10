@@ -1,14 +1,13 @@
 import type React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { ReportsProvider } from 'src/contexts/reports';
 import Welcome from 'src/pages/Welcome';
 import instance from 'src/services/instance';
 import { AppCore, DEFAULT_CONFIG } from '@ftdata/core';
 import { Settings } from 'src/pages/Settings';
+import { queryClient } from 'src/services/queryClient';
 
 const Routes: React.FC = () => {
-  const queryClient = new QueryClient();
-
   return (
     <ReportsProvider>
       <QueryClientProvider client={queryClient}>
