@@ -215,7 +215,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
               type="number"
               defaultValue={formState.referencePointSelected.value}
               placeholder={t('write')}
-              icon={ReferencePointIcon}
+              icon={<ReferencePointIcon />}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handlers.setReferencePointSelected((state) => ({
                   ...state,

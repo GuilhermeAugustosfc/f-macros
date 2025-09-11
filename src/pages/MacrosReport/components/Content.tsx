@@ -1,21 +1,11 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import React, { useState, useContext, useEffect, forwardRef } from 'react';
 import styled from 'styled-components';
 import Tabs from './Tabs';
 import { CustomTable } from './Table';
 import ExpandButton from './ExpandButton';
 import Empty from './Empty';
 import { ReportsContext } from '../../../contexts/reports';
-import { type ReportInsertData } from '../requets';
-import { type ICustomSelectOption } from '@ftdata/ui';
 import VehiclePagination from './Table/Pagination';
-import { type VehicleData } from './Table/type';
 import { type Table } from '@tanstack/react-table';
 
 export interface ContentHandle {
@@ -26,7 +16,7 @@ export interface ContentHandle {
 interface Props {
   expand: boolean;
   toggleExpand: () => void;
-  params: ReportInsertData;
+  params: any;
   handleOpenModal: () => void;
   setHasTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -36,8 +26,7 @@ const Content = forwardRef<ContentHandle, Props>(
     const [activeTab, setActiveTab] = useState<'report' | 'graphic'>('report');
     const showNavbar = !expand;
     const { hasFilter } = useContext(ReportsContext);
-    const [vehicleTableData, setVehicleTableData] = useState<Table<VehicleData> | null>(null);
-    const [graphicData, setGraphicData] = useState<Table<ICustomSelectOption> | null>(null);
+    const [vehicleTableData, setVehicleTableData] = useState<Table<any> | null>(null);
 
     useEffect(() => {
       setActiveTab('report');

@@ -10,34 +10,21 @@ import {
   getExpandedRowModel,
   type Table,
 } from '@tanstack/react-table';
-import { type VehicleData } from './type';
 import { ColumnsFunction } from './Columns';
 import Head from './Head';
 import Body from './Body';
 import styled from 'styled-components';
-import { UnreachableContent } from 'src/pages/FuelReport/components/UnreachableContent';
+import { UnreachableContent } from '../../components/UnreachableContent';
 import { useQuery } from 'react-query';
-import { type ReportInsertData, getReport } from '../../requets';
 
 const TableContent: React.FC<{
-  data: VehicleData[];
-  params: ReportInsertData;
-  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<VehicleData> | null>>;
+  data: any[];
+  params: any;
+  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
 }> = ({ data, params, setVehicleTableData }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    address: string;
-    latitude: number;
-    longitude: number;
-  }>({
-    isOpen: false,
-    address: '',
-    latitude: 0,
-    longitude: 0,
-  });
 
   const toggleAllExpanded = () => {
     setAllExpanded(!allExpanded);
@@ -46,10 +33,10 @@ const TableContent: React.FC<{
     }
   };
 
-  const columns = ColumnsFunction(customColumns, allExpanded, toggleAllExpanded);
+  const columns = ColumnsFunction(allExpanded, toggleAllExpanded);
   const table = useReactTable({
     data,
-    columns: columns as ColumnDef<VehicleData>[],
+    columns: columns as ColumnDef<any>[],
     state: {
       sorting,
       expanded: allExpanded
@@ -82,23 +69,6 @@ const TableContent: React.FC<{
     debugTable: true,
   });
 
-  const handleOpenModalReference = (data: {
-    address: string;
-    latitude: number;
-    longitude: number;
-  }) => {
-    setModalState({
-      isOpen: true,
-      address: data.address,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    });
-  };
-
-  const handleCloseModalReference = () => {
-    setModalState({ isOpen: false, address: '', latitude: 0, longitude: 0 });
-  };
-
   useEffect(() => {
     setVehicleTableData(table);
   }, [table]);
@@ -117,7 +87,6 @@ const TableContent: React.FC<{
               allExpanded={allExpanded}
               setAllExpanded={setAllExpanded}
               reportParams={params}
-              handleOpenModalReference={handleOpenModalReference}
             />
           </StyledTable>
         </ContainerTable>
@@ -128,8 +97,8 @@ const TableContent: React.FC<{
 
 interface TableProps {
   handleOpenModal: () => void;
-  params: ReportInsertData;
-  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<VehicleData> | null>>;
+  params: any;
+  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
 }
 
 export const CustomTable: React.FC<TableProps> = ({
@@ -140,7 +109,7 @@ export const CustomTable: React.FC<TableProps> = ({
   const { data: reportData, isFetching: reportLoading } = useQuery(
     `get_report/${JSON.stringify(params)}`,
     async () => {
-      const response = await getReport(params);
+      const response = { data: { data: [] } };
       return response.data.data;
     },
     { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 100 },
