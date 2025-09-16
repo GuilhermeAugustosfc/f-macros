@@ -6,7 +6,7 @@ export const Container = styled.div`
   background-color: #fff;
   border-radius: 4px;
   box-shadow: ${styleguide.SHADOW_LEVEL_02} rgba(107, 117, 124, 0.32);
-  height: 78vh;
+  height: 100%;
 `;
 
 export const Title3 = styled.h3`
@@ -28,7 +28,7 @@ export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 14px;
   padding: 1.5rem;
   border-radius: 4px;
   background-color: #fff;
@@ -40,20 +40,19 @@ export const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
   transition: all 0.2s;
   text-align: center;
 `;
 
 export const TextContent = styled.div`
   h4 {
-    margin-bottom: 12px;
-    margin-top: 1rem;
     font-weight: 600;
     color: ${styleguide.COLOR_CUSTOM_COLUMNBG};
   }
 
   p {
+    margin-bottom: 12px;
+    margin-top: 12px;
     color: ${styleguide.COLOR_NEUTRAL_DARKER};
   }
 `;

@@ -6,6 +6,7 @@ import instance from 'src/services/instance';
 import { AppCore, DEFAULT_CONFIG } from '@ftdata/core';
 import { Settings } from 'src/pages/Settings';
 import { queryClient } from 'src/services/queryClient';
+import MacrosReport from 'src/pages/MacrosReport';
 
 const Routes: React.FC = () => {
   return (
@@ -22,6 +23,10 @@ const Routes: React.FC = () => {
               {
                 path: '/settings',
                 element: <Settings />,
+              },
+              {
+                path: '/report',
+                element: <MacrosReport />,
               },
             ],
             navbar: {

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { HeaderContainer, IconContainer } from './styles';
+import { HeaderContainer } from './styles';
 import { ReportsContext } from '../../../../../contexts/reports';
 import { useTranslation } from '@ftdata/core';
 import { AddCircleIcon, ArrowLeftIcon, CheckIcon } from '../../svg';
@@ -7,18 +7,9 @@ import { AddCircleIcon, ArrowLeftIcon, CheckIcon } from '../../svg';
 interface Props {
   close: () => void;
   clearFilterCallback: () => void;
-  showCleanFilter: boolean;
-  changeTab: (index: number) => void;
-  changeCheckbox: () => void;
 }
 
-export const Header: React.FC<Props> = ({
-  close,
-  showCleanFilter,
-  clearFilterCallback,
-  changeTab,
-  changeCheckbox,
-}: Props) => {
+export const Header: React.FC<Props> = ({ close, clearFilterCallback }: Props) => {
   const { t } = useTranslation('114');
   const { clearFilter } = useContext(ReportsContext);
 
@@ -35,21 +26,10 @@ export const Header: React.FC<Props> = ({
         </button>
         <strong>{t('filter_2')}</strong>
       </div>
-      {showCleanFilter ? (
-        <button className="btn-clear" onClick={() => handleClearFilter()}>
-          {t('clear_filters')}
-        </button>
-      ) : (
-        <IconContainer>
-          <CheckIcon onClick={() => changeCheckbox()} />
-          <AddCircleIcon
-            onClick={() => {
-              changeTab(0);
-            }}
-            style={{ cursor: 'pointer' }}
-          />
-        </IconContainer>
-      )}
+
+      <button className="btn-clear" onClick={() => handleClearFilter()}>
+        {t('clear_filters')}
+      </button>
     </HeaderContainer>
   );
 };

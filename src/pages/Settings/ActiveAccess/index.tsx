@@ -20,8 +20,6 @@ import {
 import { ColumnsFunction } from './Columns';
 import { Button, Loading, Paragraph, Title } from '@ftdata/ui';
 
-import SearchIcon from '../../../assets/svgs/search-loupe.svg?react';
-import CloseIcon from '.././../../assets/svgs/close.svg?react';
 import { useQuery } from 'react-query';
 import Table from '../../../components/Table';
 interface ActivatedAccessItem {
@@ -37,6 +35,7 @@ import CountAccess from './CountAccess';
 import { useTranslation } from '@ftdata/core';
 import Empty from '../Empty';
 import { Pagination } from 'src/components/Table/Pagination';
+import { ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
 
 interface ICountData {
   access: number;
@@ -140,7 +139,7 @@ export function ActiveAccess(): JSX.Element {
                   />
                 </div>
                 {filterValue != '' && (
-                  <CloseIcon className="close" onClick={() => setFilterValue('')} />
+                  <ErrorIcon className="close" onClick={() => setFilterValue('')} />
                 )}
               </ContainerInput>
               {(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (

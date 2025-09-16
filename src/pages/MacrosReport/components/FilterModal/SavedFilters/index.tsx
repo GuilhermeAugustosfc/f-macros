@@ -18,8 +18,6 @@ import { Button, DoubleList, Loading } from '@ftdata/ui';
 import {
   BadgesContainer,
   BadgeTitle,
-  Checkbox,
-  CheckboxWrapper,
   ContainerButtons,
   CustomButton,
   FilterName,
@@ -34,10 +32,9 @@ import {
 import ConfirmDelete from './ConfirmDelete';
 interface SavedFiltersProps {
   applyFilter: (params: any, serialize?: boolean) => void;
-  showCheckbox: boolean;
 }
 
-export const SavedFilters = ({ applyFilter, showCheckbox }: SavedFiltersProps): JSX.Element => {
+export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element => {
   const { t } = useTranslation('114');
   const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -48,13 +45,6 @@ export const SavedFilters = ({ applyFilter, showCheckbox }: SavedFiltersProps): 
       setSelectedFilters([]);
     },
   });
-
-  const handleCheckboxClick = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation(); // Previne que o card seja clicado
-    setSelectedFilters((prev) =>
-      prev.includes(id) ? prev.filter((filterId) => filterId !== id) : [...prev, id],
-    );
-  };
 
   const handleDeleteSelected = () => {
     if (selectedFilters.length > 0) {
@@ -130,15 +120,6 @@ export const SavedFilters = ({ applyFilter, showCheckbox }: SavedFiltersProps): 
           itemFilterSaved.data.data.map((item: any, index: number) => (
             <SavedFilter key={item.id} onClick={() => applySavedFilters(item)}>
               <InfoContainer>
-                {showCheckbox && (
-                  <CheckboxWrapper onClick={(e) => handleCheckboxClick(e, item.id)}>
-                    <Checkbox
-                      type="checkbox"
-                      checked={selectedFilters.includes(item.id)}
-                      readOnly
-                    />
-                  </CheckboxWrapper>
-                )}
                 <FilterIcon />
                 <FilterName>
                   {t('filter')} {index + 1}

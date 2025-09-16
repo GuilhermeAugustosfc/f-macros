@@ -106,11 +106,57 @@ export const CustomTable: React.FC<TableProps> = ({
   params,
   setVehicleTableData,
 }: TableProps) => {
+  console.log(params);
+
   const { data: reportData, isFetching: reportLoading } = useQuery(
     `get_report/${JSON.stringify(params)}`,
     async () => {
-      const response = { data: { data: [] } };
-      return response.data.data;
+      // Dados fake baseados na imagem fornecida
+      const fakeData = [
+        {
+          ativo_id: '1',
+          veiculo: 'ABC123A4',
+          grupo_macros: 3,
+          duracao_total: '22:30',
+          analise_detalhada: true,
+        },
+        {
+          ativo_id: '2',
+          veiculo: 'SVF452A8',
+          grupo_macros: 3,
+          duracao_total: '44:00',
+          analise_detalhada: true,
+        },
+        {
+          ativo_id: '3',
+          veiculo: 'HGG453B9',
+          grupo_macros: 5,
+          duracao_total: '40:05',
+          analise_detalhada: true,
+        },
+        {
+          ativo_id: '4',
+          veiculo: 'JKT982F7',
+          grupo_macros: 2,
+          duracao_total: '37:30',
+          analise_detalhada: true,
+        },
+        {
+          ativo_id: '5',
+          veiculo: 'PLM567H2',
+          grupo_macros: 4,
+          duracao_total: '48:00',
+          analise_detalhada: true,
+        },
+        {
+          ativo_id: '6',
+          veiculo: 'ABC123A4',
+          grupo_macros: 3,
+          duracao_total: '25:54',
+          analise_detalhada: true,
+        },
+      ];
+      return fakeData;
     },
     { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 100 },
   );

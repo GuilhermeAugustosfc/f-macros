@@ -1,5 +1,5 @@
 import React, { Fragment, type ReactNode } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
 import { Header } from '../Header';
 
 interface Props {
@@ -18,9 +18,9 @@ export const TransitionContainer: React.FC<Props> = ({
   titleHeader,
 }: Props) => {
   return (
-    <Transition.Root show={isOpen} as={Fragment}>
+    <Transition show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={open}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-in-out duration-500"
           enterFrom="opacity-0"
@@ -30,12 +30,12 @@ export const TransitionContainer: React.FC<Props> = ({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
                 enterFrom="translate-x-full"
@@ -44,20 +44,20 @@ export const TransitionContainer: React.FC<Props> = ({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-lg">
+                <DialogPanel className="pointer-events-auto relative w-screen max-w-lg">
                   <div className="flex h-screen flex-col overflow-y-scroll bg-white shadow-xl">
-                    <Dialog.Title>
+                    <DialogTitle>
                       <Header title={titleHeader} close={close} />
-                    </Dialog.Title>
+                    </DialogTitle>
 
                     <div className="relative flex flex-1">{children}</div>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 };

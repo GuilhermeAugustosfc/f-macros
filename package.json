@@ -20,7 +20,7 @@
     "@ftdata/f-tokens": "^0.0.1",
     "@ftdata/http": "^0.0.1",
     "@ftdata/ui": "^0.0.7",
-    "@headlessui/react": "^2.2.4",
+    "@headlessui/react": "^2.2.8",
     "@tanstack/react-table": "^8.21.3",
     "DateRangePicker": "link:rsuite/esm/DateRangePicker",
     "axios": "^1.10.0",

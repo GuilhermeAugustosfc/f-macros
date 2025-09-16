@@ -11,8 +11,7 @@ import { MainContainer, ReportWrapper } from './styles';
 const FuelReport: React.FC = () => {
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
   const { t } = useTranslation('114');
-  const [expandView, setExpandView] = useState(false);
-  const showHeaderAndFilterOptions = !expandView;
+
   const { hasFilter, clearFilter } = useContext(ReportsContext);
   //   const { pathname } = useLocation();
   // const { setCurrentPage } = useConfiguration();
@@ -31,10 +30,6 @@ const FuelReport: React.FC = () => {
     setFilterModalOpen(true);
   }
 
-  function toggleExpandView() {
-    setExpandView((state) => !state);
-  }
-
   function clearFilterCallback() {
     setFilterModalOpen(false);
   }
@@ -46,20 +41,14 @@ const FuelReport: React.FC = () => {
 
   return (
     <MainContainer>
-      <ReportWrapper hasPagination={hasTable && hasFilter}>
-        <Header
-          title={t('fuel_management_reports_and_charts')}
-          openFilter={handleOpenModal}
-          showHeader={showHeaderAndFilterOptions}
-        />
+      <ReportWrapper $hasPagination={hasTable && hasFilter}>
+        <Header title={'Macros Personalizadas'} openFilter={handleOpenModal} />
 
         <Content
           ref={contentRef}
           setHasTable={setHasTable}
           params={params}
           handleOpenModal={handleOpenModal}
-          expand={expandView}
-          toggleExpand={toggleExpandView}
         />
 
         <FilterModal

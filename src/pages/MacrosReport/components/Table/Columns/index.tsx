@@ -1,11 +1,16 @@
-import React from 'react';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { AddCircleIcon, MinusIcon, VehicleIcon } from '../../svg';
+import {
+  AddCircleIcon,
+  MinusIcon,
+  VehicleIcon,
+  GroupIcon,
+  RelatoriosIcon,
+  ClockIcon,
+} from '../../svg';
 
 const columnHelper = createColumnHelper<any>();
 
 import styled from 'styled-components';
-import { useTranslation } from '@ftdata/core';
 
 const DivValue = styled.div`
   display: flex;
@@ -16,6 +21,36 @@ const DivValue = styled.div`
   svg,
   path {
     stroke: white;
+  }
+`;
+
+const CellValue = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  svg,
+  path {
+    stroke: #26333b;
+  }
+`;
+
+const DurationValue = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #26333b;
+`;
+
+const AnalysisIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  svg,
+  path {
+    stroke: #26333b;
   }
 `;
 
@@ -34,36 +69,76 @@ export const ColumnsFunction = (
   allExpanded: boolean,
   toggleAllRowsExpanded: () => void,
 ): ColumnDef<any, unknown>[] => {
-  const { t } = useTranslation('114');
   const allColumns = [
     columnHelper.accessor('ativo_id', {
       header: () => (
         <IconContainer>
           {allExpanded ? (
-            <MinusIcon stroke="white" onClick={toggleAllRowsExpanded} />
+            <MinusIcon width={24} height={24} stroke="white" onClick={toggleAllRowsExpanded} />
           ) : (
-            <AddCircleIcon stroke="white" onClick={toggleAllRowsExpanded} />
+            <AddCircleIcon width={24} height={24} stroke="white" onClick={toggleAllRowsExpanded} />
           )}
         </IconContainer>
       ),
       cell: (info) => (
         <IconContainer>
           {!info.row.getIsExpanded() ? (
-            <AddCircleIcon stroke="#26333B" onClick={() => info.row.toggleExpanded()} />
+            <AddCircleIcon
+              width={24}
+              height={24}
+              stroke="#26333B"
+              onClick={() => info.row.toggleExpanded()}
+            />
           ) : (
-            <MinusIcon stroke="#26333B" onClick={() => info.row.toggleExpanded()} />
+            <MinusIcon
+              width={24}
+              height={24}
+              stroke="#26333B"
+              onClick={() => info.row.toggleExpanded()}
+            />
           )}
         </IconContainer>
       ),
     }),
-    columnHelper.accessor('ativo_desc', {
+    columnHelper.accessor('veiculo', {
       header: () => (
         <DivValue>
-          <VehicleIcon stroke="white" />
-          <span>{t('vehicle')}</span>
+          <VehicleIcon width={24} height={24} stroke="white" />
+          <span>Veículo</span>
         </DivValue>
       ),
-      cell: (info) => <DivValue>{info.row.original.ativo_desc}</DivValue>,
+      cell: (info) => <CellValue>{info.row.original.veiculo}</CellValue>,
+    }),
+    columnHelper.accessor('grupo_macros', {
+      header: () => (
+        <DivValue>
+          <GroupIcon width={24} height={24} stroke="white" />
+          <span>Grupo de Macros Vinculados</span>
+        </DivValue>
+      ),
+      cell: (info) => <CellValue>{info.row.original.grupo_macros}</CellValue>,
+    }),
+    columnHelper.accessor('duracao_total', {
+      header: () => (
+        <DivValue>
+          <ClockIcon width={24} height={24} stroke="white" />
+          <span>Duração Total</span>
+        </DivValue>
+      ),
+      cell: (info) => <DurationValue>{info.row.original.duracao_total}</DurationValue>,
+    }),
+    columnHelper.accessor('analise_detalhada', {
+      header: () => (
+        <DivValue>
+          <RelatoriosIcon width={24} height={24} stroke="white" />
+          <span>Análise Detalhada</span>
+        </DivValue>
+      ),
+      cell: () => (
+        <AnalysisIcon>
+          <RelatoriosIcon width={24} height={24} stroke="#26333B" />
+        </AnalysisIcon>
+      ),
     }),
   ];
 

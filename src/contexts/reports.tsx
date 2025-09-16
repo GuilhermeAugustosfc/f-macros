@@ -29,6 +29,8 @@ interface IReportsContext {
   setStartTimeValue: (value: TimeRange) => void;
   endTimeValue: TimeRange;
   setEndTimeValue: (value: TimeRange) => void;
+  gruposMacros: ICustomSelectOption;
+  setGruposMacros: (value: ICustomSelectOption) => void;
 }
 
 const ReportsContext = createContext<IReportsContext>({} as IReportsContext);
@@ -53,6 +55,7 @@ const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     isChecked: false,
     value: 100,
   });
+  const [gruposMacros, setGruposMacros] = useState<ICustomSelectOption>(emptyValue);
   const [period, setPeriod] = useState<DateRange | null>({
     startDate: startOfDay(new Date()),
     endDate: endOfDay(new Date()),
@@ -94,6 +97,8 @@ const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         endTimeValue,
         setEndTimeValue,
         startTimeValue,
+        gruposMacros,
+        setGruposMacros,
       }}
     >
       {children}

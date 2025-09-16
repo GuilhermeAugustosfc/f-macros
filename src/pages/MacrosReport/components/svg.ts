@@ -1,42 +1,44 @@
-import FilterIcon from './Svgs/filter.svg?react';
-import FilterAppliedIcon from './Svgs/filter-applied.svg?react';
-import ClientIcon from './Svgs/client.svg?react';
-import CalendarIcon from './Svgs/calendar.svg?react';
-import VehicleIcon from './Svgs/vehicle.svg?react';
-import DriverIcon from './Svgs/driver.svg?react';
-import ArrowLeftIcon from './Svgs/arrow-left.svg?react';
-import DriverHeaderIcon from './Svgs/driver-header.svg?react';
-import DownloadIcon from './Svgs/download.svg?react';
-import DownloadGrossoIcon from './Svgs/download-grosso.svg?react';
-import QuestionIcon from './Svgs/question.svg?react';
-import ReportIcon from './Svgs/report.svg?react';
-import AddCircleIcon from './Svgs/add-circle.svg?react';
-import MinusIcon from './Svgs/minus.svg?react';
-import ZoomInIcon from './Svgs/zoom-in.svg?react';
-import ZoomOutIcon from './Svgs/zoom-out.svg?react';
-import SettingsIcon from './Svgs/settings.svg?react';
-import ExcelIcon from './Svgs/excel.svg?react';
-import PDFIcon from './Svgs/pdf.svg?react';
-import HelperIcon from './Svgs/helper.svg?react';
-import EmptyReportIcon from './Svgs/empty-report.svg?react';
-import UnreachableContentIcon from './Svgs/unreachable-content.svg?react';
-import UpIcon from './Svgs/up.svg?react';
-import DownIcon from './Svgs/down.svg?react';
-import ArrowDownCalender from './Svgs/arrow-down-calender.svg';
-import ExpandFullScreenIcon from './Svgs/expand-fullscreen.svg?react';
-import ReferencePointIcon from './Svgs/reference-point.svg?react';
-import IgnitionStatusMovingIcon from './Svgs/ignition_status_moving.svg?react';
-import IgnitionStatusOffIcon from './Svgs/ignition_status_off.svg?react';
-import IgnitionStatusOnIcon from './Svgs/ignition_status_on.svg?react';
-import RelatoriosIcon from './Svgs/relatorio.svg?react';
-import EmailIcon from './Svgs/email.svg?react';
-import EnderecoArrowIcon from './Svgs/popup-arrow.svg?react';
-import CheckIcon from './Svgs/check.svg?react';
-import SinoIcon from './Svgs/sino.svg?react';
+import FilterIcon from '../../../assets/svgs/filter.svg?react';
+import FilterAppliedIcon from '../../../assets/svgs/filter-applied.svg?react';
+import ClientIcon from '../../../assets/svgs/client.svg?react';
+import CalendarIcon from '../../../assets/svgs/calendar.svg?react';
+import VehicleIcon from '../../../assets/svgs/vehicle.svg?react';
+import DriverIcon from '../../../assets/svgs/driver.svg?react';
+import ArrowLeftIcon from '../../../assets/svgs/arrow-left.svg?react';
+import DriverHeaderIcon from '../../../assets/svgs/driver-header.svg?react';
+import DownloadIcon from '../../../assets/svgs/download.svg?react';
+import DownloadGrossoIcon from '../../../assets/svgs/download-grosso.svg?react';
+import QuestionIcon from '../../../assets/svgs/question.svg?react';
+import AddCircleIcon from '../../../assets/svgs/add-circle.svg?react';
+import MinusIcon from '../../../assets/svgs/minus.svg?react';
+import ZoomInIcon from '../../../assets/svgs/zoom-in.svg?react';
+import ZoomOutIcon from '../../../assets/svgs/zoom-out.svg?react';
+import SettingsIcon from '../../../assets/svgs/settings.svg?react';
+import ExcelIcon from '../../../assets/svgs/excel.svg?react';
+import PDFIcon from '../../../assets/svgs/pdf.svg?react';
+import HelperIcon from '../../../assets/svgs/helper.svg?react';
+import EmptyReportIcon from '../../../assets/svgs/empty-report.svg?react';
+import UnreachableContentIcon from '../../../assets/svgs/unreachable-content.svg?react';
+import UpIcon from '../../../assets/svgs/up.svg?react';
+import DownIcon from '../../../assets/svgs/down.svg?react';
+import ArrowDownCalender from '../../../assets/svgs/arrow-down-calender.svg';
+import ReferencePointIcon from '../../../assets/svgs/reference-point.svg?react';
+import IgnitionStatusMovingIcon from '../../../assets/svgs/ignition_status_moving.svg?react';
+import IgnitionStatusOffIcon from '../../../assets/svgs/ignition_status_off.svg?react';
+import IgnitionStatusOnIcon from '../../../assets/svgs/ignition_status_on.svg?react';
+import RelatoriosIcon from '../../../assets/svgs/relatorio.svg?react';
+import EmailIcon from '../../../assets/svgs/email.svg?react';
+import EnderecoArrowIcon from '../../../assets/svgs/popup-arrow.svg?react';
+import CheckIcon from '../../../assets/svgs/check.svg?react';
+import SinoIcon from '../../../assets/svgs/sino.svg?react';
 import PreviousIcon from './Svgs/previous';
 import NextIcon from './Svgs/next';
-import SearchIcon from './Svgs/search-loupe.svg?react';
-
+import SearchIcon from '../../../assets/svgs/search-loupe.svg?react';
+import ErrorIcon from '../../../assets/svgs/error.svg?react';
+import SuccessIcon from '../../../assets/svgs/done-check-checkmark.svg?react';
+import UserIcon from '../../../assets/icons-details/user.svg?react';
+import GroupIcon from '../../../assets/svgs/group.svg?react';
+import ClockIcon from '../../../assets/svgs/clock.svg?react';
 export {
   FilterIcon,
   FilterAppliedIcon,
@@ -49,7 +51,6 @@ export {
   DownloadIcon,
   DownloadGrossoIcon,
   QuestionIcon,
-  ReportIcon,
   AddCircleIcon,
   MinusIcon,
   PreviousIcon,
@@ -65,7 +66,6 @@ export {
   DownIcon,
   UpIcon,
   ArrowDownCalender,
-  ExpandFullScreenIcon,
   ReferencePointIcon,
   IgnitionStatusMovingIcon,
   IgnitionStatusOffIcon,
@@ -76,4 +76,9 @@ export {
   CheckIcon,
   SinoIcon,
   SearchIcon,
+  ErrorIcon,
+  SuccessIcon,
+  UserIcon,
+  GroupIcon,
+  ClockIcon,
 };

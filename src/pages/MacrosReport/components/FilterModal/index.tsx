@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Tab } from '@headlessui/react';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { TransitionContainer } from './TransitionContainer';
 import { Form } from './Form';
 import { TabsContainer } from './styles';
@@ -11,7 +11,6 @@ interface Props {
   open: () => void;
   close: () => void;
   clearFilterCallback: () => void;
-  showCleanFilter: boolean;
   applyFilter: (params: any, serialize?: boolean) => void;
 }
 
@@ -20,35 +19,21 @@ export const FilterModal: React.FC<Props> = ({
   open,
   close,
   applyFilter,
-  showCleanFilter,
   clearFilterCallback,
 }: Props) => {
   const [currentTab, setCurrentTab] = useState(0);
   const { t } = useTranslation('114');
-
-  const changeTab = (index: number) => {
-    setCurrentTab(index);
-  };
-
-  const [showCheckbox, setShowCheckbox] = useState(false);
-
-  const changeCheckbox = () => {
-    setShowCheckbox(!showCheckbox);
-  };
 
   return (
     <TransitionContainer
       isOpen={isOpen}
       close={close}
       open={open}
-      showCleanFilter={showCleanFilter && currentTab === 0}
       clearFilterCallback={clearFilterCallback}
-      changeTab={changeTab}
-      changeCheckbox={changeCheckbox}
     >
       <TabsContainer>
-        <Tab.Group selectedIndex={currentTab} onChange={setCurrentTab}>
-          <Tab.List className="tab-list">
+        <TabGroup selectedIndex={currentTab} onChange={setCurrentTab}>
+          <TabList className="tab-list">
             <Tab as={Fragment}>
               {({ selected }) => (
                 <button className={selected ? 'tab selected' : 'tab'}>{t('filter_by')}</button>
@@ -59,16 +44,16 @@ export const FilterModal: React.FC<Props> = ({
                 <button className={selected ? 'tab selected' : 'tab'}>{t('saved_filters')}</button>
               )}
             </Tab>
-          </Tab.List>
-          <Tab.Panels className="tab-panels">
-            <Tab.Panel className="tab-panel">
+          </TabList>
+          <TabPanels className="tab-panels">
+            <TabPanel className="tab-panel">
               <Form close={close} applyFilter={(params) => applyFilter(params)} />
-            </Tab.Panel>
-            <Tab.Panel className="tab-panel">
-              <SavedFilters showCheckbox={showCheckbox} applyFilter={applyFilter} />
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
+            </TabPanel>
+            <TabPanel className="tab-panel">
+              <SavedFilters applyFilter={applyFilter} />
+            </TabPanel>
+          </TabPanels>
+        </TabGroup>
       </TabsContainer>
     </TransitionContainer>
   );

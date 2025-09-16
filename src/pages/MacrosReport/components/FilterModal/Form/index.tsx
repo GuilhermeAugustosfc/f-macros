@@ -15,7 +15,13 @@ import {
 } from './styles';
 import { type FormProps } from './types';
 import { useFormLogic } from './useFormLogic';
-import { CalendarIcon, ClientIcon, DriverIcon, ReferencePointIcon } from '../../svg';
+import {
+  CalendarIcon,
+  ClientIcon,
+  DriverHeaderIcon,
+  GroupIcon,
+  ReferencePointIcon,
+} from '../../svg';
 import { addDays, format, startOfMonth } from 'date-fns';
 import { TimeSelector } from './TimeSelector';
 
@@ -56,7 +62,8 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
     <FormContainer>
       <FormContent height={window.innerHeight <= 730 ? '75%' : '82%'}>
         <Select
-          icon={<ClientIcon />}
+          label="Cliente"
+          icon={<ClientIcon width={24} height={24} />}
           width="100%"
           placeholder={t('select')}
           options={selectOptions.clientsOptions}
@@ -78,7 +85,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
             onClick={() => handlers.setShowDatePicker(!formState.showDatePicker)}
             className="btn-calendar"
           >
-            <CalendarIcon />
+            <CalendarIcon width={24} height={24} />
             {dateRanges.initialRangeWithTime && dateRanges.endRangeWithTime
               ? `${dateRanges.initialRangeWithTime} - ${dateRanges.endRangeWithTime}`
               : t('choose')}
@@ -183,9 +190,9 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
         />
 
         <Select
-          icon={<DriverIcon />}
+          icon={<DriverHeaderIcon width={24} height={24} />}
           width="100%"
-          label={t('driver')}
+          label="Motorista"
           placeholder={t('select')}
           options={[{ label: t('all_drivers'), value: '0' }, ...selectOptions.motoristaOptions]}
           isError={!!errors.motorista}
@@ -194,7 +201,20 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
           t={t}
           selected={formState.selectedMotorista}
           setSelected={handlers.setSelectedMotorista}
-          value={formState.selectedMotorista.value}
+        />
+
+        <Select
+          icon={<GroupIcon width={24} height={24} />}
+          width="100%"
+          label={'Grupos de macros'}
+          placeholder={t('select')}
+          options={[{ label: t('all_drivers'), value: '0' }, ...selectOptions.gruposMacrosOptions]}
+          isError={!!errors.gruposMacros}
+          helpText={errors.gruposMacros ? t('this_field_is_required') : ''}
+          required
+          t={t}
+          selected={formState.selectedGruposMacros}
+          setSelected={handlers.setSelectedGruposMacros}
         />
 
         <SwitchReference>
@@ -215,7 +235,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
               type="number"
               defaultValue={formState.referencePointSelected.value}
               placeholder={t('write')}
-              icon={<ReferencePointIcon />}
+              icon={<ReferencePointIcon width={24} height={24} />}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handlers.setReferencePointSelected((state) => ({
                   ...state,

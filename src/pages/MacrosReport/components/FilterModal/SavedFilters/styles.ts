@@ -124,18 +124,6 @@ export const DeleteBar = styled.div<{ maxHeight: number }>`
   }
 `;
 
-export const CheckboxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 0.5rem;
-`;
-
-export const Checkbox = styled.input`
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-`;
-
 export const show = keyframes`
     0% {
         opacity: 0;

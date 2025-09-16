@@ -25,12 +25,15 @@ const ManagementReports: React.FC = () => {
 
           <CardContent>
             <TextContent>
-              <Title size="md">F/Inspect</Title>
-              <Paragraph size="sm">{t('description_text_finspect')}</Paragraph>
+              <Title size="md">Macros Personalizadas</Title>
+              <Paragraph size="sm">
+                Acompanhe em tempo real os estados operacionais da sua frota e transforme dados em
+                decisões estratégicas com eficiência e precisão.
+              </Paragraph>
             </TextContent>
 
             <StyledButton onClick={() => navigate('/report')}>
-              <Button variant="primary">{t('access')}</Button>
+              <Button variant="primary">Acessar</Button>
             </StyledButton>
           </CardContent>
         </CardContainer>

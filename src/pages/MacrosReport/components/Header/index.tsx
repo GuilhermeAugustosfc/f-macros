@@ -20,15 +20,22 @@ import { CustomTooltip, TooltipVehicleList } from './CustomTooltip';
 
 interface Props {
   title: string;
-  showHeader?: boolean;
   openFilter?: () => void;
 }
 
-const Header: React.FC<Props> = ({ title, openFilter, showHeader = true }: Props) => {
+const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
   const { t } = useTranslation('114');
 
-  const { client, period, vehicle, hasFilter, referencePoint, startTimeValue, endTimeValue } =
-    useContext(ReportsContext);
+  const {
+    client,
+    period,
+    vehicle,
+    hasFilter,
+    referencePoint,
+    startTimeValue,
+    endTimeValue,
+    gruposMacros,
+  } = useContext(ReportsContext);
 
   let range = '';
 
@@ -46,18 +53,16 @@ const Header: React.FC<Props> = ({ title, openFilter, showHeader = true }: Props
     )} ${endHour}:${endMinute}:${endSecond}`;
   }
 
-  if (!showHeader) {
-    return null;
-  }
-
   return (
     <Container>
       <HeaderContainer justifyContent="space-between">
         <Title>{title}</Title>
-        <DownloadButton variant="primary" disabled={!hasFilter}>
-          <DownloadIcon />
-          {t('download')}
-        </DownloadButton>
+        {hasFilter && (
+          <DownloadButton variant="primary" disabled={!hasFilter}>
+            <DownloadIcon />
+            {t('download')}
+          </DownloadButton>
+        )}
       </HeaderContainer>
       <HeaderContainer justifyContent={hasFilter ? 'space-between' : 'flex-end'}>
         {hasFilter && (
@@ -146,6 +151,14 @@ const Header: React.FC<Props> = ({ title, openFilter, showHeader = true }: Props
                 </Tooltips>
               )}
             </div>
+            {gruposMacros && (
+              <Tooltips position="top" text={t('grupos_macros')}>
+                <Badge>
+                  {/* <GroupIcon /> */}
+                  <p>{gruposMacros.value}</p>
+                </Badge>
+              </Tooltips>
+            )}
           </SelectedFilters>
         )}
         <ContainerRight>
@@ -158,7 +171,7 @@ const Header: React.FC<Props> = ({ title, openFilter, showHeader = true }: Props
             <Input
               value={''}
               onChange={(e) => {}}
-              icon={<SearchIcon />}
+              icon={<SearchIcon width={24} height={24} />}
               placeholder={t('research') + '...'}
             />
           </InputAction>
@@ -172,7 +185,7 @@ const Container = styled.div``;
 
 const HeaderContainer = styled.header<{ justifyContent: string }>`
   border-bottom: 0.0625rem solid ${styleguide.COLOR_NEUTRAL_LIGHT};
-  padding: 0.75rem 2rem;
+  padding: 16px 24px;
   display: flex;
   gap: 1rem;
   justify-content: ${({ justifyContent }) => justifyContent};
@@ -191,7 +204,7 @@ const Title = styled.h2`
 
 const ContainerRight = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 16px;
   align-items: center;
 `;
 
@@ -201,7 +214,12 @@ const ContainerBadges = styled.div`
   align-items: center;
 `;
 
-const FilterButton = styled.button``;
+const FilterButton = styled.button`
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
 
 const DownloadButton = styled(Button)`
   background-color: ${styleguide.COLOR_BRAND_MEDIUM};

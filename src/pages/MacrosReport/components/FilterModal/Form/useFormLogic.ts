@@ -19,6 +19,7 @@ import {
   getDrivers,
   getVehicles,
   insertSavedFilter,
+  getGroups,
 } from 'src/pages/MacrosReport/requets';
 import { useToast } from 'src/contexts/toast';
 import { type ICustomSelectOption } from '@ftdata/ui';
@@ -35,13 +36,21 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
   const [selectedMotorista, setSelectedMotorista] = useState<ICustomSelectOption | null>(
     emptyValue,
   );
+  const [selectedGruposMacros, setSelectedGruposMacros] = useState<ICustomSelectOption | null>(
+    emptyValue,
+  );
   const [selectedRange, setSelectedRange] = useState<Range[]>([
     { startDate: new Date(), endDate: new Date(), key: 'selection' },
   ]);
   const [startTime, setStartTime] = useState<TimeRange>({ hour: '00', minute: '00', second: '00' });
   const [endTime, setEndTime] = useState<TimeRange>({ hour: '23', minute: '59', second: '59' });
   const language = 'pt-BR';
-  const [errors, setErrors] = useState({ client: false, vehicle: false, motorista: false });
+  const [errors, setErrors] = useState({
+    client: false,
+    vehicle: false,
+    motorista: false,
+    gruposMacros: false,
+  });
   const [referencePointSelected, setReferencePointSelected] = useState<ReferencePoint>({
     isChecked: false,
     value: 100,
@@ -62,6 +71,8 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     setMotorista,
     setStartTimeValue,
     setEndTimeValue,
+    setGruposMacros,
+    gruposMacros,
   } = useContext(ReportsContext);
 
   const { data: clienteData } = useQuery(
@@ -114,6 +125,23 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     },
   );
 
+  const { data: dataGruposMacros } = useQuery(
+    ['gruposMacros', selectedClient?.value],
+    () => getGroups({ customer_id: Number(selectedClient?.value) }).then((res) => res.data.data),
+    {
+      staleTime: 1000 * 60 * 30,
+      enabled: Boolean(selectedClient?.value),
+      refetchOnWindowFocus: false,
+      select: (data) =>
+        data.map(
+          (grupo): ICustomSelectOption => ({
+            value: grupo.id.toString(),
+            label: grupo.grupo_desc,
+          }),
+        ),
+    },
+  );
+
   useEffect(() => {
     const handler = (event: MouseEvent) => {
       if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
@@ -136,8 +164,10 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
   }, [selectedClient, activeRefetch]);
 
   const setPreSelectedValues = useCallback(() => {
-    if (client.value) setSelectedClient({ value: client.value, label: client.value });
+    if (client.value) setSelectedClient({ value: client.value, label: client.label });
     if (vehicle.length) setSelectedVehicle(vehicle);
+    if (gruposMacros.value)
+      setSelectedGruposMacros({ value: gruposMacros.value, label: gruposMacros.label });
     if (period?.endDate && period?.startDate) {
       setSelectedRange([
         {
@@ -148,18 +178,17 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       ]);
     }
     if (referencePoint) setReferencePointSelected(referencePoint);
-    if (motorista.value) setSelectedMotorista({ value: motorista.value, label: motorista.value });
+    if (motorista.value) setSelectedMotorista({ value: motorista.value, label: motorista.label });
 
     setStartTime(startTime);
     setEndTime(endTime);
   }, [
     client.value,
-    client.value,
     vehicle.length,
+    gruposMacros.value,
     period?.endDate,
     period?.startDate,
     referencePoint,
-    motorista.value,
     motorista.value,
     startTime,
     endTime,
@@ -184,6 +213,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       saveFilters,
       startTime,
       endTime,
+      selectedGruposMacros,
     };
 
     const params = Object.entries(data).map(([id, value]) => ({ id, value }));
@@ -192,6 +222,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       client: !selectedClient?.value,
       vehicle: selectedVehicle.length === 0,
       motorista: !selectedMotorista?.value,
+      gruposMacros: !selectedGruposMacros?.value,
     };
     setErrors(newErrors);
 
@@ -210,6 +241,9 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
         ativo_id: data.selectedVehicle.map((item) => item.value).join(','),
       }),
       ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
+      ...(data.selectedGruposMacros?.value && {
+        group_id: Number(data.selectedGruposMacros.value),
+      }),
       initial_data: data.selectedRange[0].startDate
         ? format(
             setSeconds(
@@ -234,13 +268,12 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
             'dd/MM/yyyy HH:mm:ss',
           )
         : '',
-      options: {
-        ponto_referencia: data.referencePointSelected.isChecked
-          ? data.referencePointSelected.value == 0
-            ? 100
-            : data.referencePointSelected.value
-          : 0,
-      },
+
+      ponto_referencia: data.referencePointSelected.isChecked
+        ? data.referencePointSelected.value == 0
+          ? 100
+          : data.referencePointSelected.value
+        : 0,
     };
 
     applyFilter(formSavedData);
@@ -248,15 +281,13 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     if (data.saveFilters) {
       const insertItem = {
         ...formSavedData,
-        options: {
-          ...formSavedData.options,
-          ativos: data.selectedVehicle.map((item) => ({
-            ativo_id: item.value,
-            ativo_plate: item.label,
-            ativo_desc: item.label,
-          })),
-        },
+        ativos: data.selectedVehicle.map((item) => ({
+          ativo_id: item.value,
+          ativo_plate: item.label,
+          ativo_desc: item.label,
+        })),
       };
+
       delete insertItem.ativo_id;
 
       insertSavedFilter(insertItem).then(() => {
@@ -275,6 +306,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     selectedVehicle,
     selectedRange,
     selectedMotorista,
+    selectedGruposMacros,
     referencePointSelected,
     saveFilters,
     startTime,
@@ -289,6 +321,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     insertSavedFilter,
     setStartTimeValue,
     setEndTimeValue,
+    setGruposMacros,
   ]);
 
   const updateContextValues = (data: any) => {
@@ -321,6 +354,10 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     if (data.endTime) {
       setEndTimeValue(data.endTime);
     }
+
+    if (data.selectedGruposMacros) {
+      setGruposMacros(data.selectedGruposMacros);
+    }
   };
 
   const getFirstAndLastDayOfPreviousMonth = useCallback(() => {
@@ -335,14 +372,16 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       clientsOptions: clienteData ?? ([] as ICustomSelectOption[]),
       vehicleOptions: dataAtivos ?? ([] as ICustomSelectOption[]),
       motoristaOptions: dataMotoristas ?? ([] as ICustomSelectOption[]),
+      gruposMacrosOptions: dataGruposMacros ?? ([] as ICustomSelectOption[]),
     };
   }, [clienteData, dataAtivos, dataMotoristas]);
 
   return {
     formState: {
       selectedClient: selectedClient ?? emptyValue,
-      selectedVehicle,
       selectedMotorista: selectedMotorista ?? emptyValue,
+      selectedGruposMacros: selectedGruposMacros ?? emptyValue,
+      selectedVehicle,
       selectedRange,
       startTime,
       endTime,
@@ -360,6 +399,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       setReferencePointSelected,
       setSaveFilters,
       setShowDatePicker,
+      setSelectedGruposMacros,
     },
     selectOptions,
     errors,

@@ -18,9 +18,9 @@ interface VehicleResponse {
   plate: string;
 }
 
-interface VehicleGroupResponse {
+interface MacrosGroupResponse {
   id: number;
-  desc: string;
+  grupo_desc: string;
 }
 
 // Novos endpoints do Postman
@@ -49,6 +49,35 @@ export const getVehicles = (params?: {
   group_id?: number;
 }): Promise<AxiosResponse<{ total: number; last_id: number | null; data: VehicleResponse[] }>> => {
   return api.get('/fuel/v1/reports/vehicles', { params });
+};
+
+export const getGroups = (params?: {
+  limit?: number;
+  search?: string;
+  last_id?: number;
+  customer_id?: number;
+}): Promise<
+  AxiosResponse<{ total: number; last_id: number | null; data: MacrosGroupResponse[] }>
+> => {
+  // Dados simulados
+  const dadosFake: MacrosGroupResponse[] = [
+    { id: 1, grupo_desc: 'Grupo Urbano' },
+    { id: 2, grupo_desc: 'Grupo Rodoviário' },
+    { id: 3, grupo_desc: 'Grupo Especial' },
+    { id: 4, grupo_desc: 'Grupo VIP' },
+    { id: 5, grupo_desc: 'Grupo Express' },
+  ];
+
+  // Simula resposta da API
+  const resposta = {
+    data: {
+      total: dadosFake.length,
+      last_id: null,
+      data: dadosFake,
+    },
+  };
+
+  return Promise.resolve(resposta as AxiosResponse<any>);
 };
 
 export const insertSavedFilter = (data: any): Promise<AxiosResponse<{ id: number }>> => {

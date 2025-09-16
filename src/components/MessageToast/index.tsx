@@ -1,6 +1,6 @@
 import React from 'react';
-import ErrorIcon from 'src/assets/svgs/error.svg?react';
-import SuccessIcon from 'src/assets/svgs/done-check-checkmark.svg?react';
+import { SuccessIcon } from 'src/pages/MacrosReport/components/svg';
+import { ErrorIcon } from 'src/pages/MacrosReport/components/svg';
 import styled from 'styled-components';
 
 export interface MessageToastProps {

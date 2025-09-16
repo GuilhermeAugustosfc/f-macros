@@ -14,14 +14,15 @@ const Empty: React.FC<Props> = ({ openModal }: Props) => {
 
   return (
     <ContainerEmpty>
-      <EmptyReportIcon data-testid="empty-report-icon" />
+      <EmptyReportIcon />
       <div>
-        <Title size="md">{t('no_filters_applied')}</Title>
+        <Title size="md">Nenhum filtro aplicado</Title>
         <Paragraph size="caption" style={{ width: '338px', textAlign: 'center' }}>
-          {t('filter_to_generate_customized_reports_and_graphs_for_your_fleets_fuel_management')}
+          Aplique os filtros para gerar relatórios e verificar as jornadas com macros personalizadas
+          da sua frota.
         </Paragraph>
         <Button variant="primary" onClick={openModal}>
-          {t('apply_filters')}
+          Aplicar filtros
         </Button>
       </div>
     </ContainerEmpty>
@@ -29,7 +30,7 @@ const Empty: React.FC<Props> = ({ openModal }: Props) => {
 };
 
 const ContainerEmpty = styled.div`
-  padding: 3rem 0;
+  padding: 129px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,12 +38,14 @@ const ContainerEmpty = styled.div`
 
   svg {
     margin-bottom: 24px;
+    width: 150px;
+    height: 150px;
   }
 
   div {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
     align-items: center;
   }
 `;

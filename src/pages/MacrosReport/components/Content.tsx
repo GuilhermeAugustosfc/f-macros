@@ -1,36 +1,25 @@
 import React, { useState, useContext, useEffect, forwardRef } from 'react';
 import styled from 'styled-components';
-import Tabs from './Tabs';
 import { CustomTable } from './Table';
-import ExpandButton from './ExpandButton';
 import Empty from './Empty';
 import { ReportsContext } from '../../../contexts/reports';
-import VehiclePagination from './Table/Pagination';
 import { type Table } from '@tanstack/react-table';
-
+import { UserIcon } from './svg';
 export interface ContentHandle {
   prepareGraphicsForExport: () => Promise<void>;
   resetExportStyles: () => void;
 }
 
 interface Props {
-  expand: boolean;
-  toggleExpand: () => void;
   params: any;
   handleOpenModal: () => void;
   setHasTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Content = forwardRef<ContentHandle, Props>(
-  ({ expand, params, toggleExpand, handleOpenModal, setHasTable }: Props, ref) => {
-    const [activeTab, setActiveTab] = useState<'report' | 'graphic'>('report');
-    const showNavbar = !expand;
+  ({ params, handleOpenModal, setHasTable }: Props) => {
     const { hasFilter } = useContext(ReportsContext);
     const [vehicleTableData, setVehicleTableData] = useState<Table<any> | null>(null);
-
-    useEffect(() => {
-      setActiveTab('report');
-    }, [params]);
 
     useEffect(() => {
       if (vehicleTableData) {
@@ -43,37 +32,35 @@ const Content = forwardRef<ContentHandle, Props>(
     return (
       <>
         <Container>
-          <ContainerTabs
-            expand={expand}
-            toggleExpand={toggleExpand}
-            params={params}
-            handleOpenModal={handleOpenModal}
-            setHasTable={setHasTable}
-          >
-            {showNavbar ? <Tabs activeTab={activeTab} setActiveTab={setActiveTab} /> : <div />}
-
-            {!expand && <ExpandButton toggleExpand={toggleExpand} />}
-          </ContainerTabs>
+          <PageHeader>
+            <HeaderContent>
+              <Title>Relatório de Macros Personalizadas</Title>
+              <Description>
+                Acompanhe a jornada e status personalizados da sua frota a qualquer momento e em
+                tempo real.
+              </Description>
+            </HeaderContent>
+            <VehicleTypeContainer>
+              <InfoBadge>
+                <UserIcon />
+                <BadgeText>Admin - Permissão de Edição Total</BadgeText>
+              </InfoBadge>
+            </VehicleTypeContainer>
+          </PageHeader>
           <ContainerContent>
             {hasFilter ? (
               <>
-                {activeTab === 'report' && (
-                  <CustomTable
-                    handleOpenModal={handleOpenModal}
-                    params={params}
-                    setVehicleTableData={setVehicleTableData}
-                  />
-                )}
+                <CustomTable
+                  handleOpenModal={handleOpenModal}
+                  params={params}
+                  setVehicleTableData={setVehicleTableData}
+                />
               </>
             ) : (
               <Empty openModal={handleOpenModal} />
             )}
           </ContainerContent>
         </Container>
-        {activeTab === 'report' &&
-          vehicleTableData &&
-          hasFilter &&
-          vehicleTableData.getPageCount() > 1 && <VehiclePagination table={vehicleTableData} />}
       </>
     );
   },
@@ -86,8 +73,77 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 1.5rem;
   position: relative;
+`;
+
+const PageHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const HeaderContent = styled.div`
+  display: grid;
+  grid-template-columns: max-content;
+  grid-template-rows: max-content;
+  place-items: start;
+  flex-shrink: 0;
+`;
+
+const Title = styled.h1`
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #26333b;
+  margin: 0;
+  white-space: nowrap;
+`;
+
+const Description = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6b757c;
+  margin: 10px 0 0 0;
+  white-space: nowrap;
+`;
+
+const VehicleTypeContainer = styled.div`
+  display: grid;
+  grid-template-columns: max-content;
+  grid-template-rows: max-content;
+  place-items: start;
+  flex-shrink: 0;
+`;
+
+const InfoBadge = styled.div`
+  background-color: #e6f4f0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+`;
+
+const BadgeText = styled.div`
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #004834;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const ContainerContent = styled.div`
@@ -101,13 +157,6 @@ const ContainerContent = styled.div`
 
   // Esconde a barra de rolagem no IE e Edge
   -ms-overflow-style: none;
-`;
-
-const ContainerTabs = styled.div<Props>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0rem 2rem 0rem 1.5rem; // 32px para 2rem e 24px para 1.5rem
 `;
 
 export default Content;

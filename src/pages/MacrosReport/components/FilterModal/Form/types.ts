@@ -1,4 +1,4 @@
-import type { ICustomSelectOption, IMultiSelectOption } from '@ftdata/ui';
+import type { ICustomSelectOption } from '@ftdata/ui';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type Range } from 'react-date-range';
 
@@ -23,12 +23,14 @@ export interface FormState {
   referencePointSelected: ReferencePoint;
   saveFilters: boolean;
   showDatePicker: boolean;
+  selectedGruposMacros: ICustomSelectOption;
 }
 
 export interface FormErrors {
   client: boolean;
   vehicle: boolean;
   motorista: boolean;
+  gruposMacros: boolean;
 }
 
 export interface FormHandlers {
@@ -41,12 +43,14 @@ export interface FormHandlers {
   setReferencePointSelected: Dispatch<SetStateAction<ReferencePoint>>;
   setSaveFilters: Dispatch<SetStateAction<boolean>>;
   setShowDatePicker: Dispatch<SetStateAction<boolean>>;
+  setSelectedGruposMacros: Dispatch<SetStateAction<ICustomSelectOption | null>>;
 }
 
 export interface SelectOptions {
   clientsOptions: ICustomSelectOption[];
   vehicleOptions: ICustomSelectOption[];
   motoristaOptions: ICustomSelectOption[];
+  gruposMacrosOptions: ICustomSelectOption[];
 }
 
 export interface UseFormLogicReturn {
@@ -56,6 +60,7 @@ export interface UseFormLogicReturn {
     clientsOptions: ICustomSelectOption[];
     vehicleOptions: ICustomSelectOption[];
     motoristaOptions: ICustomSelectOption[];
+    gruposMacrosOptions: ICustomSelectOption[];
   };
   errors: FormErrors;
   selectRef: React.RefObject<HTMLDivElement>;

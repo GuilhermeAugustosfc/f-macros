@@ -21,7 +21,7 @@ export const ContainerPresentation = styled.div`
     align-items: center;
     gap: 1.125rem;
     font-weight: ${styleguide.FONT_WEIGHT_BOLD};
-    margin-bottom: 0.625rem;
+    margin-bottom: 10px;
 
     span {
       padding: 0 0.5rem;
@@ -41,8 +41,4 @@ export const ContainerButtonConfiguration = styled.div`
   display: flex;
   height: 3.438rem;
   align-items: center;
-
-  & > button {
-    background: transparent;
-  }
 `;
