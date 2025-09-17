@@ -21,7 +21,7 @@ import { ColumnsFunction } from './Columns';
 import { Button, Loading, Paragraph, Title } from '@ftdata/ui';
 
 import { useQuery } from 'react-query';
-import Table from '../../../components/Table';
+// import Table from '../../../components/Table';
 interface ActivatedAccessItem {
   checkbox: boolean;
   ativo_id: string;
@@ -34,7 +34,7 @@ interface ActivatedAccessItem {
 import CountAccess from './CountAccess';
 import { useTranslation } from '@ftdata/core';
 import Empty from '../Empty';
-import { Pagination } from 'src/components/Table/Pagination';
+// import { Pagination } from 'src/components/Table/Pagination';
 import { ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
 
 interface ICountData {
@@ -161,13 +161,13 @@ export function ActiveAccess(): JSX.Element {
           </ContainerLoading>
         ) : listAccess && listAccess?.length > 0 ? (
           <ContainerTableGrid>
-            <Table<ActivatedAccessItem> table={table} setSorting={setSorting} pagination={<></>} />
+            {/* <Table<ActivatedAccessItem> table={table} setSorting={setSorting} pagination={<></>} /> */}
           </ContainerTableGrid>
         ) : (
           <Empty />
         )}
       </ContainerTabContent>
-      {!isLoading && listAccess && listAccess.length > 0 && <Pagination table={table} />}
+      {/* {!isLoading && listAccess && listAccess.length > 0 && <Pagination table={table} />} */}
     </>
   );
 }

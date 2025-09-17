@@ -31,6 +31,8 @@ interface IReportsContext {
   setEndTimeValue: (value: TimeRange) => void;
   gruposMacros: ICustomSelectOption;
   setGruposMacros: (value: ICustomSelectOption) => void;
+  isModalDetalhesOpen: boolean;
+  setIsModalDetalhesOpen: (value: boolean) => void;
 }
 
 const ReportsContext = createContext<IReportsContext>({} as IReportsContext);
@@ -63,6 +65,7 @@ const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   } as DateRange);
   const [ativo, setAtivo] = useState<ICustomSelectOption>(emptyValue);
   const [hasFilter, setHasFilter] = useState<boolean>(false);
+  const [isModalDetalhesOpen, setIsModalDetalhesOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setHasFilter(Boolean(client.value || ativo.value || period));
@@ -99,6 +102,8 @@ const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         startTimeValue,
         gruposMacros,
         setGruposMacros,
+        isModalDetalhesOpen,
+        setIsModalDetalhesOpen,
       }}
     >
       {children}

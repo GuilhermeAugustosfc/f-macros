@@ -1,12 +1,7 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import {
-  AddCircleIcon,
-  MinusIcon,
-  VehicleIcon,
-  GroupIcon,
-  RelatoriosIcon,
-  ClockIcon,
-} from '../../svg';
+import { AddCircleIcon, MinusIcon, VehicleIcon, GroupIcon, ChartIcon, ClockIcon } from '../../svg';
+import { useContext } from 'react';
+import { ReportsContext } from '../../../../../contexts/reports';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -69,6 +64,7 @@ export const ColumnsFunction = (
   allExpanded: boolean,
   toggleAllRowsExpanded: () => void,
 ): ColumnDef<any, unknown>[] => {
+  const { setIsModalDetalhesOpen } = useContext(ReportsContext);
   const allColumns = [
     columnHelper.accessor('ativo_id', {
       header: () => (
@@ -130,13 +126,13 @@ export const ColumnsFunction = (
     columnHelper.accessor('analise_detalhada', {
       header: () => (
         <DivValue>
-          <RelatoriosIcon width={24} height={24} stroke="white" />
+          <ChartIcon width={24} height={24} stroke="white" />
           <span>Análise Detalhada</span>
         </DivValue>
       ),
       cell: () => (
-        <AnalysisIcon>
-          <RelatoriosIcon width={24} height={24} stroke="#26333B" />
+        <AnalysisIcon onClick={() => setIsModalDetalhesOpen(true)}>
+          <ChartIcon width={24} height={24} stroke="#26333B" />
         </AnalysisIcon>
       ),
     }),

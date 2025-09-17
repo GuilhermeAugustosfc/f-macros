@@ -6,6 +6,8 @@ import {
   type SortingState,
   useReactTable,
   getPaginationRowModel,
+  type ColumnDef,
+  getExpandedRowModel,
 } from '@tanstack/react-table';
 import Head from './Head';
 import { ColumnsFunction } from './Columns';
@@ -14,19 +16,25 @@ import Pagination from './Pagination';
 import styled from 'styled-components';
 import { Loading } from '@ftdata/ui';
 
-import { getAddress } from 'src/components/Tracking/utils/common';
-
 interface Props {
-  reportParams: any;
   isEven: boolean;
-  ativo_id: number;
 }
 
-const SubTable: React.FC<Props> = ({ reportParams, isEven, ativo_id }: Props) => {
+const SubTable: React.FC<Props> = ({ isEven }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const columns = ColumnsFunction();
+  const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
+  const [allExpanded, setAllExpanded] = useState(false);
+
+  const toggleAllExpanded = () => {
+    setAllExpanded(!allExpanded);
+    if (allExpanded) {
+      setExpandedRowId(null);
+    }
+  };
+
+  const columns = ColumnsFunction(allExpanded, toggleAllExpanded);
 
   const [pagination, setPagination] = useState({
     limit: 10,
@@ -39,55 +47,57 @@ const SubTable: React.FC<Props> = ({ reportParams, isEven, ativo_id }: Props) =>
       setIsLoading(true);
       const currentLimit = table.getState().pagination.pageSize;
 
-      const currentSorting = table.getState().sorting[0];
-      const orderField = currentSorting?.id as string;
-      const orderDirection = currentSorting?.desc ? 'desc' : 'asc';
-      const requestParams: any = {
-        ...reportParams,
-        ativo_id: ativo_id.toString(),
-        limit: currentLimit,
-        page: page,
-      };
+      // Simular ordenação se necessário
 
-      if (orderField) {
-        requestParams.order_field = orderField;
-        requestParams.order = orderDirection;
-      }
+      // Dados fakes baseados na imagem fornecida
+      const fakeData = [
+        {
+          grupo_macros: 'Fazenda 4 Estações',
+          duracao_total: '08:00',
+        },
+        {
+          grupo_macros: 'Plantio Norte',
+          duracao_total: '12:30',
+        },
+        {
+          grupo_macros: 'Colheita Sul',
+          duracao_total: '15:45',
+        },
+        {
+          grupo_macros: 'Irrigação Central',
+          duracao_total: '06:20',
+        },
+        {
+          grupo_macros: 'Fertilização Leste',
+          duracao_total: '09:15',
+        },
+        {
+          grupo_macros: 'Monitoramento Oeste',
+          duracao_total: '11:30',
+        },
+        {
+          grupo_macros: 'Manutenção Geral',
+          duracao_total: '04:45',
+        },
+        {
+          grupo_macros: 'Controle de Pragas',
+          duracao_total: '07:20',
+        },
+      ];
 
-      const response = { data: { data: [{ loc: [0, 0] }], total: 0 } };
-      const newData = response?.data?.data;
+      // Simular paginação
+      const startIndex = (page - 1) * currentLimit;
+      const endIndex = startIndex + currentLimit;
+      const paginatedData = fakeData.slice(startIndex, endIndex);
 
-      if (!newData || !Array.isArray(newData)) {
-        console.error('Erro: Dados da resposta são inválidos ou indefinidos.', response);
-        setData([]);
-        setPagination((prev) => ({
-          ...prev,
-          total: 0,
-        }));
-        setIsLoading(false);
-        return;
-      }
-
-      const addressParams = newData.map((item, index) => ({
-        code: index,
-        latitude: item.loc[0],
-        longitude: item.loc[1],
-      }));
-
-      getAddress(addressParams, (addressFormated) => {
-        const dataWithAddresses = newData.map((item, index) => ({
-          ...item,
-          address: addressFormated[index] || '',
-        }));
-        setData(dataWithAddresses);
-        setIsLoading(false);
-      });
-
+      setData(paginatedData);
       setPagination((prevPagination) => ({
         limit: currentLimit,
-        total: response?.data?.total,
+        total: fakeData.length,
         pageIndex: prevPagination.pageIndex,
       }));
+
+      setIsLoading(false);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
       setIsLoading(false);
@@ -95,15 +105,37 @@ const SubTable: React.FC<Props> = ({ reportParams, isEven, ativo_id }: Props) =>
   };
 
   const table = useReactTable({
-    data: data,
-    columns,
+    data,
+    columns: columns as ColumnDef<any>[],
     state: {
       sorting,
+      expanded: allExpanded
+        ? data.reduce((acc, _, index) => ({ ...acc, [index]: true }), {})
+        : expandedRowId
+          ? { [expandedRowId]: true }
+          : {},
     },
     onSortingChange: setSorting,
+    onExpandedChange: (updater) => {
+      const newExpanded =
+        typeof updater === 'function' ? updater(table.getState().expanded) : updater;
+      const expandedKeys = Object.keys(newExpanded);
+
+      if (expandedKeys.length === 0) {
+        setAllExpanded(false);
+        setExpandedRowId(null);
+      } else if (expandedKeys.length === data.length) {
+        setAllExpanded(true);
+        setExpandedRowId(null);
+      } else {
+        setAllExpanded(false);
+        setExpandedRowId(expandedKeys[0]);
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     manualPagination: true,
     pageCount: pagination.total > 0 ? Math.ceil(pagination.total / pagination.limit) : 0,
     debugTable: true,
@@ -128,7 +160,7 @@ const SubTable: React.FC<Props> = ({ reportParams, isEven, ativo_id }: Props) =>
         <>
           <StyledTable>
             <Head setSorting={setSorting} table={table} />
-            <Body table={table} />
+            <Body table={table} isEven={isEven} />
           </StyledTable>
           <Pagination isEven={isEven} total={pagination.total} table={table} />
         </>

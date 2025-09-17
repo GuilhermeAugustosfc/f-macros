@@ -21,7 +21,7 @@ import EmptyReportIcon from '../../../assets/svgs/empty-report.svg?react';
 import UnreachableContentIcon from '../../../assets/svgs/unreachable-content.svg?react';
 import UpIcon from '../../../assets/svgs/up.svg?react';
 import DownIcon from '../../../assets/svgs/down.svg?react';
-import ArrowDownCalender from '../../../assets/svgs/arrow-down-calender.svg';
+import ArrowDownCalender from '../../../assets/svgs/arrow-down-calender.svg?react';
 import ReferencePointIcon from '../../../assets/svgs/reference-point.svg?react';
 import IgnitionStatusMovingIcon from '../../../assets/svgs/ignition_status_moving.svg?react';
 import IgnitionStatusOffIcon from '../../../assets/svgs/ignition_status_off.svg?react';
@@ -39,6 +39,9 @@ import SuccessIcon from '../../../assets/svgs/done-check-checkmark.svg?react';
 import UserIcon from '../../../assets/icons-details/user.svg?react';
 import GroupIcon from '../../../assets/svgs/group.svg?react';
 import ClockIcon from '../../../assets/svgs/clock.svg?react';
+import ChartIcon from '../../../assets/svgs/chart.svg?react';
+import RouteIcon from '../../../assets/svgs/route.svg?react';
+import CloseIcon from '../../../assets/svgs/close.svg?react';
 export {
   FilterIcon,
   FilterAppliedIcon,
@@ -81,4 +84,7 @@ export {
   UserIcon,
   GroupIcon,
   ClockIcon,
+  ChartIcon,
+  RouteIcon,
+  CloseIcon,
 };

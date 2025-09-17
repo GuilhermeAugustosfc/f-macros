@@ -19,9 +19,8 @@ import { useQuery } from 'react-query';
 
 const TableContent: React.FC<{
   data: any[];
-  params: any;
   setVehicleTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
-}> = ({ data, params, setVehicleTableData }) => {
+}> = ({ data, setVehicleTableData }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
@@ -86,7 +85,6 @@ const TableContent: React.FC<{
               setSorting={setSorting}
               allExpanded={allExpanded}
               setAllExpanded={setAllExpanded}
-              reportParams={params}
             />
           </StyledTable>
         </ContainerTable>
@@ -176,9 +174,7 @@ export const CustomTable: React.FC<TableProps> = ({
     return <UnreachableContent openModal={handleOpenModal} />;
   }
 
-  return (
-    <TableContent data={reportData} params={params} setVehicleTableData={setVehicleTableData} />
-  );
+  return <TableContent data={reportData} setVehicleTableData={setVehicleTableData} />;
 };
 
 const ContainerTable = styled.div`

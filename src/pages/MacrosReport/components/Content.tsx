@@ -5,6 +5,7 @@ import Empty from './Empty';
 import { ReportsContext } from '../../../contexts/reports';
 import { type Table } from '@tanstack/react-table';
 import { UserIcon } from './svg';
+import { ModalDetalhesGrupos } from '../../../components/ModalDetalhesGrupos';
 export interface ContentHandle {
   prepareGraphicsForExport: () => Promise<void>;
   resetExportStyles: () => void;
@@ -18,7 +19,7 @@ interface Props {
 
 const Content = forwardRef<ContentHandle, Props>(
   ({ params, handleOpenModal, setHasTable }: Props) => {
-    const { hasFilter } = useContext(ReportsContext);
+    const { hasFilter, isModalDetalhesOpen, setIsModalDetalhesOpen } = useContext(ReportsContext);
     const [vehicleTableData, setVehicleTableData] = useState<Table<any> | null>(null);
 
     useEffect(() => {
@@ -61,6 +62,10 @@ const Content = forwardRef<ContentHandle, Props>(
             )}
           </ContainerContent>
         </Container>
+        <ModalDetalhesGrupos
+          isOpen={isModalDetalhesOpen}
+          onClose={() => setIsModalDetalhesOpen(false)}
+        />
       </>
     );
   },

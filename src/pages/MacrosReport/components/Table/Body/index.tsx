@@ -11,7 +11,6 @@ interface Props {
   setExpandedRowId: React.Dispatch<React.SetStateAction<string | null>>;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
   allExpanded: boolean;
-  reportParams: any;
   setAllExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -20,7 +19,6 @@ const Body: React.FC<Props> = ({
   expandedRowId,
   setExpandedRowId,
   allExpanded,
-  reportParams,
   setAllExpanded,
 }: Props) => {
   const handleExpand = (rowId: string) => {
@@ -65,11 +63,7 @@ const Body: React.FC<Props> = ({
                   style={{ borderBottom: '1px solid #ccc' }}
                   colSpan={row.getVisibleCells().length}
                 >
-                  <SubTable
-                    isEven={isEven}
-                    ativo_id={row.original.ativo_id}
-                    reportParams={reportParams}
-                  />
+                  <SubTable isEven={isEven} />
                 </td>
               </AnimatedTr>
             )}
@@ -125,7 +119,7 @@ const TdBody = styled.td<{ isFirstColumn: boolean }>`
   border-right: 1px solid #b1b7bb;
   border-bottom: 1px solid #b1b7bb;
   font-weight: bold;
-  width: ${({ isFirstColumn }) => (isFirstColumn ? '1.875rem' : 'initial')}; // 30px para rem
+  width: ${({ isFirstColumn }) => (isFirstColumn ? '32px' : 'initial')}; // 30px para rem
   padding-left: ${({ isFirstColumn }) =>
     isFirstColumn ? '0.3125rem' : '0.625rem'}; // 5px para rem
   padding-right: ${({ isFirstColumn }) =>
@@ -135,6 +129,11 @@ const TdBody = styled.td<{ isFirstColumn: boolean }>`
     gap: 0.625rem; // 10px para rem
     justify-content: ${({ isFirstColumn }) => (isFirstColumn ? 'center' : 'flex-start')};
     cursor: pointer;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
   text-align: center;
   vertical-align: middle;

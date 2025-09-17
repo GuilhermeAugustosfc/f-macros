@@ -1,39 +1,103 @@
-import React from 'react';
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { IgnitionStatusMovingIcon, IgnitionStatusOffIcon, IgnitionStatusOnIcon } from '../../svg';
-import { useTranslation } from '@ftdata/core';
+import { GroupIcon, ClockIcon, AddCircleIcon, MinusIcon } from '../../svg';
+import styled from 'styled-components';
+
 const columnHelper = createColumnHelper<any>();
 
-export const ColumnsFunction = (): ColumnDef<any>[] => {
-  const { t } = useTranslation('114');
-  const status_icons = [
-    <IgnitionStatusOffIcon key="off" />,
-    <IgnitionStatusOnIcon key="on" />,
-    <IgnitionStatusMovingIcon key="moving" />,
-  ];
+const DivValue = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  cursor: pointer;
+  svg,
+  path {
+    stroke: white;
+  }
+`;
 
+const CellValue = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  svg,
+  path {
+    stroke: #26333b;
+  }
+`;
+
+const DurationValue = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #26333b;
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg,
+  path {
+    stroke: #26333b;
+  }
+`;
+
+export const ColumnsFunction = (
+  allExpanded: boolean,
+  toggleAllRowsExpanded: () => void,
+): ColumnDef<any>[] => {
   const allColumns = [
-    columnHelper.accessor('data', {
-      header: () => <span>{t('dt_gps')}</span>,
-      cell: (info) => <span>{info.getValue()}</span>,
+    columnHelper.accessor('expand', {
+      header: () => (
+        <IconContainer>
+          {allExpanded ? (
+            <MinusIcon width={24} height={24} stroke="white" onClick={toggleAllRowsExpanded} />
+          ) : (
+            <AddCircleIcon width={24} height={24} stroke="white" onClick={toggleAllRowsExpanded} />
+          )}
+        </IconContainer>
+      ),
+      cell: (info) => (
+        <IconContainer>
+          {!info.row.getIsExpanded() ? (
+            <AddCircleIcon
+              width={24}
+              height={24}
+              stroke="#26333B"
+              onClick={() => info.row.toggleExpanded()}
+            />
+          ) : (
+            <MinusIcon
+              width={24}
+              height={24}
+              stroke="#26333B"
+              onClick={() => info.row.toggleExpanded()}
+            />
+          )}
+        </IconContainer>
+      ),
     }),
-    columnHelper.accessor('driver', {
-      header: () => <span className="mr-2">{t('driver')}</span>,
-      cell: (info) => <span>{info.getValue() == 'PADRAO' ? '-' : info.getValue()}</span>,
+    columnHelper.accessor('grupo_macros', {
+      header: () => (
+        <DivValue>
+          <GroupIcon width={24} height={24} stroke="white" />
+          <span>Grupo de Macros</span>
+        </DivValue>
+      ),
+      cell: (info) => <CellValue>{info.getValue()}</CellValue>,
     }),
-    columnHelper.accessor('status', {
-      header: () => <span className="mr-2">{t('status')}</span>,
-      cell: (info) => {
-        return (
-          <span style={{ display: 'flex', justifyContent: 'center' }}>
-            {status_icons[info.getValue()]}
-          </span>
-        );
-      },
-    }),
-    columnHelper.accessor('reference_point', {
-      header: () => <span>{t('reference_point')}</span>,
-      cell: (info) => <span>{info.getValue().length ? info.getValue().join(', ') : '-'}</span>,
+    columnHelper.accessor('duracao_total', {
+      header: () => (
+        <DivValue>
+          <ClockIcon width={24} height={24} stroke="white" />
+          <span>Duração Total</span>
+        </DivValue>
+      ),
+      cell: (info) => <DurationValue>{info.getValue()}</DurationValue>,
     }),
   ];
 
