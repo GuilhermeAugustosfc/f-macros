@@ -211,7 +211,6 @@ const LoadingContainer = styled.div`
 const StyledTableWrapper = styled.div<{ isEven: boolean }>`
   padding: 12px;
   background-color: ${({ isEven }) => (isEven ? '#F5F5F5' : '#fff')};
-  overflow: hidden;
   border-radius: 8px;
   margin: 8px 0;
 `;
@@ -220,7 +219,6 @@ const StyledTable = styled.table`
   width: 100%;
   background-color: white;
   border-radius: 8px;
-  overflow: hidden;
   border-collapse: collapse;
 `;
 

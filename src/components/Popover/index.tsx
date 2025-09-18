@@ -73,7 +73,7 @@ export const Popover = ({
   type,
   closeToast,
 }: Props): JSX.Element => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   return (
     <>

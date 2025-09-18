@@ -10,7 +10,7 @@ import { MainContainer, ReportWrapper } from './styles';
 
 const FuelReport: React.FC = () => {
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   const { hasFilter, clearFilter } = useContext(ReportsContext);
   //   const { pathname } = useLocation();
@@ -54,7 +54,6 @@ const FuelReport: React.FC = () => {
         <FilterModal
           isOpen={isFilterModalOpen}
           open={handleOpenModal}
-          showCleanFilter={hasFilter}
           clearFilterCallback={clearFilterCallback}
           close={() => setFilterModalOpen(false)}
           applyFilter={(form) => {

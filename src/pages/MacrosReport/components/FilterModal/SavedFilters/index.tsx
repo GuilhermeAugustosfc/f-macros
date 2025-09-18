@@ -35,7 +35,7 @@ interface SavedFiltersProps {
 }
 
 export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   const [selectedFilters, setSelectedFilters] = useState<number[]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 

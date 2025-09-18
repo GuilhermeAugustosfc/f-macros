@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const UnreachableContent: React.FC<Props> = ({ openModal }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   return (
     <Container>
       <UnreachableContentIcon />

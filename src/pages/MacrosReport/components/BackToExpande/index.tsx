@@ -13,7 +13,7 @@ export const BackToExpand: React.FC<BackToExpandProps> = ({
   toggleExpand,
   setComponentLeftMenu,
 }) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   const { style } = useSettings();
   return (
     <BackButton

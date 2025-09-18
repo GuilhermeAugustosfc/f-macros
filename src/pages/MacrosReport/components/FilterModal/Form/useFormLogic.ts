@@ -26,7 +26,7 @@ import { type ICustomSelectOption } from '@ftdata/ui';
 import { queryClient } from 'src/services/queryClient';
 
 export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicReturn => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const selectRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
 

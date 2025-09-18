@@ -1,4 +1,4 @@
-import { type JSX } from 'react';
+import { type JSX, useState } from 'react';
 import {
   ContainerTabs,
   ContentContainerGrid,
@@ -10,10 +10,17 @@ import { Tab } from './Tab';
 import { Title } from '@ftdata/ui';
 import { ActiveAccess } from './ActiveAccess';
 import KeyIcon from '../../assets/svgs/key.svg?react';
+import GroupIcon from '../../assets/svgs/group.svg?react';
 import { useTranslation } from '@ftdata/core';
 
 export const Settings = (): JSX.Element => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<'access' | 'groups'>('access');
+
+  const handleTabClick = (tab: 'access' | 'groups') => {
+    setActiveTab(tab);
+  };
+
   return (
     <GridContainer>
       <TittleContainerGrid>
@@ -21,11 +28,23 @@ export const Settings = (): JSX.Element => {
       </TittleContainerGrid>
       <TabsContainerGrid>
         <ContainerTabs>
-          <Tab icon={KeyIcon} title={t('access_activation')} />
+          <Tab
+            icon={KeyIcon}
+            title={t('access_activation')}
+            isActive={activeTab === 'access'}
+            onClick={() => handleTabClick('access')}
+          />
+          <Tab
+            icon={GroupIcon}
+            title="Grupos de Macros"
+            isActive={activeTab === 'groups'}
+            onClick={() => handleTabClick('groups')}
+          />
         </ContainerTabs>
       </TabsContainerGrid>
       <ContentContainerGrid>
-        <ActiveAccess />
+        {activeTab === 'access' && <ActiveAccess />}
+        {activeTab === 'groups' && <div>Conteúdo dos Grupos de Macros</div>}
       </ContentContainerGrid>
     </GridContainer>
   );

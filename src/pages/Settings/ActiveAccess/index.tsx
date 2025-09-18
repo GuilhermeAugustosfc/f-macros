@@ -1,4 +1,4 @@
-import { useState, type JSX } from 'react';
+import React, { useState, type JSX } from 'react';
 import {
   ContainerActions,
   ContainerHeader,
@@ -9,24 +9,15 @@ import {
   ContainerTableGrid,
   HeaderDescription,
 } from '../styles';
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  type SortingState,
-  getFilteredRowModel,
-} from '@tanstack/react-table';
-import { ColumnsFunction } from './Columns';
 import { Button, Loading, Paragraph, Title } from '@ftdata/ui';
-
+import TableContent from './Table';
 import { useQuery } from 'react-query';
-// import Table from '../../../components/Table';
 interface ActivatedAccessItem {
   checkbox: boolean;
   ativo_id: string;
   client: string;
   plate: string;
+  vehicle: string;
   activation_date: string;
   deactivation_date: string;
   is_active: number;
@@ -45,15 +36,79 @@ interface ICountData {
 
 export const INITIAL_DATA_COUNT: ICountData = {
   access: 0,
-  available: 0,
+  available: 6,
   unavailable: 0,
 };
 
+// Dados fake baseados na imagem
+const FAKE_DATA: ActivatedAccessItem[] = [
+  {
+    checkbox: false,
+    ativo_id: '345',
+    client: 'Márcio',
+    plate: 'JHG-6372',
+    vehicle: 'Fox',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+  {
+    checkbox: false,
+    ativo_id: '236',
+    client: 'Márcio',
+    plate: 'POG-6382',
+    vehicle: 'BMW',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+  {
+    checkbox: false,
+    ativo_id: '12',
+    client: 'Márcio',
+    plate: 'FTS-9243',
+    vehicle: 'Gol',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+  {
+    checkbox: false,
+    ativo_id: '67',
+    client: 'Márcio',
+    plate: 'QWD-1246',
+    vehicle: 'Fox',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+  {
+    checkbox: false,
+    ativo_id: '98',
+    client: 'Márcio',
+    plate: 'CGH-7548',
+    vehicle: 'Gol',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+  {
+    checkbox: false,
+    ativo_id: '125',
+    client: 'Márcio',
+    plate: 'LIH-7543',
+    vehicle: 'Fox',
+    activation_date: '',
+    deactivation_date: '',
+    is_active: 0, // Desativado
+  },
+];
+
 export function ActiveAccess(): JSX.Element {
   const { t } = useTranslation();
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [filterValue, setFilterValue] = useState('');
-  const columns = ColumnsFunction();
+  const [, setTableData] = useState<any>(null);
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
   const { data: countAccess, refetch: refetchCountAccess } = useQuery(
     'countAccess',
@@ -64,44 +119,34 @@ export function ActiveAccess(): JSX.Element {
     data: listAccess,
     refetch: refetchListAccess,
     isLoading,
-  } = useQuery('listAccess', () => [] as ActivatedAccessItem[]);
+  } = useQuery('listAccess', () => FAKE_DATA);
 
-  const table = useReactTable({
-    data: listAccess || [],
-    columns: columns,
-    state: {
-      globalFilter: filterValue,
-      sorting,
-    },
-    globalFilterFn: (row, _columnID, value: string) => {
-      const plate = `${row.original.plate.toLocaleLowerCase()} - ${row.original.ativo_id.toLocaleLowerCase()}`;
-      const isPlate = plate.includes(value.toLocaleLowerCase());
-      const isClient = row.original.client.toLocaleLowerCase().includes(value.toLocaleLowerCase());
+  // Filtro local dos dados
+  const filteredData = React.useMemo(() => {
+    if (!listAccess) return [];
+    if (!filterValue) return listAccess;
+
+    return listAccess.filter((item) => {
+      const plate = `${item.plate.toLowerCase()} - ${item.ativo_id.toLowerCase()}`;
+      const isPlate = plate.includes(filterValue.toLowerCase());
+      const isClient = item.client.toLowerCase().includes(filterValue.toLowerCase());
       return isPlate || isClient;
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setFilterValue,
-    debugTable: true,
-  });
+    });
+  }, [listAccess, filterValue]);
 
   const handleAccess = async (action: 'deactivate' | 'activate') => {
-    const activeValue = action === 'activate' ? 0 : 1;
-    const items = table
-      .getGroupedSelectedRowModel()
-      .rows.filter((e) => e.original.is_active === activeValue);
+    if (selectedRows.size === 0) return;
 
-    if (items.length > 0) {
-      if (action === 'activate') {
-        console.log('activate');
-      } else {
-        console.log('deactivate');
-      }
+    const selectedItems = filteredData.filter((item) => selectedRows.has(item.ativo_id));
+
+    if (action === 'activate') {
+      console.log('activate', selectedItems);
+    } else {
+      console.log('deactivate', selectedItems);
     }
 
-    table.resetRowSelection();
+    // Limpar seleção após ação
+    setSelectedRows(new Set());
     refetchListAccess();
     refetchCountAccess();
     notificationSuccess(action);
@@ -142,7 +187,7 @@ export function ActiveAccess(): JSX.Element {
                   <ErrorIcon className="close" onClick={() => setFilterValue('')} />
                 )}
               </ContainerInput>
-              {(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (
+              {selectedRows.size > 0 && (
                 <div className="btn-actions">
                   <Button variant="primary" onClick={() => handleAccess('activate')}>
                     {t('activate')}
@@ -159,9 +204,14 @@ export function ActiveAccess(): JSX.Element {
           <ContainerLoading>
             <Loading size={'xl'} variant={'light'} />
           </ContainerLoading>
-        ) : listAccess && listAccess?.length > 0 ? (
+        ) : filteredData && filteredData?.length > 0 ? (
           <ContainerTableGrid>
-            {/* <Table<ActivatedAccessItem> table={table} setSorting={setSorting} pagination={<></>} /> */}
+            <TableContent
+              data={filteredData}
+              setTableData={setTableData}
+              selectedRows={selectedRows}
+              setSelectedRows={setSelectedRows}
+            />
           </ContainerTableGrid>
         ) : (
           <Empty />

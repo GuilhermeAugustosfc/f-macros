@@ -1,10 +1,9 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { RouteIcon, ArrowDownCalender } from 'src/pages/MacrosReport/components/svg';
-import { CustomSelect as Select } from '@ftdata/ui';
 import { DatePicker } from 'rsuite';
 import 'rsuite/dist/rsuite.css';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -82,7 +81,6 @@ const DriverCell = styled.div`
 const EditableCell = styled.div<{ isEditable: boolean }>`
   position: relative;
   cursor: ${({ isEditable }) => (isEditable ? 'pointer' : 'default')};
-  z-index: 9999;
 `;
 
 const EditIcon = styled.div`
@@ -98,48 +96,71 @@ const EditIcon = styled.div`
   justify-content: center;
 `;
 
-const DatePickerContainer = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 99999;
-  background: white;
-  border: 1px solid #d5d8da;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 8px;
-  min-width: 280px;
-  z-index: 99999;
-  .rs-picker-date {
-    width: 100%;
-    z-index: 99999;
-  }
-
-  .rs-picker-date-menu {
-    box-shadow: none;
-    border: none;
-    z-index: 99999;
-  }
-
-  .rs-picker-dropdown {
-    z-index: 99999 !important;
-  }
-
-  .rs-picker-dropdown-menu {
-    z-index: 99999 !important;
-  }
-`;
-
-const SelectContainer = styled.div`
+const FloatingSelect = styled.div<{ isOpen: boolean }>`
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 99999;
+  z-index: 999999;
   background: white;
-  border: 1px solid #d5d8da;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px 0px rgba(107, 117, 124, 0.32);
+  max-height: 218px;
+  overflow-x: clip;
+  overflow-y: auto;
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 0;
+`;
+
+const SelectOption = styled.button<{ isSelected?: boolean }>`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: clip;
+  padding: 8px 16px;
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background: #f8f9fa;
+  }
+`;
+
+const OptionMacroButton = styled.div<{ color: string }>`
+  background: ${({ color }) => color};
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  justify-content: center;
+  width: max-content;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: white;
+    flex-shrink: 0;
+  }
+`;
+
+const OptionText = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.5;
+  color: white;
+  white-space: nowrap;
+  margin: 0;
 `;
 
 const HoverArrow = styled.div`
@@ -156,6 +177,17 @@ const HoverArrow = styled.div`
   }
 `;
 
+const DatePickerContainer = styled.div`
+  /* position: absolute; */
+  max-width: 0px;
+  max-height: 0px;
+  .rs-picker-toggle-wrapper {
+    opacity: 0;
+    max-width: 0px;
+    max-height: 0px;
+  }
+`;
+
 // Componente para célula editável de data
 const EditableDateCell = ({
   value,
@@ -169,7 +201,7 @@ const EditableDateCell = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
 
-  const handleSave = (newDate: Date | null) => {
+  const handleDateChange = (newDate: Date | null) => {
     if (!newDate) return;
 
     const newValue = {
@@ -185,11 +217,15 @@ const EditableDateCell = ({
     setIsEditing(false);
   };
 
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   return (
     <EditableCell
       isEditable={true}
       onClick={() => setIsEditing(true)}
-      onMouseLeave={() => setIsEditing(false)}
+      // onMouseLeave={() => setIsEditing(false)}
     >
       <DateTimeCell>
         <div>{editValue.date}</div>
@@ -203,14 +239,13 @@ const EditableDateCell = ({
         <DatePickerContainer>
           <DatePicker
             format="dd/MM/yyyy HH:mm:ss"
-            onChange={handleSave}
-            onClose={() => setIsEditing(false)}
+            onChange={handleDateChange}
+            onClose={handleCancel}
             defaultValue={new Date()}
-            oneTap
             placement="bottomStart"
             cleanable={false}
             editable={false}
-            style={{ zIndex: 99999 }}
+            open={isEditing}
             container={() => document.body}
           />
         </DatePickerContainer>
@@ -231,18 +266,88 @@ const EditableMacroCell = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
-  const [selected, setSelected] = useState<any>(null);
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const macroOptions = [
-    { value: 'plantando', label: 'Plantando Mudas', color: '#3A99D5', icon: '🌱' },
-    { value: 'aguardando', label: 'Aguardando Mudas', color: '#D3771E', icon: '⏳' },
-    { value: 'colhendo', label: 'Colhendo Frutos', color: '#19A675', icon: '🍎' },
-    { value: 'transito', label: 'Em Trânsito', color: '#E95F77', icon: '🚛' },
+    {
+      value: 'inicio',
+      name: 'Início de jornada',
+      color: '#19A675', // Visual/Green
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2L2 7L12 12L22 7L12 2Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+    },
+    {
+      value: 'aguardando',
+      name: 'Aguardando mudas',
+      color: '#D3771E', // Visual/Yellow
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+          <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      ),
+    },
+    {
+      value: 'pulverizando',
+      name: 'Pulverizando lavoura',
+      color: '#6390F5', // Visual/Blue
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2L2 7L12 12L22 7L12 2Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+    },
+    {
+      value: 'plantando',
+      name: 'Plantando mudas',
+      color: '#3A99D5', // Visual/Cyan
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M7 13L12 8L17 13M12 8V20"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+    },
+    {
+      value: 'fim',
+      name: 'Fim de jornada',
+      color: '#E95F77', // Visual/Red
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 9L15 15M15 9L9 15"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      ),
+    },
   ];
 
-  const handleSave = (selectedOption: any) => {
+  const handleOptionClick = (selectedOption: any) => {
     const newValue = {
-      name: selectedOption.label,
+      name: selectedOption.name,
       color: selectedOption.color,
       icon: selectedOption.icon,
     };
@@ -251,27 +356,46 @@ const EditableMacroCell = ({
     setIsEditing(false);
   };
 
-  const t = (key: string) => key; // Mock translation function
+  const handleCellClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      setIsEditing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isEditing) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isEditing]);
 
   return (
-    <EditableCell isEditable={true} onClick={() => setIsEditing(true)}>
+    <EditableCell ref={selectRef} isEditable={true} onClick={handleCellClick}>
       <MacroButton color={editValue.color}>
         {editValue.icon}
         {editValue.name}
       </MacroButton>
       {isEdited && <EditIcon />}
-      {isEditing && (
-        <SelectContainer>
-          <Select
-            t={t}
-            options={macroOptions}
-            selected={selected}
-            setSelected={setSelected}
-            placeholder="Selecione uma macro"
-            onChange={handleSave}
-          />
-        </SelectContainer>
-      )}
+      <FloatingSelect isOpen={isEditing}>
+        {macroOptions.map((option) => (
+          <SelectOption
+            key={option.value}
+            onClick={() => handleOptionClick(option)}
+            isSelected={editValue.value === option.value}
+          >
+            <OptionMacroButton color={option.color}>
+              {option.icon}
+              <OptionText>{option.name}</OptionText>
+            </OptionMacroButton>
+          </SelectOption>
+        ))}
+      </FloatingSelect>
     </EditableCell>
   );
 };

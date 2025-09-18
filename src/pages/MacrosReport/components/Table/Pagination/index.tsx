@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Pagination: React.FC<Props> = ({ table }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   // Define o mínimo de itens por página e obtém o total de registros
   const minimumItems = 5;

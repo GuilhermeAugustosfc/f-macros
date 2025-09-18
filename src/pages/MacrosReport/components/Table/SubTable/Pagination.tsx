@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Pagination: React.FC<Props> = ({ table, isEven, total }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   const pageIndex = table.getState().pagination.pageIndex;
   const pageCount = table.getPageCount();
   const hasMultiplePages = total > table.getState().pagination.pageSize;

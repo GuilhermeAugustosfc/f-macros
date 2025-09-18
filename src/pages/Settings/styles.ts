@@ -4,8 +4,13 @@ import * as styleguide from '@ftdata/f-tokens';
 export const ContainerTabs = styled.div`
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid ${styleguide.COLOR_NEUTRAL_LIGHT};
-  margin: 1.375rem 0;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 24px 0 24px;
+  background: white;
+  width: 100%;
+  height: 54px;
+  box-sizing: border-box;
 `;
 
 export const ContentTabs = styled.div`
@@ -178,13 +183,14 @@ export const GridContainer = styled.div`
 
 export const TittleContainerGrid = styled.div`
   box-sizing: border-box;
-  padding: 30px 1.75rem 1rem 1.75rem;
+  padding: 16px 24px;
   grid-area: title;
 `;
 
 export const TabsContainerGrid = styled.div`
-  padding: 0 1.75rem;
+  padding: 0;
   grid-area: tabs;
+  background: white;
 `;
 
 export const ContentContainerGrid = styled.div`
@@ -202,12 +208,12 @@ export const ContainerTabContent = styled.div`
   max-height: calc(100vh - 5.5rem - 3.5rem);
   overflow-y: auto;
   padding: 0 1.5rem;
+  padding-top: 24px;
   width: 100%;
 `;
 
 export const ContainerHeader = styled.div`
   box-sizing: border-box;
-  padding: 0.875rem 1.75rem 1.5rem 1.75rem;
   grid-area: header;
 `;
 

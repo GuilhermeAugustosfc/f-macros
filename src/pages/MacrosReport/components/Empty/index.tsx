@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Empty: React.FC<Props> = ({ openModal }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   return (
     <ContainerEmpty>

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const Header: React.FC<Props> = ({ close, clearFilterCallback }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
   const { clearFilter } = useContext(ReportsContext);
 
   function handleClearFilter() {

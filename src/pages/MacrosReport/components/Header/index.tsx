@@ -24,7 +24,7 @@ interface Props {
 }
 
 const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   const {
     client,

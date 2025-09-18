@@ -22,7 +22,7 @@ export const FilterModal: React.FC<Props> = ({
   clearFilterCallback,
 }: Props) => {
   const [currentTab, setCurrentTab] = useState(0);
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   return (
     <TransitionContainer

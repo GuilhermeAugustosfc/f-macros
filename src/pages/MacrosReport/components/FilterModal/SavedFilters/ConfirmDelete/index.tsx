@@ -17,7 +17,7 @@ interface ConfirmDeleteProps {
 }
 
 export default function ConfirmDelete({ onCancel, onConfirm }: ConfirmDeleteProps): JSX.Element {
-  const { t } = useTranslation('114');
+  const { t } = useTranslation();
 
   return (
     <>
