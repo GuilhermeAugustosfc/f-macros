@@ -11,8 +11,6 @@ import DownloadGrossoIcon from '../../../assets/svgs/download-grosso.svg?react';
 import QuestionIcon from '../../../assets/svgs/question.svg?react';
 import AddCircleIcon from '../../../assets/svgs/add-circle.svg?react';
 import MinusIcon from '../../../assets/svgs/minus.svg?react';
-import ZoomInIcon from '../../../assets/svgs/zoom-in.svg?react';
-import ZoomOutIcon from '../../../assets/svgs/zoom-out.svg?react';
 import SettingsIcon from '../../../assets/svgs/settings.svg?react';
 import ExcelIcon from '../../../assets/svgs/excel.svg?react';
 import PDFIcon from '../../../assets/svgs/pdf.svg?react';
@@ -23,9 +21,6 @@ import UpIcon from '../../../assets/svgs/up.svg?react';
 import DownIcon from '../../../assets/svgs/down.svg?react';
 import ArrowDownCalender from '../../../assets/svgs/arrow-down-calender.svg?react';
 import ReferencePointIcon from '../../../assets/svgs/reference-point.svg?react';
-import IgnitionStatusMovingIcon from '../../../assets/svgs/ignition_status_moving.svg?react';
-import IgnitionStatusOffIcon from '../../../assets/svgs/ignition_status_off.svg?react';
-import IgnitionStatusOnIcon from '../../../assets/svgs/ignition_status_on.svg?react';
 import RelatoriosIcon from '../../../assets/svgs/relatorio.svg?react';
 import EmailIcon from '../../../assets/svgs/email.svg?react';
 import EnderecoArrowIcon from '../../../assets/svgs/popup-arrow.svg?react';
@@ -42,6 +37,11 @@ import ClockIcon from '../../../assets/svgs/clock.svg?react';
 import ChartIcon from '../../../assets/svgs/chart.svg?react';
 import RouteIcon from '../../../assets/svgs/route.svg?react';
 import CloseIcon from '../../../assets/svgs/close.svg?react';
+import GroupDescriptionIcon from '../../../assets/svgs/group-description.svg?react';
+import CadeadoIcon from '../../../assets/svgs/cadeado.svg?react';
+import SandwitchIcon from '../../../assets/svgs/sandwitch.svg?react';
+import EditIcon from '../../../assets/svgs/edit.svg?react';
+import TrashIcon from '../../../assets/svgs/trash.svg?react';
 export {
   FilterIcon,
   FilterAppliedIcon,
@@ -58,8 +58,6 @@ export {
   MinusIcon,
   PreviousIcon,
   NextIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
   SettingsIcon,
   ExcelIcon,
   PDFIcon,
@@ -70,9 +68,6 @@ export {
   UpIcon,
   ArrowDownCalender,
   ReferencePointIcon,
-  IgnitionStatusMovingIcon,
-  IgnitionStatusOffIcon,
-  IgnitionStatusOnIcon,
   RelatoriosIcon,
   EmailIcon,
   EnderecoArrowIcon,
@@ -87,4 +82,9 @@ export {
   ChartIcon,
   RouteIcon,
   CloseIcon,
+  GroupDescriptionIcon,
+  CadeadoIcon,
+  SandwitchIcon,
+  EditIcon,
+  TrashIcon,
 };

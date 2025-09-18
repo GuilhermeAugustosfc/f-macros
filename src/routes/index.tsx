@@ -7,7 +7,7 @@ import { AppCore, DEFAULT_CONFIG } from '@ftdata/core';
 import { Settings } from 'src/pages/Settings';
 import { queryClient } from 'src/services/queryClient';
 import MacrosReport from 'src/pages/MacrosReport';
-
+import { Form } from 'src/pages/Settings/Form';
 const Routes: React.FC = () => {
   return (
     <ReportsProvider>
@@ -23,6 +23,10 @@ const Routes: React.FC = () => {
               {
                 path: '/settings',
                 element: <Settings />,
+              },
+              {
+                path: '/settings/form',
+                element: <Form />,
               },
               {
                 path: '/report',
