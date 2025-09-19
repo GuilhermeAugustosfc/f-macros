@@ -1,18 +1,15 @@
 import { type JSX, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Input, Checkbox, CustomSelect as Select, Collapse } from '@ftdata/ui';
+import { Button, Input, CustomSelect as Select, Collapse } from '@ftdata/ui';
 import {
-  DownIcon,
-  AddCircleIcon,
   ClientIcon,
   VehicleIcon,
   GroupDescriptionIcon,
-  CadeadoIcon,
-  SandwitchIcon,
-  EditIcon,
-  TrashIcon,
 } from 'src/pages/MacrosReport/components/svg';
 import { useTranslation } from '@ftdata/core';
+import { MacrosContainer } from './MacrosContainer';
+import { type Macro } from './MacrosContainer/types';
+import { MacroEditModal } from './MacroEditModal';
 
 export const Form = (): JSX.Element => {
   const { t } = useTranslation();
@@ -20,6 +17,45 @@ export const Form = (): JSX.Element => {
   const [selectedVehicle, setSelectedVehicle] = useState<any>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(true);
   const [isMacrosOpen, setIsMacrosOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMacro, setEditingMacro] = useState<Macro | undefined>();
+  const [macros, setMacros] = useState<Macro[]>([]);
+
+  const handleMacrosChange = (updatedMacros: Macro[]) => {
+    setMacros(updatedMacros);
+    console.log('Macros atualizadas:', updatedMacros);
+  };
+
+  const handleEditMacro = (macro: Macro) => {
+    setEditingMacro(macro);
+    setIsModalOpen(true);
+  };
+
+  const handleAddMacro = () => {
+    setEditingMacro(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveMacro = (updatedMacro: Macro) => {
+    if (editingMacro) {
+      // Editando macro existente
+      const updatedMacros = macros.map((macro) =>
+        macro.id === updatedMacro.id ? updatedMacro : macro,
+      );
+      setMacros(updatedMacros);
+    } else {
+      // Adicionando nova macro
+      const updatedMacros = [...macros, updatedMacro];
+      setMacros(updatedMacros);
+    }
+    setIsModalOpen(false);
+    setEditingMacro(undefined);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingMacro(undefined);
+  };
 
   return (
     <Container>
@@ -89,72 +125,12 @@ export const Form = (): JSX.Element => {
           handleChange={() => setIsMacrosOpen(!isMacrosOpen)}
           margin="24px"
         >
-          <MacrosContainer>
-            <MacrosHeader>
-              <MacrosTitle>Selecione e ordene as macros para este grupo</MacrosTitle>
-              <MacrosCount>4/15</MacrosCount>
-            </MacrosHeader>
-
-            <MacrosList>
-              <MacroItem>
-                <DragHandle>
-                  <CadeadoIcon width={24} height={24} />
-                </DragHandle>
-                <MacroTag color="#19a675">
-                  <DownIcon />
-                  Início de jornada
-                </MacroTag>
-                <MacroRequired>(Obrigatório)</MacroRequired>
-              </MacroItem>
-
-              <MacroItem>
-                <SandwitchIcon width={24} height={24} />
-                <Checkbox checked label="" />
-                <MacroTag color="#d3771e">
-                  <DownIcon />
-                  Aguardando mudas
-                </MacroTag>
-                <DragHandle>
-                  <EditIcon width={24} height={24} />
-                </DragHandle>
-                <DragHandle>
-                  <TrashIcon width={24} height={24} />
-                </DragHandle>
-              </MacroItem>
-
-              <MacroItem>
-                <SandwitchIcon width={24} height={24} />
-
-                <Checkbox checked label="" />
-                <MacroTag color="#3a99d5">
-                  <DownIcon />
-                  Plantando mudas
-                </MacroTag>
-                <DragHandle>
-                  <EditIcon width={24} height={24} />
-                </DragHandle>
-                <DragHandle>
-                  <TrashIcon width={24} height={24} />
-                </DragHandle>
-              </MacroItem>
-
-              <MacroItem>
-                <DragHandle>
-                  <CadeadoIcon width={24} height={24} />
-                </DragHandle>
-                <MacroTag color="#e95f77">
-                  <DownIcon />
-                  Fim de jornada
-                </MacroTag>
-                <MacroRequired>(Obrigatório)</MacroRequired>
-              </MacroItem>
-
-              <AddMacroButton>
-                <AddCircleIcon width={24} height={24} />
-                Adicionar novo status
-              </AddMacroButton>
-            </MacrosList>
-          </MacrosContainer>
+          <MacrosContainer
+            maxMacros={15}
+            onMacrosChange={handleMacrosChange}
+            onEditMacro={handleEditMacro}
+            onAddMacro={handleAddMacro}
+          />
         </Collapse>
 
         <ActionButtons>
@@ -162,6 +138,13 @@ export const Form = (): JSX.Element => {
           <Button variant="secondary">Cancelar</Button>
         </ActionButtons>
       </FormContainer>
+
+      <MacroEditModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={handleSaveMacro}
+        macro={editingMacro}
+      />
     </Container>
   );
 };
@@ -245,114 +228,6 @@ const SensorTypeContainer = styled.div`
     justify-content: space-between;
     display: flex;
   }
-`;
-
-const MacrosContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
-  margin-bottom: 32px;
-`;
-
-const MacrosHeader = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const MacrosTitle = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: #26333b;
-  white-space: nowrap;
-  line-height: 1.2;
-`;
-
-const MacrosCount = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  color: #6b757c;
-  white-space: nowrap;
-  line-height: 1.5;
-`;
-
-const MacrosList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const MacroItem = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 8px 0;
-`;
-
-const DragHandle = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-`;
-
-const MacroTag = styled.div<{ color: string }>`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  height: 26px;
-  padding: 4px 8px;
-  background: ${({ color }) => color};
-  border-radius: 4px;
-  color: white;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  white-space: nowrap;
-  line-height: 1.5;
-`;
-
-const MacroRequired = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  color: #6b757c;
-  white-space: nowrap;
-  line-height: 1.5;
-`;
-
-const AddMacroButton = styled.button`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 6px 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #316ee8;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  white-space: nowrap;
-  line-height: 1.5;
 `;
 
 const ActionButtons = styled.div`
