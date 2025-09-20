@@ -5,7 +5,7 @@ interface MyButtonProps {
   action: () => void;
   iconType?: 'add' | 'delete' | 'edit';
   title: string;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   backgroundColor?: string;
 }
 
@@ -16,11 +16,24 @@ export function MyButton({
   variant = 'primary',
   backgroundColor,
 }: MyButtonProps): JSX.Element {
-  backgroundColor = iconType === 'delete' ? '#C13E4A' : '';
+  // Definir cor de fundo baseada no variant ou iconType
+  if (variant === 'danger') {
+    backgroundColor = '#C13E4A';
+  } else if (iconType === 'delete') {
+    backgroundColor = '#C13E4A';
+  } else {
+    backgroundColor = backgroundColor || '';
+  }
+
   return (
     <Button
-      style={{ backgroundColor: backgroundColor, height: '40px', outline: 'none' }}
-      variant={variant}
+      style={{
+        backgroundColor: backgroundColor,
+        height: '40px',
+        outline: 'none',
+        color: variant === 'danger' ? '#FFFFFF' : undefined,
+      }}
+      variant={variant === 'danger' ? 'primary' : variant}
       onClick={action}
     >
       {title}

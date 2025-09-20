@@ -11,6 +11,7 @@ import { useQuery } from 'react-query';
 import { MacrosContainer } from './MacrosContainer';
 import { type Macro } from './MacrosContainer/types';
 import { MacroEditModal } from './MacroEditModal';
+import { ConfirmDeleteModal } from './MacrosContainer/ConfirmDeleteModal';
 import { getCustomers, getVehicles } from 'src/pages/MacrosReport/requets';
 import { type ICustomSelectOption } from '@ftdata/ui';
 
@@ -184,6 +185,8 @@ export const Form = (): JSX.Element => {
         onSave={handleSaveMacro}
         macro={editingMacro}
       />
+
+      <ConfirmDeleteModal isOpen={false} onClose={() => {}} onConfirm={() => {}} />
     </Container>
   );
 };

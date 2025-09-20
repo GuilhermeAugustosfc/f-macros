@@ -10,6 +10,7 @@ import {
   TrashIcon,
 } from 'src/pages/MacrosReport/components/svg';
 import { getIconById } from '../MacroEditModal/icons';
+import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import type { Macro, MacrosContainerProps } from './types';
 
 export const MacrosContainer = ({
@@ -57,6 +58,8 @@ export const MacrosContainer = ({
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number } | null>(null);
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [macroToDelete, setMacroToDelete] = useState<string | null>(null);
 
   const selectedMacrosCount = [inicioMacro, ...allMacros, fimMacro].filter(
     (macro) => macro.isSelected,
@@ -107,9 +110,18 @@ export const MacrosContainer = ({
     const macro = middleMacros.find((m) => m.id === macroId);
     if (macro?.isRequired) return; // Não permitir deletar macros obrigatórias
 
-    const updatedMiddleMacros = middleMacros.filter((macro) => macro.id !== macroId);
+    setMacroToDelete(macroId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteMacro = () => {
+    if (!macroToDelete) return;
+
+    const updatedMiddleMacros = middleMacros.filter((macro) => macro.id !== macroToDelete);
     setMiddleMacros(updatedMiddleMacros);
     onMacrosChange?.(updatedMiddleMacros);
+    setShowDeleteModal(false);
+    setMacroToDelete(null);
   };
 
   // Funções de drag and drop nativo
@@ -332,6 +344,16 @@ export const MacrosContainer = ({
           </DragHandle>
         </DragGhost>
       )}
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setMacroToDelete(null);
+        }}
+        onConfirm={confirmDeleteMacro}
+        macroName={middleMacros.find((m) => m.id === macroToDelete)?.name}
+      />
     </Container>
   );
 };
