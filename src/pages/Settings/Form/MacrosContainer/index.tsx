@@ -9,6 +9,7 @@ import {
   EditIcon,
   TrashIcon,
 } from 'src/pages/MacrosReport/components/svg';
+import { getIconById } from '../MacroEditModal/icons';
 import type { Macro, MacrosContainerProps } from './types';
 
 export const MacrosContainer = ({
@@ -16,50 +17,16 @@ export const MacrosContainer = ({
   onMacrosChange,
   onEditMacro,
   onAddMacro,
+  macros = [],
 }: MacrosContainerProps): JSX.Element => {
-  const [middleMacros, setMiddleMacros] = useState<Macro[]>([
-    {
-      id: 'manutencao-equipamento',
-      name: 'Manutenção de Equipamento',
-      color: '#8B4513',
-      isRequired: false,
-      isSelected: true,
-    },
-    {
-      id: 'pausa-almoco',
-      name: 'Pausa para Almoço',
-      color: '#4B0082',
-      isRequired: false,
-      isSelected: true,
-    },
-    {
-      id: 'abastecimento',
-      name: 'Abastecimento',
-      color: '#2F4F4F',
-      isRequired: false,
-      isSelected: true,
-    },
-    {
-      id: 'colheita',
-      name: 'Colheita',
-      color: '#FF6B6B',
-      isRequired: false,
-      isSelected: true,
-    },
-    {
-      id: 'irrigacao',
-      name: 'Irrigação',
-      color: '#4682B4',
-      isRequired: false,
-      isSelected: true,
-    },
-  ]);
+  const [middleMacros, setMiddleMacros] = useState<Macro[]>([]);
 
   // Macros estáticas (início e fim)
   const inicioMacro: Macro = {
     id: 'inicio-jornada',
     name: 'Início de jornada',
     color: '#19a675',
+    iconType: 'icone1', // Ícone padrão para início
     isRequired: true,
     isSelected: true,
   };
@@ -68,12 +35,22 @@ export const MacrosContainer = ({
     id: 'fim-jornada',
     name: 'Fim de jornada',
     color: '#e95f77',
+    iconType: 'icone36', // Ícone padrão para fim
     isRequired: true,
     isSelected: true,
   };
 
-  // Array completo para contagem
-  const allMacros = [inicioMacro, ...middleMacros, fimMacro];
+  // Sincronizar middleMacros com as macros recebidas via prop
+  // Filtrar apenas as macros que não são estáticas (início e fim)
+  useEffect(() => {
+    const dynamicMacros = macros.filter(
+      (macro) => macro.id !== 'inicio-jornada' && macro.id !== 'fim-jornada',
+    );
+    setMiddleMacros(dynamicMacros);
+  }, [macros]);
+
+  // Array completo para contagem - apenas as macros do meio
+  const allMacros = middleMacros;
 
   // Estado para controlar o drag
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -81,7 +58,17 @@ export const MacrosContainer = ({
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number } | null>(null);
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
 
-  const selectedMacrosCount = allMacros.filter((macro) => macro.isSelected).length;
+  const selectedMacrosCount = [inicioMacro, ...allMacros, fimMacro].filter(
+    (macro) => macro.isSelected,
+  ).length;
+
+  // Função para renderizar o ícone correto baseado no iconType
+  const renderMacroIcon = (macro: Macro) => {
+    if (macro.iconType) {
+      return getIconById(macro.iconType, 16);
+    }
+    return <DownIcon />; // Fallback para o ícone padrão
+  };
 
   // Rastrear movimento do mouse durante drag
   useEffect(() => {
@@ -102,8 +89,7 @@ export const MacrosContainer = ({
       macro.id === macroId ? { ...macro, isSelected: !macro.isSelected } : macro,
     );
     setMiddleMacros(updatedMiddleMacros);
-    const updatedAllMacros = [inicioMacro, ...updatedMiddleMacros, fimMacro];
-    onMacrosChange?.(updatedAllMacros);
+    onMacrosChange?.(updatedMiddleMacros);
   };
 
   const handleAddMacro = () => {
@@ -111,20 +97,19 @@ export const MacrosContainer = ({
   };
 
   const handleEditMacro = (macroId: string) => {
-    const macro = allMacros.find((m) => m.id === macroId);
+    const macro = middleMacros.find((m) => m.id === macroId);
     if (macro) {
       onEditMacro?.(macro);
     }
   };
 
   const handleDeleteMacro = (macroId: string) => {
-    const macro = allMacros.find((m) => m.id === macroId);
+    const macro = middleMacros.find((m) => m.id === macroId);
     if (macro?.isRequired) return; // Não permitir deletar macros obrigatórias
 
     const updatedMiddleMacros = middleMacros.filter((macro) => macro.id !== macroId);
     setMiddleMacros(updatedMiddleMacros);
-    const updatedAllMacros = [inicioMacro, ...updatedMiddleMacros, fimMacro];
-    onMacrosChange?.(updatedAllMacros);
+    onMacrosChange?.(updatedMiddleMacros);
   };
 
   // Funções de drag and drop nativo
@@ -184,8 +169,7 @@ export const MacrosContainer = ({
     newMiddleMacros.splice(dropIndex, 0, draggedItem);
 
     setMiddleMacros(newMiddleMacros);
-    const updatedAllMacros = [inicioMacro, ...newMiddleMacros, fimMacro];
-    onMacrosChange?.(updatedAllMacros);
+    onMacrosChange?.(newMiddleMacros);
 
     setDraggedIndex(null);
     setDragOverIndex(null);
@@ -216,85 +200,87 @@ export const MacrosContainer = ({
             <CadeadoIcon width={24} height={24} />
           </DragHandle>
           <MacroTag color={inicioMacro.color}>
-            <DownIcon />
+            {renderMacroIcon(inicioMacro)}
             {inicioMacro.name}
           </MacroTag>
           <MacroRequired>(Obrigatório)</MacroRequired>
         </MacroItem>
 
         {/* Macros do meio - com drag and drop nativo */}
-        <MiddleMacrosContainer>
-          {middleMacros.map((macro, index) => (
-            <MacroItem
-              key={macro.id}
-              draggable={true}
-              onDragStart={(e) => {
-                e.stopPropagation();
-                handleDragStart(e, index);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleDragOver(e, index);
-              }}
-              onDragLeave={(e) => {
-                e.stopPropagation();
-                handleDragLeave(e);
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleDrop(e, index);
-              }}
-              onDragEnd={(e) => {
-                e.stopPropagation();
-                handleDragEnd();
-              }}
-              isDragging={draggedIndex === index}
-              isDragOver={dragOverIndex === index}
-              canDrag={true}
-              style={{
-                opacity: draggedIndex === index ? 0.3 : 1,
-                transform: draggedIndex === index ? 'scale(0.95)' : 'none',
-              }}
-            >
-              <DragHandle
-                onMouseDown={(e) => e.stopPropagation()}
-                onDragStart={(e) => e.stopPropagation()}
-              >
-                <SandwitchIcon width={24} height={24} />
-              </DragHandle>
-
-              <Checkbox
-                checked={macro.isSelected}
-                label=""
-                onChange={() => handleMacroToggle(macro.id)}
-              />
-
-              <MacroTag color={macro.color}>
-                <DownIcon />
-                {macro.name}
-              </MacroTag>
-
-              <DragHandle
-                onClick={(e) => {
+        {middleMacros.length > 0 && (
+          <MiddleMacrosContainer>
+            {middleMacros.map((macro, index) => (
+              <MacroItem
+                key={macro.id}
+                draggable={true}
+                onDragStart={(e) => {
                   e.stopPropagation();
-                  handleEditMacro(macro.id);
+                  handleDragStart(e, index);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDragOver(e, index);
+                }}
+                onDragLeave={(e) => {
+                  e.stopPropagation();
+                  handleDragLeave(e);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDrop(e, index);
+                }}
+                onDragEnd={(e) => {
+                  e.stopPropagation();
+                  handleDragEnd();
+                }}
+                isDragging={draggedIndex === index}
+                isDragOver={dragOverIndex === index}
+                canDrag={true}
+                style={{
+                  opacity: draggedIndex === index ? 0.3 : 1,
+                  transform: draggedIndex === index ? 'scale(0.95)' : 'none',
                 }}
               >
-                <EditIcon width={24} height={24} />
-              </DragHandle>
-              <DragHandle
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteMacro(macro.id);
-                }}
-              >
-                <TrashIcon width={24} height={24} />
-              </DragHandle>
-            </MacroItem>
-          ))}
-        </MiddleMacrosContainer>
+                <DragHandle
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onDragStart={(e) => e.stopPropagation()}
+                >
+                  <SandwitchIcon width={24} height={24} />
+                </DragHandle>
+
+                <Checkbox
+                  checked={macro.isSelected}
+                  label=""
+                  onChange={() => handleMacroToggle(macro.id)}
+                />
+
+                <MacroTag color={macro.color}>
+                  {renderMacroIcon(macro)}
+                  {macro.name}
+                </MacroTag>
+
+                <DragHandle
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditMacro(macro.id);
+                  }}
+                >
+                  <EditIcon width={24} height={24} />
+                </DragHandle>
+                <DragHandle
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteMacro(macro.id);
+                  }}
+                >
+                  <TrashIcon width={24} height={24} />
+                </DragHandle>
+              </MacroItem>
+            ))}
+          </MiddleMacrosContainer>
+        )}
 
         {/* Macro de fim - estática */}
         <MacroItem canDrag={false}>
@@ -302,7 +288,7 @@ export const MacrosContainer = ({
             <CadeadoIcon width={24} height={24} />
           </DragHandle>
           <MacroTag color={fimMacro.color}>
-            <DownIcon />
+            {renderMacroIcon(fimMacro)}
             {fimMacro.name}
           </MacroTag>
           <MacroRequired>(Obrigatório)</MacroRequired>
@@ -331,7 +317,11 @@ export const MacrosContainer = ({
             onChange={() => {}}
           />
           <MacroTag color={middleMacros[draggedIndex]?.color || '#85919e'}>
-            <DownIcon />
+            {middleMacros[draggedIndex] ? (
+              renderMacroIcon(middleMacros[draggedIndex])
+            ) : (
+              <DownIcon />
+            )}
             {middleMacros[draggedIndex]?.name || ''}
           </MacroTag>
           <DragHandle>
@@ -386,7 +376,6 @@ const MacrosCount = styled.div`
 const MacrosList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
@@ -396,12 +385,9 @@ const MacrosList = styled.div`
 const MiddleMacrosContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 50px;
-  padding: 4px 0;
   position: relative;
 `;
 
@@ -472,7 +458,6 @@ const AddMacroButton = styled.button`
   gap: 8px;
   align-items: center;
   justify-content: flex-start;
-  padding: 6px 0;
   background: none;
   border: none;
   cursor: pointer;

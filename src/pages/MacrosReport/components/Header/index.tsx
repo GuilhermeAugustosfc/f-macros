@@ -183,7 +183,9 @@ const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
 
 const Container = styled.div``;
 
-const HeaderContainer = styled.header<{ justifyContent: string }>`
+const HeaderContainer = styled.header.withConfig({
+  shouldForwardProp: (prop) => prop !== 'justifyContent',
+})<{ justifyContent: string }>`
   border-bottom: 0.0625rem solid ${styleguide.COLOR_NEUTRAL_LIGHT};
   padding: 16px 24px;
   display: flex;

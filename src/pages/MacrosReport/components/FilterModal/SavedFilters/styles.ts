@@ -19,7 +19,9 @@ interface ListContainerProps {
   hasSelectedFilters: boolean;
 }
 
-export const ListContainer = styled.div<ListContainerProps>`
+export const ListContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'hasSelectedFilters',
+})<ListContainerProps>`
   width: 100%;
   max-height: ${({ hasSelectedFilters }) => (hasSelectedFilters ? 'calc(100% - 8.75rem)' : '100%')};
   overflow-y: auto;

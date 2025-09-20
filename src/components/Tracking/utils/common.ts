@@ -1,13 +1,4 @@
-import type { ICustomSelectOption } from '@ftdata/ui';
-import { type QueryObserverResult, useQuery } from 'react-query';
 import instance from 'src/services/instance';
-import { getClients } from 'src/services/reports/filter';
-
-export const getClientsReactQuery = (): QueryObserverResult<ICustomSelectOption[], unknown> => {
-  return useQuery<ICustomSelectOption[]>('clients', getClients, {
-    staleTime: 1000 * 60 * 30, // 30 minutos
-  });
-};
 
 type IaddressReverse = {
   label?: string | undefined;

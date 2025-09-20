@@ -22,7 +22,7 @@ export const Header: React.FC<Props> = ({ close, clearFilterCallback }: Props) =
     <HeaderContainer>
       <div>
         <button className="btn-close" onClick={close}>
-          <ArrowLeftIcon />
+          <ArrowLeftIcon width={24} height={24} />
         </button>
         <strong>{t('filter_2')}</strong>
       </div>

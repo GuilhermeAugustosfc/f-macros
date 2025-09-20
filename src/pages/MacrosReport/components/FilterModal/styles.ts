@@ -6,7 +6,7 @@ export const TabsContainer = styled.div`
   display: flex;
   flex-direction: column;
   color: ${styleguide.COLOR_NEUTRAL_DUSK};
-
+  width: 416px;
   .tab-list {
     display: flex;
 

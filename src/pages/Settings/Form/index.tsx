@@ -1,4 +1,4 @@
-import { type JSX, useState } from 'react';
+import { type JSX, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, Input, CustomSelect as Select, Collapse } from '@ftdata/ui';
 import {
@@ -7,19 +7,62 @@ import {
   GroupDescriptionIcon,
 } from 'src/pages/MacrosReport/components/svg';
 import { useTranslation } from '@ftdata/core';
+import { useQuery } from 'react-query';
 import { MacrosContainer } from './MacrosContainer';
 import { type Macro } from './MacrosContainer/types';
 import { MacroEditModal } from './MacroEditModal';
+import { getCustomers, getVehicles } from 'src/pages/MacrosReport/requets';
+import { type ICustomSelectOption } from '@ftdata/ui';
 
 export const Form = (): JSX.Element => {
   const { t } = useTranslation();
-  const [selectedClient, setSelectedClient] = useState<any>(null);
-  const [selectedVehicle, setSelectedVehicle] = useState<any>(null);
+  const [selectedClient, setSelectedClient] = useState<ICustomSelectOption | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<ICustomSelectOption | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(true);
   const [isMacrosOpen, setIsMacrosOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMacro, setEditingMacro] = useState<Macro | undefined>();
   const [macros, setMacros] = useState<Macro[]>([]);
+
+  // Query para buscar clientes
+  const { data: clientesData } = useQuery(
+    ['clients'],
+    () => getCustomers().then((res) => res.data.data),
+    {
+      staleTime: 1000 * 60 * 60 * 2, // 2 horas
+      refetchOnWindowFocus: false,
+      select: (data) =>
+        data.map(
+          (cliente): ICustomSelectOption => ({
+            label: cliente.client_description,
+            value: cliente.client_id.toString(),
+          }),
+        ),
+    },
+  );
+
+  // Query para buscar veículos baseado no cliente selecionado
+  const { data: veiculosData } = useQuery(
+    ['vehicles', selectedClient?.value],
+    () => getVehicles({ customer_id: Number(selectedClient?.value) }),
+    {
+      staleTime: 1000 * 60 * 30, // 30 minutos
+      enabled: Boolean(selectedClient?.value),
+      refetchOnWindowFocus: false,
+      select: (data) =>
+        data.data.data.map(
+          (veiculo): ICustomSelectOption => ({
+            value: String(veiculo.ativo_id),
+            label: `${veiculo.plate} - ${veiculo.ativo}`,
+          }),
+        ),
+    },
+  );
+
+  // Reset veículo quando cliente muda
+  useEffect(() => {
+    setSelectedVehicle(null);
+  }, [selectedClient]);
 
   const handleMacrosChange = (updatedMacros: Macro[]) => {
     setMacros(updatedMacros);
@@ -38,13 +81,13 @@ export const Form = (): JSX.Element => {
 
   const handleSaveMacro = (updatedMacro: Macro) => {
     if (editingMacro) {
-      // Editando macro existente
+      // Editando macro existente - atualizar na lista
       const updatedMacros = macros.map((macro) =>
         macro.id === updatedMacro.id ? updatedMacro : macro,
       );
       setMacros(updatedMacros);
     } else {
-      // Adicionando nova macro
+      // Adicionando nova macro - adicionar na lista
       const updatedMacros = [...macros, updatedMacro];
       setMacros(updatedMacros);
     }
@@ -91,10 +134,7 @@ export const Form = (): JSX.Element => {
                 placeholder="Selecionar"
                 icon={<ClientIcon width={24} height={24} />}
                 width="100%"
-                options={[
-                  { label: 'Cliente 1', value: '1' },
-                  { label: 'Cliente 2', value: '2' },
-                ]}
+                options={clientesData ?? []}
                 required
                 t={t}
                 selected={selectedClient}
@@ -106,14 +146,12 @@ export const Form = (): JSX.Element => {
                 placeholder="Selecionar"
                 icon={<VehicleIcon width={24} height={24} />}
                 width="100%"
-                options={[
-                  { label: 'Veículo 1', value: '1' },
-                  { label: 'Veículo 2', value: '2' },
-                ]}
+                options={veiculosData ?? []}
                 required
                 t={t}
                 selected={selectedVehicle}
                 setSelected={setSelectedVehicle}
+                disabled={!selectedClient}
               />
             </SensorTypeContainer>
           </InfoFieldsContainer>
@@ -127,6 +165,7 @@ export const Form = (): JSX.Element => {
         >
           <MacrosContainer
             maxMacros={15}
+            macros={macros}
             onMacrosChange={handleMacrosChange}
             onEditMacro={handleEditMacro}
             onAddMacro={handleAddMacro}

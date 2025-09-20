@@ -9,6 +9,7 @@ export interface Macro {
 
 export interface MacrosContainerProps {
   maxMacros?: number;
+  macros?: Macro[];
   onMacrosChange?: (macros: Macro[]) => void;
   onEditMacro?: (macro: Macro) => void;
   onAddMacro?: () => void;

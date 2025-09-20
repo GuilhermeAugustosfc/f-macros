@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import * as styleguide from '@ftdata/f-tokens';
-import { ArrowDownCalender } from '../../svg';
-
+import ArrowDownCalenderUrl from '../../../../../assets/svgs/arrow-down-calender.svg';
 export const FormContainer = styled.div`
   width: 100%;
 `;
@@ -61,7 +60,7 @@ export const FormControl = styled.div`
     -moz-appearance: none;
     appearance: none;
     padding-right: ${styleguide.SPACING_INLINE_03};
-    background: url(${ArrowDownCalender}) no-repeat 96% center;
+    background: url(${ArrowDownCalenderUrl}) no-repeat 96% center;
     width: 100%;
 
     &.selected {
