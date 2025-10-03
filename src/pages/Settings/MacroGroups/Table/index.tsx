@@ -6,7 +6,6 @@ import {
   useReactTable,
   getPaginationRowModel,
   type ColumnDef,
-  type Table,
 } from '@tanstack/react-table';
 import { ColumnsFunction } from '../Columns';
 import Head from './Head';
@@ -15,20 +14,20 @@ import styled from 'styled-components';
 
 interface TableProps {
   data: any[];
-  setTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
   selectedRows: Set<string>;
   setSelectedRows: React.Dispatch<React.SetStateAction<Set<string>>>;
+  allIds?: string[];
 }
 
 const TableContent: React.FC<TableProps> = ({
   data,
-  setTableData,
   selectedRows,
   setSelectedRows,
+  allIds,
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = ColumnsFunction(selectedRows, setSelectedRows);
+  const columns = ColumnsFunction(selectedRows, setSelectedRows, allIds);
   const table = useReactTable({
     data,
     columns: columns as ColumnDef<any>[],
@@ -41,10 +40,6 @@ const TableContent: React.FC<TableProps> = ({
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   });
-
-  React.useEffect(() => {
-    setTableData(table);
-  }, [table, setTableData]);
 
   return (
     <ContainerContent>

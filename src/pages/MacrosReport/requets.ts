@@ -1,127 +1,154 @@
 import api from 'src/services/instance';
 import type { AxiosResponse } from 'axios';
-
-// Tipos das respostas
-interface DriverResponse {
-  id: number;
-  mot_desc: string;
-}
-
-interface CustomerResponse {
-  client_id: number;
-  client_description: string;
-}
-
-interface VehicleResponse {
-  ativo_id: number;
-  ativo: string;
-  plate: string;
-}
-
-interface MacrosGroupResponse {
-  id: number;
-  grupo_desc: string;
-}
+import { format, setHours, setMinutes, setSeconds } from 'date-fns';
+import type { ICustomSelectOption } from '@ftdata/ui';
+import type { Range } from 'react-date-range';
+import type { TimeRange } from './components/FilterModal/Form/types';
+import type {
+  DriverResponse,
+  CustomerResponse,
+  VehicleResponse,
+  MacrosGroupResponse,
+  SavedFilterResponse,
+  SavedFiltersApiResponse,
+  GetDriversParams,
+  GetCustomersParams,
+  GetVehiclesParams,
+  GetGroupsParams,
+  GetReportsParams,
+  GetSavedFiltersParams,
+  InsertSavedFilterData,
+} from './types';
 
 // Novos endpoints do Postman
-export const getDrivers = (params?: {
-  limit?: number;
-  search?: string;
-  last_id?: number;
-  customer_id?: number;
-}): Promise<AxiosResponse<{ total: number; last_id: number | null; data: DriverResponse[] }>> => {
+export const getDrivers = (params?: GetDriversParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: DriverResponse[] }>> => {
   return api.get('/fuel/v1/drivers', { params });
 };
 
-export const getCustomers = (params?: {
-  limit?: number;
-  search?: string;
-  last_id?: number;
-}): Promise<AxiosResponse<{ total: number; last_id: number | null; data: CustomerResponse[] }>> => {
-  return api.get('/fuel/v1/reports/customers', { params });
+export const getCustomers = (params?: GetCustomersParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: CustomerResponse[] }>> => {
+  return api.get('/f-work/macros/v1/customers', { params });
 };
 
-export const getVehicles = (params?: {
-  limit?: number;
-  search?: string;
-  last_id?: number;
-  customer_id?: number;
-  group_id?: number;
-}): Promise<AxiosResponse<{ total: number; last_id: number | null; data: VehicleResponse[] }>> => {
-  return api.get('/fuel/v1/reports/vehicles', { params });
+export const getVehicles = (params?: GetVehiclesParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: VehicleResponse[] }>> => {
+  return api.get('/f-work/macros/v1/ativos/', { params });
 };
 
-export const getGroups = (params?: {
-  limit?: number;
-  search?: string;
-  last_id?: number;
-  customer_id?: number;
-}): Promise<
+export const getGroups = (params?: GetGroupsParams): Promise<
   AxiosResponse<{ total: number; last_id: number | null; data: MacrosGroupResponse[] }>
 > => {
-  // Dados simulados
-  const dadosFake: MacrosGroupResponse[] = [
-    { id: 1, grupo_desc: 'Grupo Urbano' },
-    { id: 2, grupo_desc: 'Grupo Rodoviário' },
-    { id: 3, grupo_desc: 'Grupo Especial' },
-    { id: 4, grupo_desc: 'Grupo VIP' },
-    { id: 5, grupo_desc: 'Grupo Express' },
-  ];
-
-  // Simula resposta da API
-  const resposta = {
-    data: {
-      total: dadosFake.length,
-      last_id: null,
-      data: dadosFake,
-    },
-  };
-
-  return Promise.resolve(resposta as AxiosResponse<any>);
+  return api.get('/f-work/macros/v1/list_macros/', { params });
 };
 
-export const insertSavedFilter = (data: any): Promise<AxiosResponse<{ id: number }>> => {
-  return api.post('/fuel/v1/reports/insert', data);
+export const insertSavedFilter = (data: InsertSavedFilterData): Promise<AxiosResponse<{ id: number }>> => {
+  return api.post('/f-work/macros/v1/reports/filter', data);
 };
 
 export const deleteSavedFilter = (
   ids: number[],
 ): Promise<AxiosResponse<{ num_rows_affected: number }>> => {
-  return api.delete(`/fuel/v1/reports/delete/${JSON.stringify(ids)}`);
+  return api.delete(`/f-work/macros/v1/reports/filters/${JSON.stringify(ids)}`);
 };
 
-const convertReportDataToParams = (data: any): any => {
-  const columns = Object.entries(data.options.colunas)
-    .filter((entry) => entry[1] === 1)
-    .map(([key]) => key)
-    .join(',');
+export const getReports = (params?: GetReportsParams): Promise<AxiosResponse<any>> => {
+  return api.get('/f-work/macros/v1/reports/', { params });
+};
 
-  const createParams = (data: any) => {
-    const params = {
-      customer_id: data.customer_id,
-      ativo_group_id: data.ativo_group_id,
-      driver_id: data.driver_id,
-      initial_data: data.initial_data,
-      final_data: data.final_data,
-      columns,
-      ponto_referencia: data.options.ponto_referencia,
-      preco_combustivel: data.options.preco_combustivel,
-      ativos: data.ativo_id ? data.ativo_id : undefined,
-      limit: data.limit,
-      page: data.page,
-      order_field: data.order_field,
-      order: data.order,
-    };
+export const getSavedFilters = (params?: GetSavedFiltersParams): Promise<AxiosResponse<SavedFiltersApiResponse>> => {
+  return api.get('/f-work/macros/v1/reports/filter', { params });
+};
 
-    // Remove chaves com valores vazios ou zerados
-    return Object.fromEntries(
-      Object.entries(params).filter(
-        ([, value]) => value !== undefined && value !== null && value !== 0 && value !== '',
+// Funções utilitárias para simplificar a montagem dos dados
+export const formatDateTime = (
+  date: Date,
+  time: TimeRange,
+): string => {
+  return format(
+    setSeconds(
+      setMinutes(
+        setHours(date, parseInt(time.hour)),
+        parseInt(time.minute),
       ),
-    );
-  };
-
-  const params = createParams(data);
-
-  return params as any;
+      parseInt(time.second),
+    ),
+    'dd/MM/yyyy HH:mm:ss',
+  );
 };
+
+export const buildReportParams = (data: {
+  selectedClient: ICustomSelectOption | null;
+  selectedVehicle: ICustomSelectOption[];
+  selectedMotorista: ICustomSelectOption | null;
+  selectedGruposMacros: ICustomSelectOption[];
+  selectedRange: Range[];
+  startTime: TimeRange;
+  endTime: TimeRange;
+  referencePointSelected: { isChecked: boolean; value: number };
+}) => {
+  return {
+    customer_id: Number(data.selectedClient?.value),
+    ...(data.selectedVehicle.length > 0 && {
+      ativos_ids: data.selectedVehicle.map((item) => item.value).join(','),
+    }),
+    ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
+    ...(data.selectedGruposMacros.length > 0 && {
+      macros_group_ids: data.selectedGruposMacros.map((item) => item.value).join(','),
+    }),
+    dt_initial: data.selectedRange[0].startDate
+      ? formatDateTime(data.selectedRange[0].startDate, data.startTime)
+      : '',
+    dt_final: data.selectedRange[0].endDate
+      ? formatDateTime(data.selectedRange[0].endDate, data.endTime)
+      : '',
+    ponto_referencia: data.referencePointSelected.isChecked
+      ? data.referencePointSelected.value === 0
+        ? 100
+        : data.referencePointSelected.value
+      : 0,
+  };
+};
+
+export const buildSavedFilterData = (data: {
+  selectedClient: ICustomSelectOption | null;
+  selectedVehicle: ICustomSelectOption[];
+  selectedMotorista: ICustomSelectOption | null;
+  selectedGruposMacros: ICustomSelectOption[];
+  selectedRange: Range[];
+  startTime: TimeRange;
+  endTime: TimeRange;
+}) => {
+  return {
+    customer_id: Number(data.selectedClient?.value),
+    ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
+    dt_initial: data.selectedRange[0].startDate
+      ? formatDateTime(data.selectedRange[0].startDate, data.startTime)
+      : '',
+    dt_final: data.selectedRange[0].endDate
+      ? formatDateTime(data.selectedRange[0].endDate, data.endTime)
+      : '',
+    ativos_ids: data.selectedVehicle.map((item) => Number(item.value)),
+    macro_groups_ids: data.selectedGruposMacros.map((item) => Number(item.value)),
+  };
+};
+
+// Função para transformar dados da API no formato esperado pelos componentes
+export const transformSavedFilterData = (apiData: SavedFilterResponse) => {
+  return {
+    id: apiData.id,
+    customer_id: apiData.customer_id,
+    customer_desc: apiData.customer_desc,
+    date_created: apiData.dt_created,
+    initial_data: apiData.dt_initial,
+    final_data: apiData.dt_final,
+    ativo_desc: apiData.ativos.length > 0 ? apiData.ativos[0].ativo_desc : '',
+    driver_id: apiData.driver_id,
+    driver_desc: apiData.driver_desc,
+    options: {
+      ativos: apiData.ativos.map(ativo => ({
+        ativo_id: ativo.ativo_id,
+        ativo_desc: ativo.ativo_desc,
+      })),
+      ponto_referencia: 0, // Este valor não vem da API, pode ser definido como padrão
+    },
+  };
+};
+

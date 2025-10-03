@@ -19,7 +19,6 @@ import {
   CalendarIcon,
   ClientIcon,
   DriverHeaderIcon,
-  GroupIcon,
   ReferencePointIcon,
 } from '../../svg';
 import { addDays, format, startOfMonth } from 'date-fns';
@@ -203,18 +202,19 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
           setSelected={handlers.setSelectedMotorista}
         />
 
-        <Select
-          icon={<GroupIcon width={24} height={24} />}
-          width="100%"
+        <MultiSelect
           label={'Grupos de macros'}
           placeholder={t('select')}
-          options={[{ label: t('all_drivers'), value: '0' }, ...selectOptions.gruposMacrosOptions]}
+          value={formState.selectedGruposMacros}
+          options={selectOptions.gruposMacrosOptions}
+          onChangeItems={(selectedOptions: any) => {
+            handlers.setSelectedGruposMacros(selectedOptions);
+          }}
           isError={!!errors.gruposMacros}
           helpText={errors.gruposMacros ? t('this_field_is_required') : ''}
           required
-          t={t}
-          selected={formState.selectedGruposMacros}
-          setSelected={handlers.setSelectedGruposMacros}
+          selectAll
+          translation={t}
         />
 
         <SwitchReference>

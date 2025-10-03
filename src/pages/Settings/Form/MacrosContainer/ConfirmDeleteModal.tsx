@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { MyButton } from 'src/components/MyButton';
-import TrashIcon from '../../../../../assets/svgs/trash.svg';
+import TrashIcon from '../../../../assets/svgs/trash.svg?react';
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -37,10 +37,10 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       >
         <ModalContent>
           <CloseButton onClick={onClose}>
-            <img src={TrashIcon} alt="Close" width={24} height={24} />
+          <TrashIcon width={24} height={24} />
           </CloseButton>
 
-          <ModalTitle>Você tem certeza que gostaria de excluir?</ModalTitle>
+          <ModalTitle>Você tem certeza que gostaria de excluir a macro <span style={{ fontWeight: 'bold', color: '#1510b0' }}>"{macroName}"</span>?</ModalTitle>
 
           <ModalDescription>
             Os registros serão permanentemente excluídos e não poderão ser recuperados.

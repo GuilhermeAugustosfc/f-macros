@@ -16,6 +16,7 @@ import Body from './Body';
 import styled from 'styled-components';
 import { UnreachableContent } from '../../components/UnreachableContent';
 import { useQuery } from 'react-query';
+import { getReports } from '../../requets';
 
 const TableContent: React.FC<{
   data: any[];
@@ -108,60 +109,20 @@ export const CustomTable: React.FC<TableProps> = ({
 
   const { data: reportData, isFetching: reportLoading } = useQuery(
     `get_report/${JSON.stringify(params)}`,
-    async () => {
-      // Dados fake baseados na imagem fornecida
-      const fakeData = [
-        {
-          ativo_id: '1',
-          veiculo: 'ABC123A4',
-          grupo_macros: 3,
-          duracao_total: '22:30',
-          analise_detalhada: true,
-        },
-        {
-          ativo_id: '2',
-          veiculo: 'SVF452A8',
-          grupo_macros: 3,
-          duracao_total: '44:00',
-          analise_detalhada: true,
-        },
-        {
-          ativo_id: '3',
-          veiculo: 'HGG453B9',
-          grupo_macros: 5,
-          duracao_total: '40:05',
-          analise_detalhada: true,
-        },
-        {
-          ativo_id: '4',
-          veiculo: 'JKT982F7',
-          grupo_macros: 2,
-          duracao_total: '37:30',
-          analise_detalhada: true,
-        },
-        {
-          ativo_id: '5',
-          veiculo: 'PLM567H2',
-          grupo_macros: 4,
-          duracao_total: '48:00',
-          analise_detalhada: true,
-        },
-        {
-          ativo_id: '6',
-          veiculo: 'ABC123A4',
-          grupo_macros: 3,
-          duracao_total: '25:54',
-          analise_detalhada: true,
-        },
-      ];
-      return fakeData;
+    () => getReports(params),
+    { 
+      refetchOnWindowFocus: false, 
+      staleTime: 1000 * 60 * 100,
+      enabled: Boolean(params?.customer_id),
     },
-    { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 100 },
   );
 
   useEffect(() => {
     setVehicleTableData(null);
   }, [reportData, reportLoading]);
+
+  // Usar dados reais da API ou dados fake como fallback
+  const tableData = reportData?.data?.data || reportData?.data || [];
 
   if (reportLoading) {
     return (
@@ -170,11 +131,11 @@ export const CustomTable: React.FC<TableProps> = ({
       </LoadingContainer>
     );
   }
-  if (!reportData) {
+  if (!reportData || tableData.length === 0) {
     return <UnreachableContent openModal={handleOpenModal} />;
   }
 
-  return <TableContent data={reportData} setVehicleTableData={setVehicleTableData} />;
+  return <TableContent data={tableData} setVehicleTableData={setVehicleTableData} />;
 };
 
 const ContainerTable = styled.div`

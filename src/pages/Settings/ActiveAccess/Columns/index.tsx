@@ -2,18 +2,12 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@ftdata/ui';
 import { DivActive, SpanActive, SpanCustomer } from './styles';
 import { useTranslation } from '@ftdata/core';
+import { type ActivatedAccessItem } from '../requests';
 
-interface ActivatedAccessItem {
+interface ActivatedAccessItemWithCheckbox extends ActivatedAccessItem {
   checkbox: boolean;
-  ativo_id: string;
-  client: string;
-  plate: string;
-  vehicle: string;
-  activation_date: string;
-  deactivation_date: string;
-  is_active: number;
 }
-const columnHelper = createColumnHelper<ActivatedAccessItem>();
+const columnHelper = createColumnHelper<ActivatedAccessItemWithCheckbox>();
 
 export const ColumnsFunction = (
   selectedRows?: Set<string>,
@@ -27,9 +21,9 @@ export const ColumnsFunction = (
     if (selectedRows && selectedRows.size > 0) {
       setSelectedRows(new Set());
     } else {
-      // Selecionar todos os IDs disponíveis
-      const allIds = new Set(['345', '236', '12', '67', '98', '125']);
-      setSelectedRows(allIds);
+      // Esta função será chamada quando houver dados reais
+      // Por enquanto, não seleciona nada
+      setSelectedRows(new Set());
     }
   };
 
@@ -49,8 +43,8 @@ export const ColumnsFunction = (
     columnHelper.accessor('checkbox', {
       cell: (info) => (
         <Checkbox
-          onChange={() => handleSelectRow(info.row.original.ativo_id)}
-          checked={selectedRows?.has(info.row.original.ativo_id) || false}
+          onChange={() => handleSelectRow(info.row.original.ativo_id.toString())}
+          checked={selectedRows?.has(info.row.original.ativo_id.toString()) || false}
           label=""
         />
       ),
@@ -80,7 +74,7 @@ export const ColumnsFunction = (
       ),
       header: () => <span>{t('plate')}</span>,
     }),
-    columnHelper.accessor('vehicle', {
+    columnHelper.accessor('ativo', {
       cell: (info) => <span>{info.getValue().toString()}</span>,
       header: () => <span>{t('vehicle')}</span>,
     }),

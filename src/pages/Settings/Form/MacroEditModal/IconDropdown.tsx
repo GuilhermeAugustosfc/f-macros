@@ -2,11 +2,12 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { ArrowDownCalender } from 'src/pages/MacrosReport/components/svg';
 import { createIconOptions, DefaultIcon } from './icons';
+import { getColorById } from './colorMapping';
 
 interface IconDropdownProps {
-  selectedIconType: string;
-  selectedColor: string;
-  onIconChange: (iconType: string) => void;
+  selectedIconType: number;
+  selectedColor: number;
+  onIconChange: (iconType: number) => void;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
@@ -40,7 +41,7 @@ export const IconDropdown: React.FC<IconDropdownProps> = ({
     }
   }, [isOpen, onClose]);
 
-  const handleIconSelect = (iconType: string) => {
+  const handleIconSelect = (iconType: number) => {
     onIconChange(iconType);
     onClose();
   };
@@ -50,7 +51,7 @@ export const IconDropdown: React.FC<IconDropdownProps> = ({
   return (
     <IconDropdownContainer ref={dropdownRef}>
       <DropdownButton onClick={onToggle} isOpen={isOpen}>
-        <IconTypePreview backgroundColor={selectedColor}>
+        <IconTypePreview backgroundColor={getColorById(selectedColor)}>
           <IconTypeIcon>
             {selectedIcon?.icon || <DefaultIcon width={16} height={16} />}
           </IconTypeIcon>
@@ -68,7 +69,7 @@ export const IconDropdown: React.FC<IconDropdownProps> = ({
               onClick={() => handleIconSelect(icon.id)}
               isSelected={selectedIconType === icon.id}
             >
-              <IconTypePreview backgroundColor={selectedColor}>
+              <IconTypePreview backgroundColor={getColorById(selectedColor)}>
                 <IconTypeIcon>{icon.icon}</IconTypeIcon>
               </IconTypePreview>
               {selectedIconType === icon.id && <CheckIcon>✓</CheckIcon>}

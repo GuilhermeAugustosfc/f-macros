@@ -26,7 +26,7 @@ const Empty: React.FC = () => {
       <Paragraph
         size="caption"
         style={{
-          width: '400px',
+          // width: '400px',
           color: '#6B757C',
           fontFamily: 'Inter',
           fontSize: '14px',

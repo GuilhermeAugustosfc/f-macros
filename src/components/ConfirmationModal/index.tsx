@@ -1,106 +1,144 @@
-import React, { useRef } from 'react';
-import Modal from 'react-modal';
-import styled from 'styled-components';
-import { CSSTransition } from 'react-transition-group';
-import { MyButton } from '../MyButton';
+import { type JSX } from 'react';
+import styled, { keyframes } from 'styled-components';
+import * as tokens from '@ftdata/f-tokens';
+import { Button } from '@ftdata/ui';
 import { useTranslation } from '@ftdata/core';
+import { Icon } from '@ftdata/f-icons';
 
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-}
+const slideUp = keyframes`
+  0% {
+    transform: translateY(30%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
 
-Modal.setAppElement('#root');
+const ConfirmModalContainer = styled.div`
+  align-items: flex-end;
+  background-color: rgba(142, 150, 155, 0.32);
+  display: flex;
+  height: calc(100% - 4rem);
+  position: absolute;
+  top: 4rem;
+  width: 100%;
+  z-index: 1000;
+`;
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  title,
-  message,
-}) => {
-  const { t } = useTranslation();
-  const nodeRef = useRef(null); // cria ref manual
+const Wrapper = styled.div`
+  animation: ${slideUp} 0.2s ease-out;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.75rem 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.75rem 1.5rem 1.25rem 1.5rem;
+  width: 100%;
+`;
 
-  return (
-    <CSSTransition
-      in={isOpen}
-      timeout={100}
-      classNames="modal"
-      unmountOnExit
-      nodeRef={nodeRef} // evita o uso de findDOMNode
-    >
-      <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={title} style={modalStyles}>
-        <ModalContent>
-          <h2>{title}</h2>
-          <p>{message}</p>
-          <ModalActions>
-            <MyButton variant="secondary" title={t('cancel')} action={onClose} />
-            <MyButton iconType="delete" title={t('yes_you_can_delete')} action={onConfirm} />
-          </ModalActions>
-        </ModalContent>
-      </Modal>
-    </CSSTransition>
-  );
-};
+const IconContainer = styled.div<{ $iconColor: string }>`
+  align-items: center;
+  background-color: rgba(225, 145, 153, 0.1);
+  border-radius: 50%;
+  color: ${props => props.$iconColor};
+  display: flex;
+  height: 6.75rem;
+  justify-content: center;
+  width: 6.75rem;
+`;
 
-const ModalContent = styled.div`
-  padding: 32px;
-  border-radius: 8px;
-  background: #fff;
+const InfoContent = styled.div`
+  align-items: center;
+  color: ${tokens.COLOR_NEUTRAL_DUSK};
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  gap: 1rem;
+  width: 100%;
 
   h2 {
-    color: #26333b;
-    font-feature-settings: 'liga' off;
-    font-family: Inter;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 120%;
-    letter-spacing: -0.6px;
-    margin-bottom: 24px;
-    text-align: start;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    letter-spacing: ${tokens.LETTER_SPACING_TIGHT};
   }
 
   p {
-    color: #6b757c;
-    font-feature-settings: 'liga' off;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    margin-bottom: 32px;
+    max-width: 90%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 `;
 
-const ModalActions = styled.div`
+const ButtonsContainer = styled.div`
+  align-items: center;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  gap: 16px;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding-top: 1rem;
+  width: 100%;
+
+  button {
+    width: 100%;
+  }
 `;
 
-const modalStyles = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1000,
-  },
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#FFF',
-    padding: '0',
-    borderRadius: '8px',
-    width: '504px',
-    minHeight: '232px',
-    boxShadow: '0px 4px 8px 0px rgba(107, 117, 124, 0.32)',
-  },
-};
+export interface ConfirmationModalProps {
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+  title: string;
+  description: string;
+  confirmText?: string;
+  cancelText?: string;
+  iconName?: any;
+  iconColor?: string;
+  confirmButtonColor?: string;
+  confirmButtonVariant?: 'primary' | 'secondary' | 'ghost';
+}
+
+export default function ConfirmationModal({
+  isOpen,
+  onConfirm,
+  onCancel,
+  title,
+  description,
+  confirmText,
+  cancelText,
+  iconName = 'ui trash-delete-bin-1' as const,
+  iconColor = tokens.COLOR_DANGER_MEDIUM,
+  confirmButtonColor = tokens.COLOR_DANGER_MEDIUM,
+  confirmButtonVariant = 'primary',
+}: ConfirmationModalProps): JSX.Element | null {
+  const { t } = useTranslation();
+
+  if (!isOpen) return null;
+
+  return (
+    <ConfirmModalContainer>
+      <Wrapper>
+        <IconContainer $iconColor={iconColor}>
+          <Icon name={iconName} color="currentColor" size="3rem" />
+        </IconContainer>
+        <InfoContent>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </InfoContent>
+
+        <ButtonsContainer>
+          <Button
+            variant={confirmButtonVariant}
+            onClick={onConfirm}
+            style={{ backgroundColor: confirmButtonColor }}
+          >
+            {confirmText || t('yes_i_want_to_continue')}
+          </Button>
+          <Button variant="ghost" onClick={onCancel}>
+            {cancelText || t('cancel')}
+          </Button>
+        </ButtonsContainer>
+      </Wrapper>
+    </ConfirmModalContainer>
+  );
+}

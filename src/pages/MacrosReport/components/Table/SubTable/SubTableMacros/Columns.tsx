@@ -3,7 +3,7 @@ import { RouteIcon, ArrowDownCalender } from 'src/pages/MacrosReport/components/
 import { DatePicker } from 'rsuite';
 import 'rsuite/dist/rsuite.css';
 import styled from 'styled-components';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -96,72 +96,6 @@ const EditIcon = styled.div`
   justify-content: center;
 `;
 
-const FloatingSelect = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 999999;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0px 2px 4px 0px rgba(107, 117, 124, 0.32);
-  max-height: 218px;
-  overflow-x: clip;
-  overflow-y: auto;
-  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
-  flex-direction: column;
-  gap: 10px;
-  padding: 8px 0;
-`;
-
-const SelectOption = styled.button<{ isSelected?: boolean }>`
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow: clip;
-  padding: 8px 16px;
-  width: 100%;
-  text-align: left;
-
-  &:hover {
-    background: #f8f9fa;
-  }
-`;
-
-const OptionMacroButton = styled.div<{ color: string }>`
-  background: ${({ color }) => color};
-  border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 26px;
-  justify-content: center;
-  width: max-content;
-
-  svg {
-    width: 18px;
-    height: 18px;
-    stroke: white;
-    flex-shrink: 0;
-  }
-`;
-
-const OptionText = styled.p`
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 1.5;
-  color: white;
-  white-space: nowrap;
-  margin: 0;
-`;
 
 const HoverArrow = styled.div`
   position: absolute;
@@ -254,151 +188,6 @@ const EditableDateCell = ({
   );
 };
 
-// Componente para célula editável de macro
-const EditableMacroCell = ({
-  value,
-  onSave,
-  isEdited,
-}: {
-  value: any;
-  onSave: (newValue: any) => void;
-  isEdited: boolean;
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
-  const selectRef = useRef<HTMLDivElement>(null);
-
-  const macroOptions = [
-    {
-      value: 'inicio',
-      name: 'Início de jornada',
-      color: '#19A675', // Visual/Green
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 2L2 7L12 12L22 7L12 2Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
-    },
-    {
-      value: 'aguardando',
-      name: 'Aguardando mudas',
-      color: '#D3771E', // Visual/Yellow
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-          <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      ),
-    },
-    {
-      value: 'pulverizando',
-      name: 'Pulverizando lavoura',
-      color: '#6390F5', // Visual/Blue
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 2L2 7L12 12L22 7L12 2Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
-    },
-    {
-      value: 'plantando',
-      name: 'Plantando mudas',
-      color: '#3A99D5', // Visual/Cyan
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M7 13L12 8L17 13M12 8V20"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
-    },
-    {
-      value: 'fim',
-      name: 'Fim de jornada',
-      color: '#E95F77', // Visual/Red
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M9 9L15 15M15 9L9 15"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  const handleOptionClick = (selectedOption: any) => {
-    const newValue = {
-      name: selectedOption.name,
-      color: selectedOption.color,
-      icon: selectedOption.icon,
-    };
-    setEditValue(newValue);
-    onSave(newValue);
-    setIsEditing(false);
-  };
-
-  const handleCellClick = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-      setIsEditing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isEditing) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [isEditing]);
-
-  return (
-    <EditableCell ref={selectRef} isEditable={true} onClick={handleCellClick}>
-      <MacroButton color={editValue.color}>
-        {editValue.icon}
-        {editValue.name}
-      </MacroButton>
-      {isEdited && <EditIcon />}
-      <FloatingSelect isOpen={isEditing}>
-        {macroOptions.map((option) => (
-          <SelectOption
-            key={option.value}
-            onClick={() => handleOptionClick(option)}
-            isSelected={editValue.value === option.value}
-          >
-            <OptionMacroButton color={option.color}>
-              {option.icon}
-              <OptionText>{option.name}</OptionText>
-            </OptionMacroButton>
-          </SelectOption>
-        ))}
-      </FloatingSelect>
-    </EditableCell>
-  );
-};
 
 export const ColumnsFunction = (): ColumnDef<any>[] => {
   const [editedCells, setEditedCells] = useState<Record<string, boolean>>({});
@@ -414,15 +203,12 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
       header: () => <span>Macros</span>,
       cell: (info) => {
         const macro = info.getValue();
-        const rowId = info.row.id;
-        const isEdited = editedCells[`${rowId}-macro`];
 
         return (
-          <EditableMacroCell
-            value={macro}
-            onSave={(newValue) => handleSave(rowId, 'macro', newValue)}
-            isEdited={isEdited}
-          />
+          <MacroButton color={macro.color}>
+            {macro.icon}
+            {macro.name}
+          </MacroButton>
         );
       },
     }),

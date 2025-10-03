@@ -11,7 +11,7 @@ import {
   ClientIcon,
   ReferencePointIcon,
 } from '../../svg';
-import { deleteSavedFilter } from 'src/pages/MacrosReport/requets';
+import { deleteSavedFilter, getSavedFilters, transformSavedFilterData } from 'src/pages/MacrosReport/requets';
 import MediaLibraryIcon from '../../../../../assets/media-library-folder-checkmark.svg';
 import { queryClient } from 'src/services/queryClient';
 import { Button, DoubleList, Loading } from '@ftdata/ui';
@@ -41,7 +41,7 @@ export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element =>
 
   const deleteMutation = useMutation(deleteSavedFilter, {
     onSuccess: () => {
-      queryClient.invalidateQueries('saved_filters/f-fuel');
+      queryClient.invalidateQueries('saved_filters/f-macros');
       setSelectedFilters([]);
     },
   });
@@ -55,100 +55,18 @@ export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element =>
   };
 
   const { data: itemFilterSaved, isLoading } = useQuery(
-    `saved_filters/f-fuel`,
-    () => {
-      return {
-        data: {
-          data: [
-            {
-              id: 1,
-              customer_id: 123,
-              customer_desc: 'Transportadora ABC Ltda',
-              date_created: '15/12/2024 14:30:25',
-              initial_data: '01/12/2024 00:00:00',
-              final_data: '15/12/2024 23:59:59',
-              ativo_desc: 'Frota Norte - Caminhão 001',
-              driver_id: 456,
-              driver_desc: 'João Silva',
-              options: {
-                ativos: [
-                  { ativo_id: 101, ativo_desc: 'Caminhão 001' },
-                  { ativo_id: 102, ativo_desc: 'Caminhão 002' },
-                  { ativo_id: 103, ativo_desc: 'Van 001' },
-                ],
-                ponto_referencia: 500,
-              },
-            },
-            {
-              id: 2,
-              customer_id: 789,
-              customer_desc: 'Logística XYZ S.A.',
-              date_created: '14/12/2024 09:15:42',
-              initial_data: '10/12/2024 08:00:00',
-              final_data: '14/12/2024 18:00:00',
-              ativo_desc: 'Frota Sul - Múltiplos Veículos',
-              driver_id: 789,
-              driver_desc: 'Maria Santos',
-              options: {
-                ativos: [
-                  { ativo_id: 201, ativo_desc: 'Caminhão 003' },
-                  { ativo_id: 202, ativo_desc: 'Caminhão 004' },
-                  { ativo_id: 203, ativo_desc: 'Caminhão 005' },
-                  { ativo_id: 204, ativo_desc: 'Van 002' },
-                  { ativo_id: 205, ativo_desc: 'Van 003' },
-                  { ativo_id: 206, ativo_desc: 'Carreta 001' },
-                  { ativo_id: 207, ativo_desc: 'Carreta 002' },
-                  { ativo_id: 208, ativo_desc: 'Caminhão 006' },
-                  { ativo_id: 209, ativo_desc: 'Caminhão 007' },
-                  { ativo_id: 210, ativo_desc: 'Caminhão 008' },
-                ],
-                ponto_referencia: null,
-              },
-            },
-            {
-              id: 3,
-              customer_id: 456,
-              customer_desc: 'Express Delivery',
-              date_created: '13/12/2024 16:45:18',
-              initial_data: '12/12/2024 06:00:00',
-              final_data: '13/12/2024 22:00:00',
-              ativo_desc: 'Frota Urbana - Vans',
-              driver_id: 321,
-              driver_desc: 'Pedro Oliveira',
-              options: {
-                ativos: [
-                  { ativo_id: 301, ativo_desc: 'Van 004' },
-                  { ativo_id: 302, ativo_desc: 'Van 005' },
-                ],
-                ponto_referencia: 200,
-              },
-            },
-            {
-              id: 4,
-              customer_id: 654,
-              customer_desc: 'Cargas Pesadas Brasil',
-              date_created: '12/12/2024 11:20:33',
-              initial_data: '08/12/2024 00:00:00',
-              final_data: '12/12/2024 23:59:59',
-              ativo_desc: 'Frota Pesada - Carretas',
-              driver_id: 987,
-              driver_desc: 'Carlos Mendes',
-              options: {
-                ativos: [
-                  { ativo_id: 401, ativo_desc: 'Carreta 003' },
-                  { ativo_id: 402, ativo_desc: 'Carreta 004' },
-                  { ativo_id: 403, ativo_desc: 'Caminhão 009' },
-                  { ativo_id: 404, ativo_desc: 'Caminhão 010' },
-                ],
-                ponto_referencia: 1000,
-              },
-            },
-          ],
-        },
-      };
-    },
+    `saved_filters/f-macros`,
+    () => getSavedFilters(),
     {
       staleTime: 1000 * 60 * 30,
+      select: (data) => {
+        // Transformar os dados da API para o formato esperado pelos componentes
+        return {
+          data: {
+            data: data.data.data.map(transformSavedFilterData),
+          },
+        };
+      },
     },
   );
 

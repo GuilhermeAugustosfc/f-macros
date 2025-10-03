@@ -12,144 +12,96 @@ import {
 import { Button, Loading, Paragraph, Title } from '@ftdata/ui';
 import TableContent from './Table';
 import { useQuery } from 'react-query';
-interface ActivatedAccessItem {
-  checkbox: boolean;
-  ativo_id: string;
-  client: string;
-  plate: string;
-  vehicle: string;
-  activation_date: string;
-  deactivation_date: string;
-  is_active: number;
-}
 import CountAccess from './CountAccess';
 import { useTranslation } from '@ftdata/core';
 import Empty from '../Empty';
 // import { Pagination } from 'src/components/Table/Pagination';
 import { ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
+import { getActiveAccessList, getCountAccess, activateAccess, deactivateAccess, type ActivatedAccessItem } from './requests';
+import ConfirmationModal from 'src/components/ConfirmationModal';
 
-interface ICountData {
-  access: number;
-  available: number;
-  unavailable: number;
+// Interface para dados com checkbox (usado na tabela)
+interface ActivatedAccessItemWithCheckbox extends ActivatedAccessItem {
+  checkbox: boolean;
 }
-
-export const INITIAL_DATA_COUNT: ICountData = {
-  access: 0,
-  available: 6,
-  unavailable: 0,
-};
-
-// Dados fake baseados na imagem
-const FAKE_DATA: ActivatedAccessItem[] = [
-  {
-    checkbox: false,
-    ativo_id: '345',
-    client: 'Márcio',
-    plate: 'JHG-6372',
-    vehicle: 'Fox',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-  {
-    checkbox: false,
-    ativo_id: '236',
-    client: 'Márcio',
-    plate: 'POG-6382',
-    vehicle: 'BMW',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-  {
-    checkbox: false,
-    ativo_id: '12',
-    client: 'Márcio',
-    plate: 'FTS-9243',
-    vehicle: 'Gol',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-  {
-    checkbox: false,
-    ativo_id: '67',
-    client: 'Márcio',
-    plate: 'QWD-1246',
-    vehicle: 'Fox',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-  {
-    checkbox: false,
-    ativo_id: '98',
-    client: 'Márcio',
-    plate: 'CGH-7548',
-    vehicle: 'Gol',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-  {
-    checkbox: false,
-    ativo_id: '125',
-    client: 'Márcio',
-    plate: 'LIH-7543',
-    vehicle: 'Fox',
-    activation_date: '',
-    deactivation_date: '',
-    is_active: 0, // Desativado
-  },
-];
 
 export function ActiveAccess(): JSX.Element {
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState('');
-  const [, setTableData] = useState<any>(null);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'activate' | 'deactivate' | null>(null);
 
   const { data: countAccess, refetch: refetchCountAccess } = useQuery(
     'countAccess',
-    () => INITIAL_DATA_COUNT,
+    getCountAccess,
   );
 
   const {
     data: listAccess,
     refetch: refetchListAccess,
     isLoading,
-  } = useQuery('listAccess', () => FAKE_DATA);
+  } = useQuery('listAccess', getActiveAccessList);
 
   // Filtro local dos dados
   const filteredData = React.useMemo(() => {
     if (!listAccess) return [];
-    if (!filterValue) return listAccess;
+    
+    // Adicionar checkbox aos dados
+    const dataWithCheckbox: ActivatedAccessItemWithCheckbox[] = listAccess.map(item => ({
+      ...item,
+      checkbox: false
+    }));
+    
+    if (!filterValue) return dataWithCheckbox;
 
-    return listAccess.filter((item) => {
-      const plate = `${item.plate.toLowerCase()} - ${item.ativo_id.toLowerCase()}`;
+    return dataWithCheckbox.filter((item) => {
+      const plate = `${item.plate.toLowerCase()} - ${item.ativo_id.toString().toLowerCase()}`;
       const isPlate = plate.includes(filterValue.toLowerCase());
       const isClient = item.client.toLowerCase().includes(filterValue.toLowerCase());
       return isPlate || isClient;
     });
   }, [listAccess, filterValue]);
 
-  const handleAccess = async (action: 'deactivate' | 'activate') => {
+  const handleAccess = (action: 'deactivate' | 'activate') => {
     if (selectedRows.size === 0) return;
+    
+    setPendingAction(action);
+    setShowConfirmModal(true);
+  };
 
-    const selectedItems = filteredData.filter((item) => selectedRows.has(item.ativo_id));
+  const handleConfirmAction = async () => {
+    if (!pendingAction) return;
 
-    if (action === 'activate') {
-      console.log('activate', selectedItems);
-    } else {
-      console.log('deactivate', selectedItems);
+    const selectedItems = filteredData.filter((item) => selectedRows.has(item.ativo_id.toString()));
+    const ativosIds = selectedItems.map(item => item.ativo_id);
+
+    try {
+      if (pendingAction === 'activate') {
+        await activateAccess({ ativos_id: ativosIds });
+        console.log('Acessos ativados com sucesso:', selectedItems);
+      } else {
+        await deactivateAccess({ ativos_id: ativosIds });
+        console.log('Acessos desativados com sucesso:', selectedItems);
+      }
+
+      // Limpar seleção após ação
+      setSelectedRows(new Set());
+      refetchListAccess();
+      refetchCountAccess();
+      notificationSuccess(pendingAction);
+    } catch (error) {
+      console.error(`Erro ao ${pendingAction} acessos:`, error);
+      // Aqui você pode adicionar uma notificação de erro se necessário
+    } finally {
+      setShowConfirmModal(false);
+      setPendingAction(null);
     }
+  };
 
-    // Limpar seleção após ação
-    setSelectedRows(new Set());
-    refetchListAccess();
-    refetchCountAccess();
-    notificationSuccess(action);
+  const handleCancelAction = () => {
+    setShowConfirmModal(false);
+    setPendingAction(null);
   };
 
   const notificationSuccess = (action: string) => {
@@ -169,7 +121,11 @@ export function ActiveAccess(): JSX.Element {
                 </Paragraph>
               </div>
 
-              <CountAccess {...(countAccess || INITIAL_DATA_COUNT)} />
+              <CountAccess 
+                access={countAccess?.access ?? 0}
+                available={countAccess?.available ?? 0}
+                unavailable={countAccess?.unavailable ?? 0}
+              />
             </HeaderDescription>
 
             <ContainerActions>
@@ -208,7 +164,6 @@ export function ActiveAccess(): JSX.Element {
           <ContainerTableGrid>
             <TableContent
               data={filteredData}
-              setTableData={setTableData}
               selectedRows={selectedRows}
               setSelectedRows={setSelectedRows}
             />
@@ -217,6 +172,23 @@ export function ActiveAccess(): JSX.Element {
           <Empty />
         )}
       </ContainerTabContent>
+      
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onConfirm={handleConfirmAction}
+        onCancel={handleCancelAction}
+        title={pendingAction === 'activate' ? t('activate_access') : t('deactivate_access')}
+        description={
+          pendingAction === 'activate' 
+            ? t('do_you_want_to_activate_the_selected_accesses')
+            : t('do_you_want_to_deactivate_the_selected_accesses')
+        }
+        confirmText={pendingAction === 'activate' ? t('activate') : t('deactivate')}
+        iconName={pendingAction === 'activate' ? 'ui check-circle' : 'ui trash-delete-bin-1'}
+        iconColor={pendingAction === 'activate' ? '#10B981' : '#EF4444'}
+        confirmButtonColor={pendingAction === 'activate' ? '#10B981' : '#EF4444'}
+      />
+      
       {/* {!isLoading && listAccess && listAccess.length > 0 && <Pagination table={table} />} */}
     </>
   );

@@ -1,32 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { ArrowDownCalender } from 'src/pages/MacrosReport/components/svg';
-
-interface ColorOption {
-  id: string;
-  color: string;
-  name: string;
-}
+import { colorOptions, getColorById } from './colorMapping';
 
 interface ColorDropdownProps {
-  selectedColor: string;
-  onColorChange: (color: string) => void;
+  selectedColor: number;
+  onColorChange: (colorId: number) => void;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
 }
-
-const colorOptions: ColorOption[] = [
-  { id: 'default', color: '#85919e', name: 'Padrão' },
-  { id: 'blue', color: '#316ee8', name: 'Azul' },
-  { id: 'green', color: '#19a675', name: 'Verde' },
-  { id: 'red', color: '#e95f77', name: 'Vermelho' },
-  { id: 'orange', color: '#d3771e', name: 'Laranja' },
-  { id: 'purple', color: '#8B5CF6', name: 'Roxo' },
-  { id: 'pink', color: '#EC4899', name: 'Rosa' },
-  { id: 'yellow', color: '#F59E0B', name: 'Amarelo' },
-  { id: 'gray', color: '#6B7280', name: 'Cinza' },
-];
 
 export const ColorDropdown: React.FC<ColorDropdownProps> = ({
   selectedColor,
@@ -54,15 +37,15 @@ export const ColorDropdown: React.FC<ColorDropdownProps> = ({
     }
   }, [isOpen, onClose]);
 
-  const handleColorSelect = (color: string) => {
-    onColorChange(color);
+  const handleColorSelect = (colorId: number) => {
+    onColorChange(colorId);
     onClose();
   };
 
   return (
     <ColorDropdownContainer ref={dropdownRef}>
       <DropdownButton onClick={onToggle} isOpen={isOpen}>
-        <ColorPreview color={selectedColor} />
+        <ColorPreview color={getColorById(selectedColor)} />
         <DropdownArrow isOpen={isOpen}>
           <ArrowDownCalender width={16} height={16} />
         </DropdownArrow>
@@ -73,11 +56,11 @@ export const ColorDropdown: React.FC<ColorDropdownProps> = ({
           {colorOptions.map((color) => (
             <DropdownItem
               key={color.id}
-              onClick={() => handleColorSelect(color.color)}
-              isSelected={selectedColor === color.color}
+              onClick={() => handleColorSelect(color.id)}
+              isSelected={selectedColor === color.id}
             >
               <ColorPreview color={color.color} />
-              {selectedColor === color.color && <CheckIcon>✓</CheckIcon>}
+              {selectedColor === color.id && <CheckIcon>✓</CheckIcon>}
             </DropdownItem>
           ))}
         </DropdownMenu>

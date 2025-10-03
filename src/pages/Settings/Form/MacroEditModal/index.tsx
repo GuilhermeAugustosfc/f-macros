@@ -26,8 +26,8 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
 }) => {
   const nodeRef = useRef(null);
   const [title, setTitle] = useState('');
-  const [selectedColor, setSelectedColor] = useState('#85919e');
-  const [selectedIconType, setSelectedIconType] = useState('icone1');
+  const [selectedColor, setSelectedColor] = useState(1);
+  const [selectedIconType, setSelectedIconType] = useState(1);
   const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
   const [iconDropdownOpen, setIconDropdownOpen] = useState(false);
 
@@ -36,11 +36,11 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
     if (macro) {
       setTitle(macro.name);
       setSelectedColor(macro.color);
-      setSelectedIconType(macro.iconType || 'icone1');
+      setSelectedIconType(macro.iconType || 1);
     } else {
       setTitle('');
-      setSelectedColor('#85919e');
-      setSelectedIconType('icone1');
+      setSelectedColor(1);
+      setSelectedIconType(1);
     }
   }, [macro]);
 
@@ -65,8 +65,8 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
   const handleClose = () => {
     // Resetar para valores padrão
     setTitle('');
-    setSelectedColor('#85919e');
-    setSelectedIconType('icone1');
+    setSelectedColor(1);
+    setSelectedIconType(1);
     setColorDropdownOpen(false);
     setIconDropdownOpen(false);
     onClose();

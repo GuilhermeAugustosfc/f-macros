@@ -2,12 +2,8 @@ import { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'r
 import { useQuery } from 'react-query';
 import {
   endOfMonth,
-  format,
   startOfMonth,
   subMonths,
-  setHours,
-  setMinutes,
-  setSeconds,
 } from 'date-fns';
 import { useTranslation } from '@ftdata/core';
 
@@ -20,6 +16,8 @@ import {
   getVehicles,
   insertSavedFilter,
   getGroups,
+  buildReportParams,
+  buildSavedFilterData,
 } from 'src/pages/MacrosReport/requets';
 import { useToast } from 'src/contexts/toast';
 import { type ICustomSelectOption } from '@ftdata/ui';
@@ -36,9 +34,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
   const [selectedMotorista, setSelectedMotorista] = useState<ICustomSelectOption | null>(
     emptyValue,
   );
-  const [selectedGruposMacros, setSelectedGruposMacros] = useState<ICustomSelectOption | null>(
-    emptyValue,
-  );
+  const [selectedGruposMacros, setSelectedGruposMacros] = useState<ICustomSelectOption[]>([]);
   const [selectedRange, setSelectedRange] = useState<Range[]>([
     { startDate: new Date(), endDate: new Date(), key: 'selection' },
   ]);
@@ -126,17 +122,21 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
   );
 
   const { data: dataGruposMacros } = useQuery(
-    ['gruposMacros', selectedClient?.value],
-    () => getGroups({ customer_id: Number(selectedClient?.value) }).then((res) => res.data.data),
+    ['gruposMacros', selectedVehicle],
+    () => {
+      if (selectedVehicle.length === 0) return Promise.resolve([]);
+      // Usar o primeiro veículo selecionado para buscar os grupos
+      return getGroups({ ativo_id: Number(selectedVehicle[0].value) }).then((res) => res.data.data);
+    },
     {
       staleTime: 1000 * 60 * 30,
-      enabled: Boolean(selectedClient?.value),
+      enabled: selectedVehicle.length > 0,
       refetchOnWindowFocus: false,
       select: (data) =>
         data.map(
           (grupo): ICustomSelectOption => ({
             value: grupo.id.toString(),
-            label: grupo.grupo_desc,
+            label: grupo.description,
           }),
         ),
     },
@@ -167,7 +167,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     if (client.value) setSelectedClient({ value: client.value, label: client.label });
     if (vehicle.length) setSelectedVehicle(vehicle);
     if (gruposMacros.value)
-      setSelectedGruposMacros({ value: gruposMacros.value, label: gruposMacros.label });
+      setSelectedGruposMacros([{ value: gruposMacros.value, label: gruposMacros.label }]);
     if (period?.endDate && period?.startDate) {
       setSelectedRange([
         {
@@ -222,7 +222,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       client: !selectedClient?.value,
       vehicle: selectedVehicle.length === 0,
       motorista: !selectedMotorista?.value,
-      gruposMacros: !selectedGruposMacros?.value,
+      gruposMacros: selectedGruposMacros.length === 0,
     };
     setErrors(newErrors);
 
@@ -235,60 +235,12 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       return;
     }
 
-    const formSavedData = {
-      customer_id: Number(data.selectedClient?.value),
-      ...(data.selectedVehicle.length > 0 && {
-        ativo_id: data.selectedVehicle.map((item) => item.value).join(','),
-      }),
-      ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
-      ...(data.selectedGruposMacros?.value && {
-        group_id: Number(data.selectedGruposMacros.value),
-      }),
-      initial_data: data.selectedRange[0].startDate
-        ? format(
-            setSeconds(
-              setMinutes(
-                setHours(data.selectedRange[0].startDate, parseInt(data.startTime.hour)),
-                parseInt(data.startTime.minute),
-              ),
-              parseInt(data.startTime.second),
-            ),
-            'dd/MM/yyyy HH:mm:ss',
-          )
-        : '',
-      final_data: data.selectedRange[0].endDate
-        ? format(
-            setSeconds(
-              setMinutes(
-                setHours(data.selectedRange[0].endDate, parseInt(data.endTime.hour)),
-                parseInt(data.endTime.minute),
-              ),
-              parseInt(data.endTime.second),
-            ),
-            'dd/MM/yyyy HH:mm:ss',
-          )
-        : '',
-
-      ponto_referencia: data.referencePointSelected.isChecked
-        ? data.referencePointSelected.value == 0
-          ? 100
-          : data.referencePointSelected.value
-        : 0,
-    };
+    const formSavedData = buildReportParams(data);
 
     applyFilter(formSavedData);
 
     if (data.saveFilters) {
-      const insertItem = {
-        ...formSavedData,
-        ativos: data.selectedVehicle.map((item) => ({
-          ativo_id: item.value,
-          ativo_plate: item.label,
-          ativo_desc: item.label,
-        })),
-      };
-
-      delete insertItem.ativo_id;
+      const insertItem = buildSavedFilterData(data);
 
       insertSavedFilter(insertItem).then(() => {
         queryClient.invalidateQueries(`saved_filters/f-macros`);
@@ -355,8 +307,10 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       setEndTimeValue(data.endTime);
     }
 
-    if (data.selectedGruposMacros) {
-      setGruposMacros(data.selectedGruposMacros);
+    if (data.selectedGruposMacros && data.selectedGruposMacros.length > 0) {
+      // Para compatibilidade com o contexto, usar o primeiro item selecionado
+      const firstGroup = data.selectedGruposMacros[0];
+      setGruposMacros(firstGroup);
     }
   };
 
@@ -380,7 +334,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     formState: {
       selectedClient: selectedClient ?? emptyValue,
       selectedMotorista: selectedMotorista ?? emptyValue,
-      selectedGruposMacros: selectedGruposMacros ?? emptyValue,
+      selectedGruposMacros: selectedGruposMacros ?? [],
       selectedVehicle,
       selectedRange,
       startTime,

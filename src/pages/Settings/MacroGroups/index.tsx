@@ -16,95 +16,101 @@ import Empty from '../Empty';
 import { AddCircleIcon, ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
 import TableContent from './Table';
 import { useNavigate } from 'react-router-dom';
-
-interface MacroGroupItem {
-  checkbox: boolean;
-  id: string;
-  client: string;
-  vehicle: string;
-  macroGroup: string;
-  lastModification: string;
-}
-
-// Dados mockados baseados na imagem fornecida
-const FAKE_MACRO_GROUPS_DATA: MacroGroupItem[] = [
-  {
-    checkbox: false,
-    id: '1',
-    client: 'Transportes SA',
-    vehicle: 'CD5678',
-    macroGroup: 'Ignição',
-    lastModification: '26/02/2025 7:45:56',
-  },
-  {
-    checkbox: false,
-    id: '2',
-    client: 'Agro ABC',
-    vehicle: 'VF-5678',
-    macroGroup: 'Lavoura',
-    lastModification: '26/02/2025 7:45:56',
-  },
-  {
-    checkbox: false,
-    id: '3',
-    client: 'Fast Tracker',
-    vehicle: '40 veículos',
-    macroGroup: 'Condutor',
-    lastModification: '26/02/2025 7:45:56',
-  },
-  {
-    checkbox: false,
-    id: '4',
-    client: 'Rastreio Já',
-    vehicle: '2 veículos',
-    macroGroup: 'Tempo de carga',
-    lastModification: '26/02/2025 7:45:56',
-  },
-];
+import { getMacroGroups, deleteMacroGroups } from '../requets';
+import { useToast } from 'src/contexts/toast';
+import { ConfirmDeleteModal } from '../Form/MacrosContainer/ConfirmDeleteModal';
 
 export function MacroGroups(): JSX.Element {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [filterValue, setFilterValue] = useState('');
-  const [, setTableData] = useState<any>(null);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemsToDelete, setItemsToDelete] = useState<any[]>([]);
   const navigate = useNavigate();
   const {
     data: listMacroGroups,
     refetch: refetchListMacroGroups,
     isLoading,
-  } = useQuery('listMacroGroups', () => FAKE_MACRO_GROUPS_DATA);
+  } = useQuery('listMacroGroups', getMacroGroups);
+
+  // Transformar dados da API para o formato da tabela
+  const transformedData = React.useMemo(() => {
+    if (!listMacroGroups?.data) return [];
+
+    return listMacroGroups.data.map((item) => ({
+      checkbox: false,
+      id: item.id.toString(),
+      client: item.client_description,
+      vehicle: item.total_ativos > 1 ? `${item.total_ativos} veículos` : item.ativos_ids[0]?.plate || '',
+      macroGroup: item.description,
+      lastModification: item.dt_updated,
+    }));
+  }, [listMacroGroups]);
 
   // Filtro local dos dados
   const filteredData = React.useMemo(() => {
-    if (!listMacroGroups) return [];
-    if (!filterValue) return listMacroGroups;
+    if (!transformedData) return [];
+    if (!filterValue) return transformedData;
 
-    return listMacroGroups.filter((item) => {
+    return transformedData.filter((item) => {
       const isClient = item.client.toLowerCase().includes(filterValue.toLowerCase());
       const isVehicle = item.vehicle.toLowerCase().includes(filterValue.toLowerCase());
       const isMacroGroup = item.macroGroup.toLowerCase().includes(filterValue.toLowerCase());
       return isClient || isVehicle || isMacroGroup;
     });
-  }, [listMacroGroups, filterValue]);
+  }, [transformedData, filterValue]);
 
   const handleCreateMacroGroup = () => {
     navigate('/settings/form');
   };
 
-  const handleMacroGroupAction = async (action: 'edit' | 'delete') => {
+  const handleMacroGroupAction = (action: 'edit' | 'delete') => {
     if (selectedRows.size === 0) return;
 
     const selectedItems = filteredData.filter((item) => selectedRows.has(item.id));
 
     if (action === 'edit') {
-      console.log('edit', selectedItems);
+      // Para edição, pegar apenas o primeiro item selecionado
+      if (selectedItems.length > 0) {
+        const id = selectedItems[0].id;
+        navigate(`/settings/form?id=${id}`);
+      }
     } else {
-      console.log('delete', selectedItems);
+      // Para delete, mostrar modal de confirmação
+      setItemsToDelete(selectedItems);
+      setShowDeleteModal(true);
     }
+  };
 
-    // Limpar seleção após ação
-    setSelectedRows(new Set());
-    refetchListMacroGroups();
+  const handleConfirmDelete = async () => {
+    try {
+      const idsToDelete = itemsToDelete.map(item => parseInt(item.id));
+      await deleteMacroGroups(idsToDelete);
+      
+      // Limpar seleção e recarregar dados
+      setSelectedRows(new Set());
+      refetchListMacroGroups();
+      
+      // Mostrar toast de sucesso
+      showToast({
+        title: 'Sucesso',
+        message: `${itemsToDelete.length} grupo(s) de macro(s) excluído(s) com sucesso!`,
+        type: 'success'
+      });
+    } catch (error) {
+      console.error('Erro ao excluir grupos de macros:', error);
+      
+      // Mostrar toast de erro
+      showToast({
+        title: 'Erro',
+        message: 'Erro ao excluir grupo(s) de macro(s). Tente novamente.',
+        type: 'error'
+      });
+    } finally {
+      setShowDeleteModal(false);
+      setItemsToDelete([]);
+    }
   };
 
   return (
@@ -140,9 +146,11 @@ export function MacroGroups(): JSX.Element {
               </ContainerInput>
               {selectedRows.size > 0 && (
                 <div className="btn-actions">
-                  <Button variant="primary" onClick={() => handleMacroGroupAction('edit')}>
-                    {t('edit')}
-                  </Button>
+                  {selectedRows.size === 1 && (
+                    <Button variant="primary" onClick={() => handleMacroGroupAction('edit')}>
+                      {t('edit')}
+                    </Button>
+                  )}
                   <Button variant="primary" onClick={() => handleMacroGroupAction('delete')}>
                     {t('delete')}
                   </Button>
@@ -159,15 +167,25 @@ export function MacroGroups(): JSX.Element {
           <ContainerTableGrid>
             <TableContent
               data={filteredData}
-              setTableData={setTableData}
               selectedRows={selectedRows}
               setSelectedRows={setSelectedRows}
+              allIds={filteredData.map(item => item.id)}
             />
           </ContainerTableGrid>
         ) : (
           <Empty />
         )}
       </ContainerTabContent>
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setItemsToDelete([]);
+        }}
+        onConfirm={handleConfirmDelete}
+        macroName={itemsToDelete.length === 1 ? itemsToDelete[0]?.macroGroup : `${itemsToDelete.length} grupos`}
+      />
     </>
   );
 }

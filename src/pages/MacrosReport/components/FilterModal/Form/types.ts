@@ -23,7 +23,7 @@ export interface FormState {
   referencePointSelected: ReferencePoint;
   saveFilters: boolean;
   showDatePicker: boolean;
-  selectedGruposMacros: ICustomSelectOption;
+  selectedGruposMacros: ICustomSelectOption[];
 }
 
 export interface FormErrors {
@@ -43,7 +43,7 @@ export interface FormHandlers {
   setReferencePointSelected: Dispatch<SetStateAction<ReferencePoint>>;
   setSaveFilters: Dispatch<SetStateAction<boolean>>;
   setShowDatePicker: Dispatch<SetStateAction<boolean>>;
-  setSelectedGruposMacros: Dispatch<SetStateAction<ICustomSelectOption | null>>;
+  setSelectedGruposMacros: Dispatch<SetStateAction<ICustomSelectOption[]>>;
 }
 
 export interface SelectOptions {

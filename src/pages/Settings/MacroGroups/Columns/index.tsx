@@ -17,18 +17,18 @@ const columnHelper = createColumnHelper<MacroGroupItem>();
 export const ColumnsFunction = (
   selectedRows?: Set<string>,
   setSelectedRows?: React.Dispatch<React.SetStateAction<Set<string>>>,
+  allIds?: string[],
 ) => {
   const { t } = useTranslation();
 
   const handleSelectAll = () => {
-    if (!setSelectedRows) return;
+    if (!setSelectedRows || !allIds) return;
 
     if (selectedRows && selectedRows.size > 0) {
       setSelectedRows(new Set());
     } else {
       // Selecionar todos os IDs disponíveis
-      const allIds = new Set(['1', '2', '3', '4']);
-      setSelectedRows(allIds);
+      setSelectedRows(new Set(allIds));
     }
   };
 

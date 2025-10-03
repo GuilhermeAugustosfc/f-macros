@@ -39,7 +39,7 @@ import Icone35 from 'src/assets/icones-macros/icone35.svg?react';
 import Icone36 from 'src/assets/icones-macros/icone36.svg?react';
 
 export interface IconOption {
-  id: string;
+  id: number;
   name: string;
   icon: React.ReactElement;
 }
@@ -87,15 +87,15 @@ const iconComponents = [
 // Função para criar as opções de ícones
 export const createIconOptions = (iconSize: number = 16): IconOption[] => {
   return iconComponents.map((IconComponent, index) => ({
-    id: `icone${index + 1}`,
+    id: index + 1,
     name: `Ícone ${index + 1}`,
     icon: <IconComponent width={iconSize} height={iconSize} />,
   }));
 };
 
 // Função para obter um ícone específico por ID
-export const getIconById = (id: string, iconSize: number = 16): React.ReactElement => {
-  const iconIndex = parseInt(id.replace('icone', '')) - 1;
+export const getIconById = (id: number, iconSize: number = 16): React.ReactElement => {
+  const iconIndex = id - 1;
   const IconComponent = iconComponents[iconIndex];
 
   if (!IconComponent) {

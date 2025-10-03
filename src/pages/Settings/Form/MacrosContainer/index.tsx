@@ -10,6 +10,7 @@ import {
   TrashIcon,
 } from 'src/pages/MacrosReport/components/svg';
 import { getIconById } from '../MacroEditModal/icons';
+import { getColorById } from '../MacroEditModal/colorMapping';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import type { Macro, MacrosContainerProps } from './types';
 
@@ -19,6 +20,9 @@ export const MacrosContainer = ({
   onEditMacro,
   onAddMacro,
   macros = [],
+  hasError = false,
+  errorMessage = '',
+  isEditing = false,
 }: MacrosContainerProps): JSX.Element => {
   const [middleMacros, setMiddleMacros] = useState<Macro[]>([]);
 
@@ -26,8 +30,8 @@ export const MacrosContainer = ({
   const inicioMacro: Macro = {
     id: 'inicio-jornada',
     name: 'Início de jornada',
-    color: '#19a675',
-    iconType: 'icone1', // Ícone padrão para início
+    color: 3, // Verde
+    iconType: 1, // Ícone padrão para início
     isRequired: true,
     isSelected: true,
   };
@@ -35,8 +39,8 @@ export const MacrosContainer = ({
   const fimMacro: Macro = {
     id: 'fim-jornada',
     name: 'Fim de jornada',
-    color: '#e95f77',
-    iconType: 'icone36', // Ícone padrão para fim
+    color: 4, // Vermelho
+    iconType: 36, // Ícone padrão para fim
     isRequired: true,
     isSelected: true,
   };
@@ -64,6 +68,7 @@ export const MacrosContainer = ({
   const selectedMacrosCount = [inicioMacro, ...allMacros, fimMacro].filter(
     (macro) => macro.isSelected,
   ).length;
+
 
   // Função para renderizar o ícone correto baseado no iconType
   const renderMacroIcon = (macro: Macro) => {
@@ -204,6 +209,10 @@ export const MacrosContainer = ({
           {selectedMacrosCount}/{maxMacros}
         </MacrosCount>
       </MacrosHeader>
+      
+      {hasError && errorMessage && (
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      )}
 
       <MacrosList>
         {/* Macro de início - estática */}
@@ -211,7 +220,7 @@ export const MacrosContainer = ({
           <DragHandle>
             <CadeadoIcon width={24} height={24} />
           </DragHandle>
-          <MacroTag color={inicioMacro.color}>
+          <MacroTag color={getColorById(inicioMacro.color)}>
             {renderMacroIcon(inicioMacro)}
             {inicioMacro.name}
           </MacroTag>
@@ -268,27 +277,31 @@ export const MacrosContainer = ({
                   onChange={() => handleMacroToggle(macro.id)}
                 />
 
-                <MacroTag color={macro.color}>
+                <MacroTag color={getColorById(macro.color)}>
                   {renderMacroIcon(macro)}
                   {macro.name}
                 </MacroTag>
 
-                <DragHandle
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditMacro(macro.id);
-                  }}
-                >
-                  <EditIcon width={24} height={24} />
-                </DragHandle>
-                <DragHandle
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteMacro(macro.id);
-                  }}
-                >
-                  <TrashIcon width={24} height={24} />
-                </DragHandle>
+                {!isEditing && (
+                  <>
+                    <DragHandle
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditMacro(macro.id);
+                      }}
+                    >
+                      <EditIcon width={24} height={24} />
+                    </DragHandle>
+                    <DragHandle
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteMacro(macro.id);
+                      }}
+                    >
+                      <TrashIcon width={24} height={24} />
+                    </DragHandle>
+                  </>
+                )}
               </MacroItem>
             ))}
           </MiddleMacrosContainer>
@@ -299,7 +312,7 @@ export const MacrosContainer = ({
           <DragHandle>
             <CadeadoIcon width={24} height={24} />
           </DragHandle>
-          <MacroTag color={fimMacro.color}>
+          <MacroTag color={getColorById(fimMacro.color)}>
             {renderMacroIcon(fimMacro)}
             {fimMacro.name}
           </MacroTag>
@@ -328,7 +341,7 @@ export const MacrosContainer = ({
             label=""
             onChange={() => {}}
           />
-          <MacroTag color={middleMacros[draggedIndex]?.color || '#85919e'}>
+          <MacroTag color={getColorById(middleMacros[draggedIndex]?.color || 1)}>
             {middleMacros[draggedIndex] ? (
               renderMacroIcon(middleMacros[draggedIndex])
             ) : (
@@ -509,4 +522,13 @@ const DragGhost = styled.div`
   pointer-events: none;
   transform: rotate(2deg);
   opacity: 0.9;
+`;
+
+const ErrorMessage = styled.div`
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #c13e4a;
+  margin-top: 4px;
+  line-height: 1.5;
 `;
