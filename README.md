@@ -1,4 +1,36 @@
-# React + TypeScript + Vite
+# f-macros
+
+Sistema de gestão de macros personalizadas para frota.
+
+## 🚀 Deploy
+
+Para fazer deploy do projeto usando Docker:
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+O script irá:
+1. Clonar o repositório da branch `develop`
+2. Fazer build da aplicação usando Docker e pnpm
+3. Copiar os arquivos gerados para `/var/www/html/homologacao/f-macros`
+
+## 🐳 Desenvolvimento com Docker
+
+### Desenvolvimento
+```bash
+docker-compose up app
+```
+
+### Produção local
+```bash
+docker-compose up prod
+```
+
+---
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
