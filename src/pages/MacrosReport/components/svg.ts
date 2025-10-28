@@ -32,7 +32,7 @@ import SearchIcon from '../../../assets/svgs/search-loupe.svg?react';
 import ErrorIcon from '../../../assets/svgs/error.svg?react';
 import SuccessIcon from '../../../assets/svgs/done-check-checkmark.svg?react';
 import UserIcon from '../../../assets/icons-details/user.svg?react';
-import GroupIcon from '../../../assets/svgs/group.svg?react';
+import GroupIcon from '../../../assets/svgs/group-icon.svg?react';
 import ClockIcon from '../../../assets/svgs/clock.svg?react';
 import ChartIcon from '../../../assets/svgs/chart.svg?react';
 import RouteIcon from '../../../assets/svgs/route.svg?react';
