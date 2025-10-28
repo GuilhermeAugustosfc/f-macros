@@ -3,13 +3,19 @@
 # Script de deploy para f-macros com pnpm e Docker
 echo "Iniciando deploy do f-macros..."
 
+# Limpar diretório anterior se existir
+if [ -d "f-macros" ]; then
+    echo "Removendo diretório antigo..."
+    rm -rf f-macros/
+fi
+
 # Clone do repositório
 git clone https://github.com/GuilhermeAugustosfc/f-macros.git
 cd f-macros
 
-# Checkout da branch master
-git checkout master
-git pull origin master
+# Checkout da branch develop
+git checkout develop
+git pull origin develop
 
 # Build da aplicação usando Docker (com output em tempo real)
 echo "Fazendo build da aplicação (isso pode levar alguns minutos)..."
