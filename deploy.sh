@@ -7,9 +7,9 @@ echo "Iniciando deploy do f-macros..."
 git clone https://github.com/GuilhermeAugustosfc/f-macros.git
 cd f-macros
 
-# Checkout da branch develop
-git checkout develop
-git pull origin develop
+# Checkout da branch master
+git checkout master
+git pull origin master
 
 # Build da aplicação usando Docker (com output em tempo real)
 echo "Fazendo build da aplicação (isso pode levar alguns minutos)..."
