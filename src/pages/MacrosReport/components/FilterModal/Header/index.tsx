@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { HeaderContainer } from './styles';
 import { ReportsContext } from '../../../../../contexts/reports';
 import { useTranslation } from '@ftdata/core';
-import { AddCircleIcon, ArrowLeftIcon, CheckIcon } from '../../svg';
+import { ArrowLeftIcon } from '../../svg';
 
 interface Props {
   close: () => void;

@@ -170,7 +170,7 @@ const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
           <InputAction>
             <Input
               value={''}
-              onChange={(e) => {}}
+              onChange={() => {}}
               icon={<SearchIcon width={24} height={24} />}
               placeholder={t('research') + '...'}
             />

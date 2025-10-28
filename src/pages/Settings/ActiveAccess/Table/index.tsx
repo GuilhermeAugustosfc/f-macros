@@ -6,7 +6,6 @@ import {
   useReactTable,
   getPaginationRowModel,
   type ColumnDef,
-  type Table,
 } from '@tanstack/react-table';
 import { ColumnsFunction } from '../Columns';
 import Head from './Head';
@@ -19,11 +18,7 @@ interface TableProps {
   setSelectedRows: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
-const TableContent: React.FC<TableProps> = ({
-  data,
-  selectedRows,
-  setSelectedRows,
-}) => {
+const TableContent: React.FC<TableProps> = ({ data, selectedRows, setSelectedRows }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const columns = ColumnsFunction(selectedRows, setSelectedRows);

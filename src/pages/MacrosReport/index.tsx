@@ -4,13 +4,11 @@ import Header from './components/Header';
 import { FilterModal } from './components/FilterModal';
 import Content, { type ContentHandle } from './components/Content';
 import { ReportsContext } from '../../contexts/reports';
-import { useTranslation } from '@ftdata/core';
 import { MainContainer, ReportWrapper } from './styles';
 // import { useConfiguration } from '@ftdata/core';
 
 const FuelReport: React.FC = () => {
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
-  const { t } = useTranslation();
 
   const { hasFilter, clearFilter } = useContext(ReportsContext);
   //   const { pathname } = useLocation();

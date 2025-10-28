@@ -10,11 +10,9 @@ import {
 } from './style';
 import HomePage from '../../../assets/svgs/emptyStates/homePage.svg?react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from '@ftdata/core';
 
 const ManagementReports: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   return (
     <Container>
       <ContentWrapper>

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Button, Paragraph, Title } from '@ftdata/ui';
-import { useTranslation } from '@ftdata/core';
 import styled from 'styled-components';
 import { EmptyReportIcon } from '../svg';
 
@@ -10,8 +9,6 @@ interface Props {
 }
 
 const Empty: React.FC<Props> = ({ openModal }: Props) => {
-  const { t } = useTranslation();
-
   return (
     <ContainerEmpty>
       <EmptyReportIcon />
