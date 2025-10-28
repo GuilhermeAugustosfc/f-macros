@@ -19,7 +19,7 @@ git pull origin develop
 
 # Build da aplicação usando Docker (com output em tempo real)
 echo "Fazendo build da aplicação (isso pode levar alguns minutos)..."
-if ! docker build -t f-macros:latest . --progress=plain; then
+if ! docker build --no-cache -t f-macros:latest . --progress=plain; then
     echo "❌ Erro no build da aplicação Docker"
     cd ..
     rm -rf f-macros/

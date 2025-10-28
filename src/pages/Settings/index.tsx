@@ -11,7 +11,7 @@ import { Title } from '@ftdata/ui';
 import { ActiveAccess } from './ActiveAccess';
 import { MacroGroups } from './MacroGroups';
 import KeyIcon from '../../assets/svgs/key.svg?react';
-import GroupIcon from '../../assets/svgs/group.svg?react';
+import GroupIcon from '../../assets/svgs/group-icon.svg?react';
 import { useTranslation } from '@ftdata/core';
 
 export const Settings = (): JSX.Element => {
