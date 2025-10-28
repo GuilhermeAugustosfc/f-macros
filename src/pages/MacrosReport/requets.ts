@@ -49,8 +49,24 @@ export const deleteSavedFilter = (
   return api.delete(`/f-work/macros/v1/reports/filters/${JSON.stringify(ids)}`);
 };
 
-export const getReports = (params?: GetReportsParams): Promise<AxiosResponse<any>> => {
+export interface ReportData {
+  ativo_id: number;
+  plate: string;
+  quantidade_grupo_macros: number;
+  duracao: string;
+}
+
+export interface ReportsResponse {
+  total: number;
+  data: ReportData[];
+}
+
+export const getReports = (params?: GetReportsParams): Promise<AxiosResponse<ReportsResponse>> => {
   return api.get('/f-work/macros/v1/reports/', { params });
+};
+
+export const getReportsDetail = (params?: GetReportsParams): Promise<AxiosResponse<ReportsResponse>> => {
+  return api.get('/f-work/macros/v1/reports/detail/', { params });
 };
 
 export const getSavedFilters = (params?: GetSavedFiltersParams): Promise<AxiosResponse<SavedFiltersApiResponse>> => {
@@ -86,24 +102,28 @@ export const buildReportParams = (data: {
 }) => {
   return {
     customer_id: Number(data.selectedClient?.value),
-    ...(data.selectedVehicle.length > 0 && {
-      ativos_ids: data.selectedVehicle.map((item) => item.value).join(','),
-    }),
-    ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
-    ...(data.selectedGruposMacros.length > 0 && {
-      macros_group_ids: data.selectedGruposMacros.map((item) => item.value).join(','),
-    }),
     dt_initial: data.selectedRange[0].startDate
       ? formatDateTime(data.selectedRange[0].startDate, data.startTime)
       : '',
     dt_final: data.selectedRange[0].endDate
       ? formatDateTime(data.selectedRange[0].endDate, data.endTime)
       : '',
-    ponto_referencia: data.referencePointSelected.isChecked
+    ...(data.selectedVehicle.length > 0 && {
+      ativos_ids: data.selectedVehicle.map((item) => item.value).join(','),
+    }),
+    ...(data.selectedGruposMacros.length > 0 && {
+      macros_group_ids: data.selectedGruposMacros.map((item) => item.value).join(','),
+    }),
+    ...(data.selectedMotorista?.value && { driver_id: Number(data.selectedMotorista.value) }),
+    limit: '',
+    offset: '',
+    distance: data.referencePointSelected.isChecked
       ? data.referencePointSelected.value === 0
         ? 100
         : data.referencePointSelected.value
       : 0,
+    order_by: '',
+    order: '',
   };
 };
 
@@ -115,6 +135,7 @@ export const buildSavedFilterData = (data: {
   selectedRange: Range[];
   startTime: TimeRange;
   endTime: TimeRange;
+  referencePointSelected: { isChecked: boolean; value: number };
 }) => {
   return {
     customer_id: Number(data.selectedClient?.value),
@@ -127,6 +148,11 @@ export const buildSavedFilterData = (data: {
       : '',
     ativos_ids: data.selectedVehicle.map((item) => Number(item.value)),
     macro_groups_ids: data.selectedGruposMacros.map((item) => Number(item.value)),
+    distance: data.referencePointSelected.isChecked
+      ? data.referencePointSelected.value === 0
+        ? 100
+        : data.referencePointSelected.value
+      : 0,
   };
 };
 

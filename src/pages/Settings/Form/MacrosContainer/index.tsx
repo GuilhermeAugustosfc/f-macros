@@ -122,7 +122,13 @@ export const MacrosContainer = ({
   const confirmDeleteMacro = () => {
     if (!macroToDelete) return;
 
-    const updatedMiddleMacros = middleMacros.filter((macro) => macro.id !== macroToDelete);
+    // Filtrar a macro deletada e recalcular positions
+    const filteredMacros = middleMacros.filter((macro) => macro.id !== macroToDelete);
+    const updatedMiddleMacros = filteredMacros.map((macro, index) => ({
+      ...macro,
+      position: index + 1 // Recalcular position após deletar
+    }));
+    
     setMiddleMacros(updatedMiddleMacros);
     onMacrosChange?.(updatedMiddleMacros);
     setShowDeleteModal(false);
@@ -185,8 +191,14 @@ export const MacrosContainer = ({
     // Inserir o item na nova posição
     newMiddleMacros.splice(dropIndex, 0, draggedItem);
 
-    setMiddleMacros(newMiddleMacros);
-    onMacrosChange?.(newMiddleMacros);
+    // Atualizar o campo position de cada macro para refletir a nova ordem
+    const reorderedMacros = newMiddleMacros.map((macro, index) => ({
+      ...macro,
+      position: index + 1 // Atualizar position baseado na nova posição
+    }));
+
+    setMiddleMacros(reorderedMacros);
+    onMacrosChange?.(reorderedMacros);
 
     setDraggedIndex(null);
     setDragOverIndex(null);

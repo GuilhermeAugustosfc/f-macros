@@ -20,3 +20,8 @@ export const colorOptions: ColorOption[] = [
 export const getColorById = (colorId: number): string => {
   return colorOptions.find(c => c.id === colorId)?.color || '#85919e';
 };
+
+// Função para converter cor HEX para ID
+export const getColorIdByHex = (colorHex: string): number => {
+  return colorOptions.find(c => c.color.toLowerCase() === colorHex.toLowerCase())?.id || 1;
+};

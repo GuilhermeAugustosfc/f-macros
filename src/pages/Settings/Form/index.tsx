@@ -11,10 +11,11 @@ import { MacrosContainer } from './MacrosContainer';
 import { type Macro } from './MacrosContainer/types';
 import { MacroEditModal } from './MacroEditModal';
 import { getCustomers, getVehicles } from 'src/pages/MacrosReport/requets';
-import { createMacroGroup, getMacroGroupById, updateMacroGroup } from '../requets';
+import { createMacroGroup, getMacroGroupById, updateMacroGroup, type UpdateMacroGroupRequest, type CreateMacroGroupRequest } from '../requets';
 import { type ICustomSelectOption } from '@ftdata/ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from 'src/contexts/toast';
+import { getColorById, getColorIdByHex } from './MacroEditModal/colorMapping';
 
 export const Form = (): JSX.Element => {
   const { t } = useTranslation();
@@ -39,6 +40,10 @@ export const Form = (): JSX.Element => {
     vehicle: false,
     macros: false
   });
+  
+  // Estados para rastrear valores originais (para detectar alterações)
+  const [originalVehicles, setOriginalVehicles] = useState<ICustomSelectOption[]>([]);
+  const [originalMacros, setOriginalMacros] = useState<Macro[]>([]);
 
   // Query para buscar clientes
   const { data: clientesData } = useQuery(
@@ -110,17 +115,23 @@ export const Form = (): JSX.Element => {
         label: `${ativo.plate} - ${ativo.ativo_desc}`,
       }));
       setSelectedVehicle(vehicleOptions);
+      setOriginalVehicles(vehicleOptions); // Salvar veículos originais
       
-      // Preencher macros
-      const macrosData = macroGroupData.macros.map((macro, index) => ({
-        id: `macro-${index}`,
-        name: macro.description,
-        color: macro.macro_color_id,
-        iconType: macro.macro_icone_id,
-        isRequired: Boolean(macro.default_macro),
-        isSelected: false,
-      }));
+      // Preencher macros - filtrar macros de início e fim de jornada
+      const macrosData = macroGroupData.macros
+        .filter((macro) => !macro.default_macro) // Não incluir macros de início e fim de jornada
+        .map((macro, index) => ({
+          id: `macro-${index}`,
+          macroId: macro.id, // ID da macro no backend
+          name: macro.description,
+          color: getColorIdByHex(macro.macro_color_id), // Converter HEX para ID
+          iconType: macro.macro_icone_id,
+          position: macro.position ?? index + 1, // Usar position do backend ou índice
+          isRequired: Boolean(macro.default_macro),
+          isSelected: false,
+        }));
       setMacros(macrosData);
+      setOriginalMacros(macrosData); // Salvar macros originais
     }
   }, [macroGroupData, isEditing, clientesData]);
 
@@ -149,14 +160,16 @@ export const Form = (): JSX.Element => {
 
   const handleSaveMacro = (updatedMacro: Macro) => {
     if (editingMacro) {
-      // Editando macro existente - atualizar na lista
+      // Editando macro existente - atualizar na lista mantendo a position
       const updatedMacros = macros.map((macro) =>
-        macro.id === updatedMacro.id ? updatedMacro : macro,
+        macro.id === updatedMacro.id ? { ...updatedMacro, position: macro.position } : macro,
       );
       setMacros(updatedMacros);
     } else {
-      // Adicionando nova macro - adicionar na lista
-      const updatedMacros = [...macros, updatedMacro];
+      // Adicionando nova macro - adicionar na lista com position baseado no tamanho atual
+      const newPosition = macros.length + 1;
+      const newMacro = { ...updatedMacro, position: newPosition };
+      const updatedMacros = [...macros, newMacro];
       setMacros(updatedMacros);
     }
     setIsModalOpen(false);
@@ -197,32 +210,74 @@ export const Form = (): JSX.Element => {
 
       setIsLoading(true);
 
-      // Mapear dados para o formato da API
-      const requestData = {
-        description: groupTitle.trim(),
-        customer_id: Number(selectedClient.value),
-        ativos_ids: selectedVehicle.map(vehicle => ({
-          ativo_id: Number(vehicle.value)
-        })),
-        macros: macros.map(macro => ({
-          description: macro.name,
-          macro_color_id: macro.color, // ID numérico da cor (1-9)
-          macro_icone_id: macro.iconType || 1 // ID numérico do ícone (1-36)
-        }))
-      };
-
-      console.log('Dados a serem enviados:', requestData);
-
       // Fazer a requisição (create ou update)
       if (isEditing && editId) {
-        await updateMacroGroup(Number(editId), requestData);
+        // Atualizar grupo existente
+        
+        // Verificar se houve alteração nos veículos
+        const vehiclesChanged = JSON.stringify(
+          selectedVehicle.map(v => v.value).sort()
+        ) !== JSON.stringify(
+          originalVehicles.map(v => v.value).sort()
+        );
+        
+        // Verificar se houve alteração nas macros
+        const macrosChanged = JSON.stringify(
+          macros.map(m => ({ name: m.name, color: m.color, iconType: m.iconType, position: m.position }))
+        ) !== JSON.stringify(
+          originalMacros.map(m => ({ name: m.name, color: m.color, iconType: m.iconType, position: m.position }))
+        );
+        
+        const updateData: UpdateMacroGroupRequest = {
+          description: groupTitle.trim(),
+          customer_id: Number(selectedClient.value),
+          // Incluir ativos_ids apenas se houve alteração
+          ...(vehiclesChanged && {
+            ativos_ids: selectedVehicle.map(vehicle => ({
+              ativo_id: Number(vehicle.value)
+            }))
+          }),
+          // Incluir macros apenas se houve alteração
+          ...(macrosChanged && {
+            macros: macros.map((macro, index) => ({
+              ...(macro.macroId ? { id: macro.macroId } : {}), // Incluir id apenas se a macro já existe
+              description: macro.name,
+              macro_color_id: getColorById(macro.color), // Converter ID para HEX
+              macro_icone_id: macro.iconType || 1,
+              position: macro.position ?? index + 1 // Usar position da macro ou índice
+            }))
+          })
+        };
+
+        console.log('Dados de atualização a serem enviados:', updateData);
+        console.log('Veículos alterados:', vehiclesChanged);
+        console.log('Macros alteradas:', macrosChanged);
+        
+        await updateMacroGroup(Number(editId), updateData);
         showToast({
           title: 'Sucesso',
           message: 'Grupo de macros atualizado com sucesso!',
           type: 'success'
         });
       } else {
-        await createMacroGroup(requestData);
+        // Criar novo grupo
+        const createData: CreateMacroGroupRequest = {
+          description: groupTitle.trim(),
+          customer_id: Number(selectedClient.value),
+          ativos_ids: selectedVehicle.map(vehicle => ({
+            ativo_id: Number(vehicle.value)
+          })),
+          macros: macros.map((macro, index) => ({
+            description: macro.name,
+            macro_color_id: getColorById(macro.color), // Converter ID para HEX
+            macro_icone_id: macro.iconType || 1,
+            position: macro.position ?? index + 1 // Usar position da macro ou índice
+          }))
+        };
+
+        console.log('Dados de criação a serem enviados:', createData);
+        
+        await createMacroGroup(createData);
         showToast({
           title: 'Sucesso',
           message: 'Grupo de macros criado com sucesso!',

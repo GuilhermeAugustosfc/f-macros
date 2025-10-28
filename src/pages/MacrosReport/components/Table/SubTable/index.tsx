@@ -15,15 +15,19 @@ import Body from './Body';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { Loading } from '@ftdata/ui';
+import { type GetReportsParams } from '../../../types';
+import { getReportsDetail } from '../../../requets';
+import { useQuery } from 'react-query';
 
 interface Props {
   isEven: boolean;
+  params?: GetReportsParams;
+  ativoId?: number;
 }
 
-const SubTable: React.FC<Props> = ({ isEven }: Props) => {
+const SubTable: React.FC<Props> = ({ isEven, params = {}, ativoId }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [data, setData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -42,67 +46,32 @@ const SubTable: React.FC<Props> = ({ isEven }: Props) => {
     pageIndex: 0,
   });
 
-  const fetchData = async (page: number) => {
-    try {
-      setIsLoading(true);
-      const currentLimit = table.getState().pagination.pageSize;
+  // Query para buscar dados detalhados
+  const { data: detailData, isFetching: detailLoading } = useQuery(
+    `get_report_detail/${ativoId}/${JSON.stringify(params)}`,
+    () => getReportsDetail({ ...params, ativos_ids: ativoId ? ativoId.toString() : '' }),
+    {
+      enabled: Boolean(ativoId && params?.customer_id),
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5, // 5 minutos
+    },
+  );
 
-      // Simular ordenação se necessário
-
-      // Dados fakes baseados na imagem fornecida
-      const fakeData = [
-        {
-          grupo_macros: 'Fazenda 4 Estações',
-          duracao_total: '08:00',
-        },
-        {
-          grupo_macros: 'Plantio Norte',
-          duracao_total: '12:30',
-        },
-        {
-          grupo_macros: 'Colheita Sul',
-          duracao_total: '15:45',
-        },
-        {
-          grupo_macros: 'Irrigação Central',
-          duracao_total: '06:20',
-        },
-        {
-          grupo_macros: 'Fertilização Leste',
-          duracao_total: '09:15',
-        },
-        {
-          grupo_macros: 'Monitoramento Oeste',
-          duracao_total: '11:30',
-        },
-        {
-          grupo_macros: 'Manutenção Geral',
-          duracao_total: '04:45',
-        },
-        {
-          grupo_macros: 'Controle de Pragas',
-          duracao_total: '07:20',
-        },
-      ];
-
-      // Simular paginação
-      const startIndex = (page - 1) * currentLimit;
-      const endIndex = startIndex + currentLimit;
-      const paginatedData = fakeData.slice(startIndex, endIndex);
-
-      setData(paginatedData);
-      setPagination((prevPagination) => ({
-        limit: currentLimit,
-        total: fakeData.length,
-        pageIndex: prevPagination.pageIndex,
+  React.useEffect(() => {
+    if (detailData?.data?.data) {
+      const apiData = detailData.data.data.map((item: any) => ({
+        grupo_macros: item.desc_grupo_macros,
+        duracao_total: item.jornada_total,
+        items: item.items,
+        historics: item.historics,
       }));
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Erro ao buscar dados:', error);
-      setIsLoading(false);
+      setData(apiData);
+      setPagination((prev) => ({
+        ...prev,
+        total: apiData.length,
+      }));
     }
-  };
+  }, [detailData]);
 
   const table = useReactTable({
     data,
@@ -141,18 +110,11 @@ const SubTable: React.FC<Props> = ({ isEven }: Props) => {
     debugTable: true,
   });
 
-  React.useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: table.getState().pagination.pageIndex }));
-    fetchData(table.getState().pagination.pageIndex + 1);
-  }, [
-    table.getState().pagination.pageIndex,
-    table.getState().pagination.pageSize,
-    table.getState().sorting,
-  ]);
+  // Removido useEffect que chamava fetchData com dados mockados
 
   return (
     <StyledTableWrapper isEven={isEven}>
-      {isLoading ? (
+      {detailLoading ? (
         <LoadingContainer>
           <Loading size="xl" variant="light" />
         </LoadingContainer>

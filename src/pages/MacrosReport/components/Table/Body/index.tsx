@@ -12,6 +12,7 @@ interface Props {
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
   allExpanded: boolean;
   setAllExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  params?: any;
 }
 
 const Body: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Body: React.FC<Props> = ({
   setExpandedRowId,
   allExpanded,
   setAllExpanded,
+  params,
 }: Props) => {
   const handleExpand = (rowId: string) => {
     if (expandedRowId === rowId) {
@@ -63,7 +65,7 @@ const Body: React.FC<Props> = ({
                   style={{ borderBottom: '1px solid #ccc' }}
                   colSpan={row.getVisibleCells().length}
                 >
-                  <SubTable isEven={isEven} />
+                  <SubTable isEven={isEven} ativoId={parseInt(row.id)} params={params} />
                 </td>
               </AnimatedTr>
             )}

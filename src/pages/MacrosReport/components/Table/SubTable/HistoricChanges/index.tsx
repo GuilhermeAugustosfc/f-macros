@@ -5,9 +5,10 @@ import { ReportsContext } from '../../../../../../contexts/reports';
 
 interface Props {
   isEven: boolean;
+  historics?: any[];
 }
 
-const HistoricChanges: React.FC<Props> = ({ isEven }: Props) => {
+const HistoricChanges: React.FC<Props> = ({ isEven, historics = [] }: Props) => {
   const { setIsModalDetalhesOpen } = useContext(ReportsContext);
   const [isHidden, setIsHidden] = useState(false);
 
@@ -28,14 +29,14 @@ const HistoricChanges: React.FC<Props> = ({ isEven }: Props) => {
           </HeaderSection>
 
           <HistoryList>
-            <HistoryItem>
-              Macro alterada de "Aguardando mudas" para "Pulverizando a lavoura" por Admin Roberto -
-              26/02/2025 10:30:25
-            </HistoryItem>
-            <HistoryItem>
-              Data de início de "Início de jornada" alterada de "26/02/2025 7:45:56" para
-              "26/02/2025 8:45:00" por Admin Roberto - 25/02/2025 9:10:07
-            </HistoryItem>
+            {historics.map((historic, index) => (
+              <HistoryItem key={index}>
+                {historic.macro_updated} alterada de "{historic.old_value}" para "{historic.new_value}" por {historic.desc_user} - {historic.created_at}
+              </HistoryItem>
+            ))}
+            {historics.length === 0 && (
+              <HistoryItem>Nenhuma alteração recente encontrada</HistoryItem>
+            )}
           </HistoryList>
         </HistoryCard>
       </AnimatedLeftSection>

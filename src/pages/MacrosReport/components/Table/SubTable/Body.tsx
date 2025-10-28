@@ -37,8 +37,8 @@ const Body: React.FC<Props> = ({ table, isEven }: Props) => {
                   style={{ borderBottom: '1px solid #ccc' }}
                   colSpan={row.getVisibleCells().length}
                 >
-                  <HistoricChanges isEven={isEven} />
-                  <SubTableMacros isEven={isEven} />
+                  <HistoricChanges isEven={isEven} historics={row.original.historics} />
+                  <SubTableMacros isEven={isEven} items={row.original.items} />
                 </td>
               </AnimatedTr>
             )}

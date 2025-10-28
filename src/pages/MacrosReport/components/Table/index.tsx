@@ -6,7 +6,6 @@ import {
   type SortingState,
   useReactTable,
   getPaginationRowModel,
-  type ColumnDef,
   getExpandedRowModel,
   type Table,
 } from '@tanstack/react-table';
@@ -16,12 +15,13 @@ import Body from './Body';
 import styled from 'styled-components';
 import { UnreachableContent } from '../../components/UnreachableContent';
 import { useQuery } from 'react-query';
-import { getReports } from '../../requets';
+import { getReports, type ReportData } from '../../requets';
 
 const TableContent: React.FC<{
-  data: any[];
-  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
-}> = ({ data, setVehicleTableData }) => {
+  data: ReportData[];
+  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<ReportData> | null>>;
+  params?: any;
+}> = ({ data, setVehicleTableData, params }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
@@ -34,9 +34,9 @@ const TableContent: React.FC<{
   };
 
   const columns = ColumnsFunction(allExpanded, toggleAllExpanded);
-  const table = useReactTable({
+  const table = useReactTable<ReportData>({
     data,
-    columns: columns as ColumnDef<any>[],
+    columns,
     state: {
       sorting,
       expanded: allExpanded
@@ -86,6 +86,7 @@ const TableContent: React.FC<{
               setSorting={setSorting}
               allExpanded={allExpanded}
               setAllExpanded={setAllExpanded}
+              params={params}
             />
           </StyledTable>
         </ContainerTable>
@@ -97,7 +98,7 @@ const TableContent: React.FC<{
 interface TableProps {
   handleOpenModal: () => void;
   params: any;
-  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<any> | null>>;
+  setVehicleTableData: React.Dispatch<React.SetStateAction<Table<ReportData> | null>>;
 }
 
 export const CustomTable: React.FC<TableProps> = ({
@@ -106,7 +107,7 @@ export const CustomTable: React.FC<TableProps> = ({
   setVehicleTableData,
 }: TableProps) => {
   console.log(params);
-
+  
   const { data: reportData, isFetching: reportLoading } = useQuery(
     `get_report/${JSON.stringify(params)}`,
     () => getReports(params),
@@ -119,10 +120,12 @@ export const CustomTable: React.FC<TableProps> = ({
 
   useEffect(() => {
     setVehicleTableData(null);
-  }, [reportData, reportLoading]);
+  }, [reportData, reportLoading, setVehicleTableData]);
 
-  // Usar dados reais da API ou dados fake como fallback
-  const tableData = reportData?.data?.data || reportData?.data || [];
+  // Extrair dados da resposta da API
+  const tableData: ReportData[] = Array.isArray(reportData?.data) 
+    ? reportData.data 
+    : reportData?.data?.data || [];
 
   if (reportLoading) {
     return (
@@ -135,7 +138,7 @@ export const CustomTable: React.FC<TableProps> = ({
     return <UnreachableContent openModal={handleOpenModal} />;
   }
 
-  return <TableContent data={tableData} setVehicleTableData={setVehicleTableData} />;
+  return <TableContent data={tableData} setVehicleTableData={setVehicleTableData} params={params} />;
 };
 
 const ContainerTable = styled.div`

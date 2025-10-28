@@ -2,8 +2,9 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
 import { AddCircleIcon, MinusIcon, VehicleIcon, GroupIcon, ChartIcon, ClockIcon } from '../../svg';
 import { useContext } from 'react';
 import { ReportsContext } from '../../../../../contexts/reports';
+import { type ReportData } from '../../../requets';
 
-const columnHelper = createColumnHelper<any>();
+const columnHelper = createColumnHelper<ReportData>();
 
 import styled from 'styled-components';
 
@@ -63,7 +64,7 @@ const IconContainer = styled.div`
 export const ColumnsFunction = (
   allExpanded: boolean,
   toggleAllRowsExpanded: () => void,
-): ColumnDef<any, unknown>[] => {
+): ColumnDef<ReportData, any>[] => {
   const { setIsModalDetalhesOpen } = useContext(ReportsContext);
   const allColumns = [
     columnHelper.accessor('ativo_id', {
@@ -96,34 +97,35 @@ export const ColumnsFunction = (
         </IconContainer>
       ),
     }),
-    columnHelper.accessor('veiculo', {
+    columnHelper.accessor('plate', {
       header: () => (
         <DivValue>
           <VehicleIcon width={24} height={24} stroke="white" />
           <span>Veículo</span>
         </DivValue>
       ),
-      cell: (info) => <CellValue>{info.row.original.veiculo}</CellValue>,
+      cell: (info) => <CellValue>{info.row.original.plate}</CellValue>,
     }),
-    columnHelper.accessor('grupo_macros', {
+    columnHelper.accessor('quantidade_grupo_macros', {
       header: () => (
         <DivValue>
           <GroupIcon width={24} height={24} stroke="white" />
-          <span>Grupo de Macros Vinculados</span>
+          <span>Quantidade de Grupos de Macros</span>
         </DivValue>
       ),
-      cell: (info) => <CellValue>{info.row.original.grupo_macros}</CellValue>,
+      cell: (info) => <CellValue>{info.row.original.quantidade_grupo_macros}</CellValue>,
     }),
-    columnHelper.accessor('duracao_total', {
+    columnHelper.accessor('duracao', {
       header: () => (
         <DivValue>
           <ClockIcon width={24} height={24} stroke="white" />
-          <span>Duração Total</span>
+          <span>Duração</span>
         </DivValue>
       ),
-      cell: (info) => <DurationValue>{info.row.original.duracao_total}</DurationValue>,
+      cell: (info) => <DurationValue>{info.row.original.duracao}</DurationValue>,
     }),
-    columnHelper.accessor('analise_detalhada', {
+    columnHelper.display({
+      id: 'analise_detalhada',
       header: () => (
         <DivValue>
           <ChartIcon width={24} height={24} stroke="white" />
@@ -138,5 +140,5 @@ export const ColumnsFunction = (
     }),
   ];
 
-  return allColumns;
+  return allColumns as ColumnDef<ReportData, any>[];
 };

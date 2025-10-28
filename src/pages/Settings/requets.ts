@@ -6,8 +6,22 @@ export interface CreateMacroGroupRequest {
   ativos_ids: Array<{ ativo_id: number }>;
   macros: Array<{
     description: string;
-    macro_color_id: number;
+    macro_color_id: string; // HEX da cor (ex: #f3fef4)
     macro_icone_id: number;
+    position: number;
+  }>;
+}
+
+export interface UpdateMacroGroupRequest {
+  description: string;
+  customer_id: number;
+  ativos_ids?: Array<{ ativo_id: number }>;
+  macros?: Array<{
+    id?: number;
+    description: string;
+    macro_color_id: string; // HEX da cor (ex: #f3fef4)
+    macro_icone_id: number;
+    position: number;
   }>;
 }
 
@@ -30,9 +44,11 @@ export interface MacroGroupResponse {
       plate: string;
     }>;
     macros: Array<{
+      id?: number;
       description: string;
-      macro_color_id: number;
+      macro_color_id: string; // HEX da cor (ex: #f3fef4)
       macro_icone_id: number;
+      position?: number;
       default_macro?: string;
     }>;
   }>;
@@ -53,7 +69,7 @@ export const getMacroGroupById = async (id: number): Promise<MacroGroupResponse[
   return response.data.data[0];
 };
 
-export const updateMacroGroup = async (id: number, data: CreateMacroGroupRequest): Promise<void> => {
+export const updateMacroGroup = async (id: number, data: UpdateMacroGroupRequest): Promise<void> => {
   const response = await instance.put(`/f-work/macros/v1/update/${id}`, data);
   return response.data;
 };
