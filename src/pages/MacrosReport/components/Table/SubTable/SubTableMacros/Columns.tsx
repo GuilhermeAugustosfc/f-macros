@@ -4,6 +4,7 @@ import { DatePicker } from 'rsuite';
 import 'rsuite/dist/rsuite.css';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { updateReport } from 'src/pages/MacrosReport/requets';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -96,7 +97,6 @@ const EditIcon = styled.div`
   justify-content: center;
 `;
 
-
 const HoverArrow = styled.div`
   position: absolute;
   top: 50%;
@@ -127,15 +127,17 @@ const EditableDateCell = ({
   value,
   onSave,
   isEdited,
+  rowData,
 }: {
   value: any;
   onSave: (newValue: any) => void;
   isEdited: boolean;
+  rowData: any;
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
 
-  const handleDateChange = (newDate: Date | null) => {
+  const handleDateChange = async (newDate: Date | null) => {
     if (!newDate) return;
 
     const newValue = {
@@ -146,9 +148,29 @@ const EditableDateCell = ({
         second: '2-digit',
       }),
     };
-    setEditValue(newValue);
-    onSave(newValue);
-    setIsEditing(false);
+
+    // Formatar valores para envio
+    const oldValueFormatted = `${editValue.date} ${editValue.time}`;
+    const newValueFormatted = `${newValue.date} ${newValue.time}`;
+
+    // Determinar a descrição da macro
+    const macroUpdated = rowData.desc_macro_chave || rowData.desc_macro || '';
+
+    try {
+      // Chamar o endpoint para atualizar
+      await updateReport(rowData.id, {
+        macro_updated: macroUpdated,
+        old_value: oldValueFormatted,
+        new_value: newValueFormatted,
+      });
+
+      setEditValue(newValue);
+      onSave(newValue);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erro ao atualizar registro:', error);
+      // Aqui você pode adicionar um toast de erro se necessário
+    }
   };
 
   const handleCancel = () => {
@@ -188,7 +210,6 @@ const EditableDateCell = ({
   );
 };
 
-
 export const ColumnsFunction = (): ColumnDef<any>[] => {
   const [editedCells, setEditedCells] = useState<Record<string, boolean>>({});
 
@@ -221,6 +242,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
       cell: (info) => {
         const value = info.getValue();
         const rowId = info.row.id;
+        const rowData = info.row.original;
         const isEdited = editedCells[`${rowId}-inicio`];
 
         return (
@@ -228,6 +250,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
             value={value}
             onSave={(newValue) => handleSave(rowId, 'inicio', newValue)}
             isEdited={isEdited}
+            rowData={rowData}
           />
         );
       },
@@ -241,6 +264,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
       cell: (info) => {
         const value = info.getValue();
         const rowId = info.row.id;
+        const rowData = info.row.original;
         const isEdited = editedCells[`${rowId}-fim`];
 
         return (
@@ -248,6 +272,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
             value={value}
             onSave={(newValue) => handleSave(rowId, 'fim', newValue)}
             isEdited={isEdited}
+            rowData={rowData}
           />
         );
       },

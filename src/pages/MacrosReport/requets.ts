@@ -21,25 +21,35 @@ import type {
 } from './types';
 
 // Novos endpoints do Postman
-export const getDrivers = (params?: GetDriversParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: DriverResponse[] }>> => {
+export const getDrivers = (
+  params?: GetDriversParams,
+): Promise<AxiosResponse<{ total: number; last_id: number | null; data: DriverResponse[] }>> => {
   return api.get('/fuel/v1/drivers', { params });
 };
 
-export const getCustomers = (params?: GetCustomersParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: CustomerResponse[] }>> => {
+export const getCustomers = (
+  params?: GetCustomersParams,
+): Promise<AxiosResponse<{ total: number; last_id: number | null; data: CustomerResponse[] }>> => {
   return api.get('/f-work/macros/v1/customers', { params });
 };
 
-export const getVehicles = (params?: GetVehiclesParams): Promise<AxiosResponse<{ total: number; last_id: number | null; data: VehicleResponse[] }>> => {
+export const getVehicles = (
+  params?: GetVehiclesParams,
+): Promise<AxiosResponse<{ total: number; last_id: number | null; data: VehicleResponse[] }>> => {
   return api.get('/f-work/macros/v1/ativos/', { params });
 };
 
-export const getGroups = (params?: GetGroupsParams): Promise<
+export const getGroups = (
+  params?: GetGroupsParams,
+): Promise<
   AxiosResponse<{ total: number; last_id: number | null; data: MacrosGroupResponse[] }>
 > => {
   return api.get('/f-work/macros/v1/list_macros/', { params });
 };
 
-export const insertSavedFilter = (data: InsertSavedFilterData): Promise<AxiosResponse<{ id: number }>> => {
+export const insertSavedFilter = (
+  data: InsertSavedFilterData,
+): Promise<AxiosResponse<{ id: number }>> => {
   return api.post('/f-work/macros/v1/reports/filter', data);
 };
 
@@ -65,25 +75,33 @@ export const getReports = (params?: GetReportsParams): Promise<AxiosResponse<Rep
   return api.get('/f-work/macros/v1/reports/', { params });
 };
 
-export const getReportsDetail = (params?: GetReportsParams): Promise<AxiosResponse<ReportsResponse>> => {
+export const getReportsDetail = (
+  params?: GetReportsParams,
+): Promise<AxiosResponse<ReportsResponse>> => {
   return api.get('/f-work/macros/v1/reports/detail/', { params });
 };
 
-export const getSavedFilters = (params?: GetSavedFiltersParams): Promise<AxiosResponse<SavedFiltersApiResponse>> => {
+export const getSavedFilters = (
+  params?: GetSavedFiltersParams,
+): Promise<AxiosResponse<SavedFiltersApiResponse>> => {
   return api.get('/f-work/macros/v1/reports/filter', { params });
 };
 
+export interface UpdateReportData {
+  macro_updated: string;
+  old_value: string;
+  new_value: string;
+}
+
+export const updateReport = (id: number, data: UpdateReportData): Promise<AxiosResponse<any>> => {
+  return api.put(`/f-work/macros/v1/reports/update/${id}/`, data);
+};
+
 // Funções utilitárias para simplificar a montagem dos dados
-export const formatDateTime = (
-  date: Date,
-  time: TimeRange,
-): string => {
+export const formatDateTime = (date: Date, time: TimeRange): string => {
   return format(
     setSeconds(
-      setMinutes(
-        setHours(date, parseInt(time.hour)),
-        parseInt(time.minute),
-      ),
+      setMinutes(setHours(date, parseInt(time.hour)), parseInt(time.minute)),
       parseInt(time.second),
     ),
     'dd/MM/yyyy HH:mm:ss',
@@ -169,7 +187,7 @@ export const transformSavedFilterData = (apiData: SavedFilterResponse) => {
     driver_id: apiData.driver_id,
     driver_desc: apiData.driver_desc,
     options: {
-      ativos: apiData.ativos.map(ativo => ({
+      ativos: apiData.ativos.map((ativo) => ({
         ativo_id: ativo.ativo_id,
         ativo_desc: ativo.ativo_desc,
       })),
@@ -177,4 +195,3 @@ export const transformSavedFilterData = (apiData: SavedFilterResponse) => {
     },
   };
 };
-
