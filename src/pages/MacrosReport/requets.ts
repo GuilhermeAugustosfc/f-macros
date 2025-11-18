@@ -30,7 +30,7 @@ export const getDrivers = (
 export const getCustomers = (
   params?: GetCustomersParams,
 ): Promise<AxiosResponse<{ total: number; last_id: number | null; data: CustomerResponse[] }>> => {
-  return api.get('/f-work/macros/v1/customers', { params });
+  return api.get('/f-work/macros/v1/customers/', { params });
 };
 
 export const getVehicles = (
