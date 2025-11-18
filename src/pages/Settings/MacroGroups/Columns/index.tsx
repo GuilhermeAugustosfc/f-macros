@@ -76,7 +76,7 @@ export const ColumnsFunction = (
       header: () => <span>{t('macro_group')}</span>,
     }),
     columnHelper.accessor('lastModification', {
-      cell: (info) => <span>{info.getValue().toString()}</span>,
+      cell: (info) => <span>{info.getValue()}</span>,
       header: () => <span>{t('last_modification')}</span>,
     }),
   ];
