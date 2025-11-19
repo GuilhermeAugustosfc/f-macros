@@ -18,10 +18,10 @@ export const colorOptions: ColorOption[] = [
 
 // Função para converter ID da cor para cor real
 export const getColorById = (colorId: number): string => {
-  return colorOptions.find(c => c.id === colorId)?.color || '#85919e';
+  return colorOptions.find((c) => c.id === colorId)?.color || '#85919e';
 };
 
 // Função para converter cor HEX para ID
 export const getColorIdByHex = (colorHex: string): number => {
-  return colorOptions.find(c => c.color.toLowerCase() === colorHex.toLowerCase())?.id || 1;
+  return colorOptions.find((c) => c.color.toLowerCase() === colorHex.toLowerCase())?.id || 1;
 };

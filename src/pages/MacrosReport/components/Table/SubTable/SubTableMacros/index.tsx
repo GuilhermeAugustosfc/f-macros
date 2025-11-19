@@ -30,23 +30,22 @@ const SubTableMacros: React.FC<Props> = ({ isEven, items = [] }: Props) => {
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-          <path
-            d="M12 6V12L16 14"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
+          <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
       ),
     },
-    inicio: item.inicio ? {
-      date: item.inicio.split(' ')[0],
-      time: item.inicio.split(' ')[1] || ''
-    } : { date: '', time: '' },
-    fim: item.fim ? {
-      date: item.fim.split(' ')[0],
-      time: item.fim.split(' ')[1] || ''
-    } : { date: '', time: '' },
+    inicio: item.inicio
+      ? {
+          date: item.inicio.split(' ')[0],
+          time: item.inicio.split(' ')[1] || '',
+        }
+      : { date: '', time: '' },
+    fim: item.fim
+      ? {
+          date: item.fim.split(' ')[0],
+          time: item.fim.split(' ')[1] || '',
+        }
+      : { date: '', time: '' },
     duracao: item.duracao || '',
     endereco: item.loc_inicial ? `${item.loc_inicial[0]}, ${item.loc_inicial[1]}` : '',
     ponto_referencia: item.reference_points_inicial_loc?.[0] || '',

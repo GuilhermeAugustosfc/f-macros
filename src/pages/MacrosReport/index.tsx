@@ -5,9 +5,11 @@ import { FilterModal } from './components/FilterModal';
 import Content, { type ContentHandle } from './components/Content';
 import { ReportsContext } from '../../contexts/reports';
 import { MainContainer, ReportWrapper } from './styles';
+import { useTranslation } from '@ftdata/core';
 // import { useConfiguration } from '@ftdata/core';
 
 const FuelReport: React.FC = () => {
+  const { t } = useTranslation();
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
 
   const { hasFilter, clearFilter } = useContext(ReportsContext);
@@ -40,7 +42,7 @@ const FuelReport: React.FC = () => {
   return (
     <MainContainer>
       <ReportWrapper $hasPagination={hasTable && hasFilter}>
-        <Header title={'Macros Personalizadas'} openFilter={handleOpenModal} />
+        <Header title={t('custom_macros')} openFilter={handleOpenModal} />
 
         <Content
           ref={contentRef}

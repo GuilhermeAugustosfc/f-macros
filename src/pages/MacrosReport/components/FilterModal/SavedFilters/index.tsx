@@ -11,7 +11,11 @@ import {
   ClientIcon,
   ReferencePointIcon,
 } from '../../svg';
-import { deleteSavedFilter, getSavedFilters, transformSavedFilterData } from 'src/pages/MacrosReport/requets';
+import {
+  deleteSavedFilter,
+  getSavedFilters,
+  transformSavedFilterData,
+} from 'src/pages/MacrosReport/requets';
 import MediaLibraryIcon from '../../../../../assets/media-library-folder-checkmark.svg';
 import { queryClient } from 'src/services/queryClient';
 import { Button, DoubleList, Loading } from '@ftdata/ui';

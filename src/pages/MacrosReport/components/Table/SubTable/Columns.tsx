@@ -1,6 +1,7 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { GroupIcon, ClockIcon, AddCircleIcon, MinusIcon } from '../../svg';
 import styled from 'styled-components';
+import { useTranslation } from '@ftdata/core';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -50,6 +51,8 @@ export const ColumnsFunction = (
   allExpanded: boolean,
   toggleAllRowsExpanded: () => void,
 ): ColumnDef<any>[] => {
+  const { t } = useTranslation();
+
   const allColumns = [
     columnHelper.accessor('expand', {
       header: () => (
@@ -85,7 +88,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <GroupIcon width={24} height={24} stroke="white" />
-          <span>Grupo de Macros</span>
+          <span>{t('grupo_macros')}</span>
         </DivValue>
       ),
       cell: (info) => <CellValue>{info.getValue()}</CellValue>,
@@ -94,7 +97,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <ClockIcon width={24} height={24} stroke="white" />
-          <span>Duração Total</span>
+          <span>{t('duracao_total')}</span>
         </DivValue>
       ),
       cell: (info) => <DurationValue>{info.getValue()}</DurationValue>,

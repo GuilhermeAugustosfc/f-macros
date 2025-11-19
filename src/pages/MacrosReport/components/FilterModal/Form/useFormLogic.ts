@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
 import { useQuery } from 'react-query';
-import {
-  endOfMonth,
-  startOfMonth,
-  subMonths,
-} from 'date-fns';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { useTranslation } from '@ftdata/core';
 
 import { ReportsContext } from '../../../../../contexts/reports';

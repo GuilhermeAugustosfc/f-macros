@@ -60,7 +60,7 @@ export const ColumnsFunction = (
     }),
     columnHelper.accessor('ativo_id', {
       cell: (info) => info.getValue().toString() || '-',
-      header: () => <span>{t('ID')}</span>,
+      header: () => <span>{t('id')}</span>,
     }),
     columnHelper.accessor('client', {
       cell: (info) => <SpanCustomer>{info.getValue().toString()}</SpanCustomer>,

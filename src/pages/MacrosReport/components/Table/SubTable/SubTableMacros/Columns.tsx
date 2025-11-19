@@ -5,6 +5,7 @@ import 'rsuite/dist/rsuite.css';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updateReport } from 'src/pages/MacrosReport/requets';
+import { useTranslation } from '@ftdata/core';
 
 const columnHelper = createColumnHelper<any>();
 
@@ -211,17 +212,16 @@ const EditableDateCell = ({
 };
 
 export const ColumnsFunction = (): ColumnDef<any>[] => {
+  const { t } = useTranslation();
   const [editedCells, setEditedCells] = useState<Record<string, boolean>>({});
 
   const handleSave = (rowId: string, field: string, newValue: any) => {
-    // Aqui você pode implementar a lógica para salvar no backend
-    console.log(`Salvando ${field} para linha ${rowId}:`, newValue);
     setEditedCells((prev) => ({ ...prev, [`${rowId}-${field}`]: true }));
   };
 
   const allColumns = [
     columnHelper.accessor('macro', {
-      header: () => <span>Macros</span>,
+      header: () => <span>{t('macros')}</span>,
       cell: (info) => {
         const macro = info.getValue();
 
@@ -236,7 +236,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('inicio', {
       header: () => (
         <DivValue>
-          <span>Início</span>
+          <span>{t('inicio')}</span>
         </DivValue>
       ),
       cell: (info) => {
@@ -258,7 +258,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('fim', {
       header: () => (
         <DivValue>
-          <span>Fim</span>
+          <span>{t('fim')}</span>
         </DivValue>
       ),
       cell: (info) => {
@@ -280,7 +280,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('duracao', {
       header: () => (
         <DivValue>
-          <span>Duração</span>
+          <span>{t('duracao')}</span>
         </DivValue>
       ),
       cell: (info) => <CellValue>{info.getValue()}</CellValue>,
@@ -288,7 +288,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('endereco', {
       header: () => (
         <DivValue>
-          <span>Endereço</span>
+          <span>{t('endereco')}</span>
         </DivValue>
       ),
       cell: (info) => <AddressCell>{info.getValue()}</AddressCell>,
@@ -296,7 +296,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('ponto_referencia', {
       header: () => (
         <DivValue>
-          <span>Ponto de Referência</span>
+          <span>{t('ponto_referencia')}</span>
         </DivValue>
       ),
       cell: (info) => <CellValue>{info.getValue()}</CellValue>,
@@ -304,7 +304,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('rota', {
       header: () => (
         <DivValue>
-          <span>Rota</span>
+          <span>{t('rota')}</span>
         </DivValue>
       ),
       cell: () => (
@@ -322,7 +322,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
     columnHelper.accessor('motorista', {
       header: () => (
         <DivValue>
-          <span>Motorista</span>
+          <span>{t('motorista')}</span>
         </DivValue>
       ),
       cell: (info) => (

@@ -13,6 +13,7 @@ import { getIconById } from '../MacroEditModal/icons';
 import { getColorById } from '../MacroEditModal/colorMapping';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import type { Macro, MacrosContainerProps } from './types';
+import { useTranslation } from '@ftdata/core';
 
 export const MacrosContainer = ({
   maxMacros = 15,
@@ -24,12 +25,13 @@ export const MacrosContainer = ({
   errorMessage = '',
   isEditing = false,
 }: MacrosContainerProps): JSX.Element => {
+  const { t } = useTranslation();
   const [middleMacros, setMiddleMacros] = useState<Macro[]>([]);
 
   // Macros estáticas (início e fim)
   const inicioMacro: Macro = {
     id: 'inicio-jornada',
-    name: 'Início de jornada',
+    name: t('inicio_jornada'),
     color: 3, // Verde
     iconType: 1, // Ícone padrão para início
     isRequired: true,
@@ -38,7 +40,7 @@ export const MacrosContainer = ({
 
   const fimMacro: Macro = {
     id: 'fim-jornada',
-    name: 'Fim de jornada',
+    name: t('jornada_fim_jornada'),
     color: 4, // Vermelho
     iconType: 36, // Ícone padrão para fim
     isRequired: true,
@@ -68,7 +70,6 @@ export const MacrosContainer = ({
   const selectedMacrosCount = [inicioMacro, ...allMacros, fimMacro].filter(
     (macro) => macro.isSelected,
   ).length;
-
 
   // Função para renderizar o ícone correto baseado no iconType
   const renderMacroIcon = (macro: Macro) => {
@@ -126,9 +127,9 @@ export const MacrosContainer = ({
     const filteredMacros = middleMacros.filter((macro) => macro.id !== macroToDelete);
     const updatedMiddleMacros = filteredMacros.map((macro, index) => ({
       ...macro,
-      position: index + 1 // Recalcular position após deletar
+      position: index + 1, // Recalcular position após deletar
     }));
-    
+
     setMiddleMacros(updatedMiddleMacros);
     onMacrosChange?.(updatedMiddleMacros);
     setShowDeleteModal(false);
@@ -194,7 +195,7 @@ export const MacrosContainer = ({
     // Atualizar o campo position de cada macro para refletir a nova ordem
     const reorderedMacros = newMiddleMacros.map((macro, index) => ({
       ...macro,
-      position: index + 1 // Atualizar position baseado na nova posição
+      position: index + 1, // Atualizar position baseado na nova posição
     }));
 
     setMiddleMacros(reorderedMacros);
@@ -216,15 +217,13 @@ export const MacrosContainer = ({
   return (
     <Container>
       <MacrosHeader>
-        <MacrosTitle>Selecione e ordene as macros para este grupo</MacrosTitle>
+        <MacrosTitle>{t('select_and_order_macros_for_group')}</MacrosTitle>
         <MacrosCount>
           {selectedMacrosCount}/{maxMacros}
         </MacrosCount>
       </MacrosHeader>
-      
-      {hasError && errorMessage && (
-        <ErrorMessage>{errorMessage}</ErrorMessage>
-      )}
+
+      {hasError && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
       <MacrosList>
         {/* Macro de início - estática */}
@@ -236,7 +235,7 @@ export const MacrosContainer = ({
             {renderMacroIcon(inicioMacro)}
             {inicioMacro.name}
           </MacroTag>
-          <MacroRequired>(Obrigatório)</MacroRequired>
+          <MacroRequired>({t('required')})</MacroRequired>
         </MacroItem>
 
         {/* Macros do meio - com drag and drop nativo */}
@@ -328,13 +327,13 @@ export const MacrosContainer = ({
             {renderMacroIcon(fimMacro)}
             {fimMacro.name}
           </MacroTag>
-          <MacroRequired>(Obrigatório)</MacroRequired>
+          <MacroRequired>({t('required')})</MacroRequired>
         </MacroItem>
       </MacrosList>
 
       <AddMacroButton onClick={handleAddMacro}>
         <AddCircleIcon width={24} height={24} />
-        Adicionar novo status
+        {t('add_new_status')}
       </AddMacroButton>
 
       {/* Drag Ghost - elemento que segue o mouse */}

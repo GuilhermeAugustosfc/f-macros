@@ -12,6 +12,7 @@ chmod +x deploy.sh
 ```
 
 O script irá:
+
 1. Clonar o repositório da branch `develop`
 2. Fazer build da aplicação usando Docker e pnpm
 3. Copiar os arquivos gerados para `/var/www/html/homologacao/f-macros`
@@ -19,11 +20,13 @@ O script irá:
 ## 🐳 Desenvolvimento com Docker
 
 ### Desenvolvimento
+
 ```bash
 docker-compose up app
 ```
 
 ### Produção local
+
 ```bash
 docker-compose up prod
 ```
@@ -68,15 +71,15 @@ export default tseslint.config([
       // other options...
     },
   },
-])
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -97,5 +100,5 @@ export default tseslint.config([
       // other options...
     },
   },
-])
+]);
 ```

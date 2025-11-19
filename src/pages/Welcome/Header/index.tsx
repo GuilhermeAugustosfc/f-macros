@@ -13,10 +13,10 @@ const Header: React.FC = () => {
     <Container>
       <ContainerPresentation>
         <Title size="section">
-          Bem-vindo ao módulo de macros personalizadas !<span>{t('new')}</span>
+          {t('welcome_to_custom_macros_module')} <span>{t('new')}</span>
         </Title>
 
-        <Paragraph size="sm">Jornadas personalizáveis no Fulltrack!</Paragraph>
+        <Paragraph size="sm">{t('customizable_journeys_in_fulltrack')}</Paragraph>
       </ContainerPresentation>
       <ContainerButtonConfiguration>
         <Icon name="ui settings" color={styleguide.COLOR_NEUTRAL_DAY} />

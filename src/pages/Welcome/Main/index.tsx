@@ -10,9 +10,11 @@ import {
 } from './style';
 import HomePage from '../../../assets/svgs/emptyStates/homePage.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '@ftdata/core';
 
 const ManagementReports: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <Container>
       <ContentWrapper>
@@ -23,15 +25,12 @@ const ManagementReports: React.FC = () => {
 
           <CardContent>
             <TextContent>
-              <Title size="md">Macros Personalizadas</Title>
-              <Paragraph size="sm">
-                Acompanhe em tempo real os estados operacionais da sua frota e transforme dados em
-                decisões estratégicas com eficiência e precisão.
-              </Paragraph>
+              <Title size="md">{t('custom_macros')}</Title>
+              <Paragraph size="sm">{t('track_fleet_operational_states_real_time')}</Paragraph>
             </TextContent>
 
             <StyledButton onClick={() => navigate('/report')}>
-              <Button variant="primary">Acessar</Button>
+              <Button variant="primary">{t('access_button')}</Button>
             </StyledButton>
           </CardContent>
         </CardContainer>

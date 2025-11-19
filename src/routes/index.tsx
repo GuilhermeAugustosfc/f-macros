@@ -41,7 +41,7 @@ const Routes: React.FC = () => {
               S3_URL: import.meta.env.VITE_S3_URL || '',
             },
             httpInstance: instance,
-            namespace: '114',
+            namespace: '351',
           }}
         />
       </QueryClientProvider>

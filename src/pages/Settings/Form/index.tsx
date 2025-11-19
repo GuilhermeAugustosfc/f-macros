@@ -1,17 +1,20 @@
 import { type JSX, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, Input, CustomSelect as Select, Collapse, MultiSelect } from '@ftdata/ui';
-import {
-  ClientIcon,
-  GroupDescriptionIcon,
-} from 'src/pages/MacrosReport/components/svg';
+import { ClientIcon, GroupDescriptionIcon } from 'src/pages/MacrosReport/components/svg';
 import { useTranslation } from '@ftdata/core';
 import { useQuery } from 'react-query';
 import { MacrosContainer } from './MacrosContainer';
 import { type Macro } from './MacrosContainer/types';
 import { MacroEditModal } from './MacroEditModal';
 import { getCustomers, getVehicles } from 'src/pages/MacrosReport/requets';
-import { createMacroGroup, getMacroGroupById, updateMacroGroup, type UpdateMacroGroupRequest, type CreateMacroGroupRequest } from '../requets';
+import {
+  createMacroGroup,
+  getMacroGroupById,
+  updateMacroGroup,
+  type UpdateMacroGroupRequest,
+  type CreateMacroGroupRequest,
+} from '../requets';
 import { type ICustomSelectOption } from '@ftdata/ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from 'src/contexts/toast';
@@ -24,7 +27,7 @@ export const Form = (): JSX.Element => {
   const [searchParams] = useSearchParams();
   const editId = searchParams.get('id');
   const isEditing = Boolean(editId);
-  
+
   const [selectedClient, setSelectedClient] = useState<ICustomSelectOption | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<ICustomSelectOption[]>([]);
   const [groupTitle, setGroupTitle] = useState<string>('');
@@ -38,9 +41,9 @@ export const Form = (): JSX.Element => {
     groupTitle: false,
     client: false,
     vehicle: false,
-    macros: false
+    macros: false,
   });
-  
+
   // Estados para rastrear valores originais (para detectar alterações)
   const [originalVehicles, setOriginalVehicles] = useState<ICustomSelectOption[]>([]);
   const [originalMacros, setOriginalMacros] = useState<Macro[]>([]);
@@ -90,55 +93,48 @@ export const Form = (): JSX.Element => {
     },
   );
 
-  // Reset veículo quando cliente muda
   useEffect(() => {
     setSelectedVehicle([]);
   }, [selectedClient]);
 
-  // Carregar dados quando estiver editando
   useEffect(() => {
     if (macroGroupData && isEditing) {
-      // Preencher título
       setGroupTitle(macroGroupData.description);
-      
-      // Preencher cliente
+
       const clientOption = clientesData?.find(
-        client => client.label === macroGroupData.client_description
+        (client) => client.label === macroGroupData.client_description,
       );
       if (clientOption) {
         setSelectedClient(clientOption);
       }
-      
-      // Preencher veículos
-      const vehicleOptions = macroGroupData.ativos_ids.map(ativo => ({
+
+      const vehicleOptions = macroGroupData.ativos_ids.map((ativo) => ({
         value: String(ativo.ativo_id),
         label: `${ativo.plate} - ${ativo.ativo_desc}`,
       }));
       setSelectedVehicle(vehicleOptions);
-      setOriginalVehicles(vehicleOptions); // Salvar veículos originais
-      
-      // Preencher macros - filtrar macros de início e fim de jornada
+      setOriginalVehicles(vehicleOptions);
+
       const macrosData = macroGroupData.macros
-        .filter((macro) => !macro.default_macro) // Não incluir macros de início e fim de jornada
+        .filter((macro) => !macro.default_macro)
         .map((macro, index) => ({
           id: `macro-${index}`,
-          macroId: macro.id, // ID da macro no backend
+          macroId: macro.id,
           name: macro.description,
-          color: getColorIdByHex(macro.macro_color_id), // Converter HEX para ID
+          color: getColorIdByHex(macro.macro_color_id),
           iconType: macro.macro_icone_id,
-          position: macro.position ?? index + 1, // Usar position do backend ou índice
+          position: macro.position ?? index + 1,
           isRequired: Boolean(macro.default_macro),
           isSelected: false,
         }));
       setMacros(macrosData);
-      setOriginalMacros(macrosData); // Salvar macros originais
+      setOriginalMacros(macrosData);
     }
   }, [macroGroupData, isEditing, clientesData]);
 
-  // Função para limpar erros quando o usuário interage
   const clearError = (field: keyof typeof errors) => {
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: false }));
+      setErrors((prev) => ({ ...prev, [field]: false }));
     }
   };
 
@@ -160,13 +156,11 @@ export const Form = (): JSX.Element => {
 
   const handleSaveMacro = (updatedMacro: Macro) => {
     if (editingMacro) {
-      // Editando macro existente - atualizar na lista mantendo a position
       const updatedMacros = macros.map((macro) =>
         macro.id === updatedMacro.id ? { ...updatedMacro, position: macro.position } : macro,
       );
       setMacros(updatedMacros);
     } else {
-      // Adicionando nova macro - adicionar na lista com position baseado no tamanho atual
       const newPosition = macros.length + 1;
       const newMacro = { ...updatedMacro, position: newPosition };
       const updatedMacros = [...macros, newMacro];
@@ -183,117 +177,107 @@ export const Form = (): JSX.Element => {
 
   const handleSave = async () => {
     try {
-      // Resetar erros
       setErrors({
         groupTitle: false,
         client: false,
         vehicle: false,
-        macros: false
+        macros: false,
       });
 
-      // Validações básicas
       const hasGroupTitleError = !groupTitle.trim();
       const hasClientError = !selectedClient;
       const hasVehicleError = selectedVehicle.length === 0;
       const hasMacrosError = macros.length === 0;
 
-      // Se há erros, atualizar estados e retornar
       if (hasGroupTitleError || hasClientError || hasVehicleError || hasMacrosError) {
         setErrors({
           groupTitle: hasGroupTitleError,
           client: hasClientError,
           vehicle: hasVehicleError,
-          macros: hasMacrosError
+          macros: hasMacrosError,
         });
         return;
       }
 
       setIsLoading(true);
 
-      // Fazer a requisição (create ou update)
       if (isEditing && editId) {
-        // Atualizar grupo existente
-        
-        // Verificar se houve alteração nos veículos
-        const vehiclesChanged = JSON.stringify(
-          selectedVehicle.map(v => v.value).sort()
-        ) !== JSON.stringify(
-          originalVehicles.map(v => v.value).sort()
-        );
-        
-        // Verificar se houve alteração nas macros
-        const macrosChanged = JSON.stringify(
-          macros.map(m => ({ name: m.name, color: m.color, iconType: m.iconType, position: m.position }))
-        ) !== JSON.stringify(
-          originalMacros.map(m => ({ name: m.name, color: m.color, iconType: m.iconType, position: m.position }))
-        );
-        
+        const vehiclesChanged =
+          JSON.stringify(selectedVehicle.map((v) => v.value).sort()) !==
+          JSON.stringify(originalVehicles.map((v) => v.value).sort());
+
+        const macrosChanged =
+          JSON.stringify(
+            macros.map((m) => ({
+              name: m.name,
+              color: m.color,
+              iconType: m.iconType,
+              position: m.position,
+            })),
+          ) !==
+          JSON.stringify(
+            originalMacros.map((m) => ({
+              name: m.name,
+              color: m.color,
+              iconType: m.iconType,
+              position: m.position,
+            })),
+          );
+
         const updateData: UpdateMacroGroupRequest = {
           description: groupTitle.trim(),
           customer_id: Number(selectedClient.value),
-          // Incluir ativos_ids apenas se houve alteração
           ...(vehiclesChanged && {
-            ativos_ids: selectedVehicle.map(vehicle => ({
-              ativo_id: Number(vehicle.value)
-            }))
+            ativos_ids: selectedVehicle.map((vehicle) => ({
+              ativo_id: Number(vehicle.value),
+            })),
           }),
-          // Incluir macros apenas se houve alteração
           ...(macrosChanged && {
             macros: macros.map((macro, index) => ({
-              ...(macro.macroId ? { id: macro.macroId } : {}), // Incluir id apenas se a macro já existe
+              ...(macro.macroId ? { id: macro.macroId } : {}),
               description: macro.name,
-              macro_color_id: getColorById(macro.color), // Converter ID para HEX
+              macro_color_id: getColorById(macro.color),
               macro_icone_id: macro.iconType || 1,
-              position: macro.position ?? index + 1 // Usar position da macro ou índice
-            }))
-          })
+              position: macro.position ?? index + 1,
+            })),
+          }),
         };
 
-        console.log('Dados de atualização a serem enviados:', updateData);
-        console.log('Veículos alterados:', vehiclesChanged);
-        console.log('Macros alteradas:', macrosChanged);
-        
         await updateMacroGroup(Number(editId), updateData);
         showToast({
-          title: 'Sucesso',
-          message: 'Grupo de macros atualizado com sucesso!',
-          type: 'success'
+          title: t('success'),
+          message: t('macro_group_updated_successfully'),
+          type: 'success',
         });
       } else {
-        // Criar novo grupo
         const createData: CreateMacroGroupRequest = {
           description: groupTitle.trim(),
           customer_id: Number(selectedClient.value),
-          ativos_ids: selectedVehicle.map(vehicle => ({
-            ativo_id: Number(vehicle.value)
+          ativos_ids: selectedVehicle.map((vehicle) => ({
+            ativo_id: Number(vehicle.value),
           })),
           macros: macros.map((macro, index) => ({
             description: macro.name,
-            macro_color_id: getColorById(macro.color), // Converter ID para HEX
+            macro_color_id: getColorById(macro.color),
             macro_icone_id: macro.iconType || 1,
-            position: macro.position ?? index + 1 // Usar position da macro ou índice
-          }))
+            position: macro.position ?? index + 1,
+          })),
         };
 
-        console.log('Dados de criação a serem enviados:', createData);
-        
         await createMacroGroup(createData);
         showToast({
-          title: 'Sucesso',
-          message: 'Grupo de macros criado com sucesso!',
-          type: 'success'
+          title: t('success'),
+          message: t('macro_group_created_successfully'),
+          type: 'success',
         });
       }
-      
-      // Navegar de volta para a lista
-      navigate('/settings');
 
+      navigate('/settings');
     } catch (error) {
-      console.error('Erro ao salvar grupo de macros:', error);
       showToast({
-        title: 'Erro',
-        message: 'Erro ao salvar grupo de macros. Tente novamente.',
-        type: 'error'
+        title: t('error'),
+        message: t('error_saving_macro_group'),
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -303,14 +287,13 @@ export const Form = (): JSX.Element => {
     navigate('/settings');
   };
 
-  // Mostrar loading quando estiver carregando dados para edição
   if (isEditing && isLoadingGroup) {
     return (
       <Container>
         <TitleSection>
           <TitleContainer>
-            <Title>Carregando...</Title>
-            <Subtitle>Buscando dados do grupo de macros</Subtitle>
+            <Title>{t('loading')}...</Title>
+            <Subtitle>{t('fetching_macro_group_data')}</Subtitle>
           </TitleContainer>
         </TitleSection>
       </Container>
@@ -321,9 +304,9 @@ export const Form = (): JSX.Element => {
     <Container>
       <TitleSection>
         <TitleContainer>
-          <Title>{isEditing ? 'Editar Grupo de Macros' : 'Criar Grupo de Macros'}</Title>
+          <Title>{isEditing ? t('edit_macro_group') : t('create_macro_group')}</Title>
           <Subtitle>
-            {isEditing ? 'Edite as informações do grupo de macros' : 'Cadastre um novo grupo de macros para sua frota'}
+            {isEditing ? t('edit_macro_group_info') : t('create_macro_group_description')}
           </Subtitle>
         </TitleContainer>
       </TitleSection>
@@ -331,19 +314,20 @@ export const Form = (): JSX.Element => {
       <FormContainer>
         <Collapse
           margin="24px"
-          title="Informações"
+          title={t('information')}
           showCollapse={isInfoOpen}
           handleChange={() => setIsInfoOpen(!isInfoOpen)}
         >
           <InfoFieldsContainer>
-            <SensorTypeContainer>
+            <ContainerFieldMacros>
               <FieldWrapper>
                 <FieldLabel>
-                  Título do Grupo de Macros <Required>*</Required>
+                  {t('macro_group_title')} <Required>*</Required>
                 </FieldLabel>
                 <Input
-                  placeholder="Fazenda 4 Estações"
                   width="100%"
+                  style={{ width: '100%' }}
+                  placeholder="Fazenda 4 Estações"
                   icon={<GroupDescriptionIcon width={24} height={24} />}
                   value={groupTitle}
                   onChange={(e) => {
@@ -351,13 +335,13 @@ export const Form = (): JSX.Element => {
                     clearError('groupTitle');
                   }}
                   error={errors.groupTitle}
-                  helpText={errors.groupTitle ? 'Título é obrigatório' : ''}
+                  helpText={errors.groupTitle ? t('title_required') : ''}
                 />
               </FieldWrapper>
 
               <Select
-                label="Cliente"
-                placeholder="Selecionar"
+                label={t('client')}
+                placeholder={t('select')}
                 icon={<ClientIcon width={24} height={24} />}
                 width="100%"
                 options={clientesData ?? []}
@@ -369,13 +353,13 @@ export const Form = (): JSX.Element => {
                   clearError('client');
                 }}
                 isError={errors.client}
-                helpText={errors.client ? 'Cliente é obrigatório' : ''}
+                helpText={errors.client ? t('client_required') : ''}
                 disabled={isEditing}
               />
 
               <MultiSelect
-                label="Veículo"
-                placeholder="Selecionar"
+                label={t('vehicle')}
+                placeholder={t('select')}
                 width="100%"
                 value={selectedVehicle}
                 options={veiculosData ?? []}
@@ -388,14 +372,14 @@ export const Form = (): JSX.Element => {
                 selectAll
                 disabled={!selectedClient}
                 isError={errors.vehicle}
-                helpText={errors.vehicle ? 'Selecione pelo menos um veículo' : ''}
+                helpText={errors.vehicle ? t('select_at_least_one_vehicle') : ''}
               />
-            </SensorTypeContainer>
+            </ContainerFieldMacros>
           </InfoFieldsContainer>
         </Collapse>
 
         <Collapse
-          title="Definir as macros do grupo"
+          title={t('define_group_macros')}
           showCollapse={isMacrosOpen}
           handleChange={() => setIsMacrosOpen(!isMacrosOpen)}
           margin="24px"
@@ -407,16 +391,18 @@ export const Form = (): JSX.Element => {
             onEditMacro={handleEditMacro}
             onAddMacro={handleAddMacro}
             hasError={errors.macros}
-            errorMessage={errors.macros ? 'Adicione pelo menos uma macro' : ''}
+            errorMessage={errors.macros ? t('add_at_least_one_macro') : ''}
             isEditing={isEditing}
           />
         </Collapse>
 
         <ActionButtons>
           <Button variant="primary" onClick={handleSave} disabled={isLoading}>
-            {isLoading ? 'Salvando...' : 'Salvar'}
+            {isLoading ? `${t('saving')}...` : t('save')}
           </Button>
-          <Button variant="secondary" disabled={isLoading} onClick={handleCancel}>Cancelar</Button>
+          <Button variant="secondary" disabled={isLoading} onClick={handleCancel}>
+            {t('cancel')}
+          </Button>
         </ActionButtons>
       </FormContainer>
 
@@ -426,7 +412,6 @@ export const Form = (): JSX.Element => {
         onSave={handleSaveMacro}
         macro={editingMacro}
       />
-
     </Container>
   );
 };
@@ -499,14 +484,12 @@ const InfoFieldsContainer = styled.div`
   margin-bottom: 32px;
 `;
 
-const SensorTypeContainer = styled.div`
+const ContainerFieldMacros = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 32px;
   width: 100%;
   > div {
     width: 100%;
-    flex: 1;
     display: flex;
   }
 `;
@@ -520,12 +503,14 @@ const ActionButtons = styled.div`
 `;
 
 const FieldWrapper = styled.div`
-  display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: flex-start;
   justify-content: flex-start;
-  width: 100%;
+
+  > div {
+    width: 100%;
+  }
 `;
 
 const FieldLabel = styled.div`

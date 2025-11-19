@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { RelatoriosIcon } from '../../../svg';
 import { ReportsContext } from '../../../../../../contexts/reports';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   isEven: boolean;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const HistoricChanges: React.FC<Props> = ({ isEven, historics = [] }: Props) => {
+  const { t } = useTranslation();
   const { setIsModalDetalhesOpen } = useContext(ReportsContext);
   const [isHidden, setIsHidden] = useState(false);
 
@@ -24,26 +26,27 @@ const HistoricChanges: React.FC<Props> = ({ isEven, historics = [] }: Props) => 
             <HeaderIcon>
               <RelatoriosIcon width={24} height={24} stroke="#26333b" />
             </HeaderIcon>
-            <HeaderText>Alterações Recentes</HeaderText>
-            <ViewMoreLink onClick={() => setIsModalDetalhesOpen(true)}>Ver mais</ViewMoreLink>
+            <HeaderText>{t('recent_changes')}</HeaderText>
+            <ViewMoreLink onClick={() => setIsModalDetalhesOpen(true)}>
+              {t('see_more')}
+            </ViewMoreLink>
           </HeaderSection>
 
           <HistoryList>
             {historics.map((historic, index) => (
               <HistoryItem key={index}>
-                {historic.macro_updated} alterada de "{historic.old_value}" para "{historic.new_value}" por {historic.desc_user} - {historic.created_at}
+                {historic.macro_updated} {t('changed_from')} "{historic.old_value}" {t('to')} "
+                {historic.new_value}" {t('by')} {historic.desc_user} - {historic.created_at}
               </HistoryItem>
             ))}
-            {historics.length === 0 && (
-              <HistoryItem>Nenhuma alteração recente encontrada</HistoryItem>
-            )}
+            {historics.length === 0 && <HistoryItem>{t('no_recent_changes_found')}</HistoryItem>}
           </HistoryList>
         </HistoryCard>
       </AnimatedLeftSection>
 
       <RightSection>
         <HideButton onClick={toggleVisibility}>
-          <HideLabel>{isHidden ? 'Expandir' : 'Ocultar'}</HideLabel>
+          <HideLabel>{isHidden ? t('expand') : t('hide')}</HideLabel>
           <ToggleSwitch isActive={!isHidden}>
             <ToggleSlider isActive={!isHidden} />
           </ToggleSwitch>

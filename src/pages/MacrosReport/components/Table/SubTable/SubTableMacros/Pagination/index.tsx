@@ -1,6 +1,7 @@
 import { type Table } from '@tanstack/react-table';
 import { NextIcon, PreviousIcon } from 'src/pages/MacrosReport/components/svg';
 import styled from 'styled-components';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   table: Table<any>;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const Pagination: React.FC<Props> = ({ table, total }: Props) => {
+  const { t } = useTranslation();
   const currentPage = table.getState().pagination.pageIndex + 1;
   const pageCount = table.getPageCount();
   const pageSize = table.getState().pagination.pageSize;
@@ -17,21 +19,21 @@ const Pagination: React.FC<Props> = ({ table, total }: Props) => {
   return (
     <PaginationContainer>
       <PaginationInfo>
-        Mostrando {startItem} a {endItem} de {total} registros
+        {t('displaying')} {startItem} {t('to')} {endItem} {t('of')} {total} {t('records')}
       </PaginationInfo>
 
       <PaginationControls>
         <PageButton onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           <PreviousIcon />
-          Anterior
+          {t('previous')}
         </PageButton>
 
         <PageInfo>
-          Página {currentPage} de {pageCount}
+          {t('page')} {currentPage} {t('of')} {pageCount}
         </PageInfo>
 
         <PageButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-          Próxima
+          {t('next')}
           <NextIcon />
         </PageButton>
       </PaginationControls>

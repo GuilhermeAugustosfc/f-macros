@@ -17,7 +17,13 @@ import { useTranslation } from '@ftdata/core';
 import Empty from '../Empty';
 // import { Pagination } from 'src/components/Table/Pagination';
 import { ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
-import { getActiveAccessList, getCountAccess, activateAccess, deactivateAccess, type ActivatedAccessItem } from './requests';
+import {
+  getActiveAccessList,
+  getCountAccess,
+  activateAccess,
+  deactivateAccess,
+  type ActivatedAccessItem,
+} from './requests';
 import ConfirmationModal from 'src/components/ConfirmationModal';
 
 // Interface para dados com checkbox (usado na tabela)
@@ -46,13 +52,13 @@ export function ActiveAccess(): JSX.Element {
   // Filtro local dos dados
   const filteredData = React.useMemo(() => {
     if (!listAccess) return [];
-    
+
     // Adicionar checkbox aos dados
-    const dataWithCheckbox: ActivatedAccessItemWithCheckbox[] = listAccess.map(item => ({
+    const dataWithCheckbox: ActivatedAccessItemWithCheckbox[] = listAccess.map((item) => ({
       ...item,
-      checkbox: false
+      checkbox: false,
     }));
-    
+
     if (!filterValue) return dataWithCheckbox;
 
     return dataWithCheckbox.filter((item) => {
@@ -65,7 +71,7 @@ export function ActiveAccess(): JSX.Element {
 
   const handleAccess = (action: 'deactivate' | 'activate') => {
     if (selectedRows.size === 0) return;
-    
+
     setPendingAction(action);
     setShowConfirmModal(true);
   };
@@ -74,7 +80,7 @@ export function ActiveAccess(): JSX.Element {
     if (!pendingAction) return;
 
     const selectedItems = filteredData.filter((item) => selectedRows.has(item.ativo_id.toString()));
-    const ativosIds = selectedItems.map(item => item.ativo_id);
+    const ativosIds = selectedItems.map((item) => item.ativo_id);
 
     try {
       if (pendingAction === 'activate') {
@@ -121,7 +127,7 @@ export function ActiveAccess(): JSX.Element {
                 </Paragraph>
               </div>
 
-              <CountAccess 
+              <CountAccess
                 access={countAccess?.access ?? 0}
                 available={countAccess?.available ?? 0}
                 unavailable={countAccess?.unavailable ?? 0}
@@ -172,14 +178,14 @@ export function ActiveAccess(): JSX.Element {
           <Empty />
         )}
       </ContainerTabContent>
-      
+
       <ConfirmationModal
         isOpen={showConfirmModal}
         onConfirm={handleConfirmAction}
         onCancel={handleCancelAction}
         title={pendingAction === 'activate' ? t('activate_access') : t('deactivate_access')}
         description={
-          pendingAction === 'activate' 
+          pendingAction === 'activate'
             ? t('do_you_want_to_activate_the_selected_accesses')
             : t('do_you_want_to_deactivate_the_selected_accesses')
         }
@@ -188,7 +194,7 @@ export function ActiveAccess(): JSX.Element {
         iconColor={pendingAction === 'activate' ? '#10B981' : '#EF4444'}
         confirmButtonColor={pendingAction === 'activate' ? '#10B981' : '#EF4444'}
       />
-      
+
       {/* {!isLoading && listAccess && listAccess.length > 0 && <Pagination table={table} />} */}
     </>
   );

@@ -19,12 +19,7 @@ interface TableProps {
   allIds?: string[];
 }
 
-const TableContent: React.FC<TableProps> = ({
-  data,
-  selectedRows,
-  setSelectedRows,
-  allIds,
-}) => {
+const TableContent: React.FC<TableProps> = ({ data, selectedRows, setSelectedRows, allIds }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const columns = ColumnsFunction(selectedRows, setSelectedRows, allIds);

@@ -8,6 +8,7 @@ import { GroupDescriptionIcon } from 'src/pages/MacrosReport/components/svg';
 import { type Macro } from '../MacrosContainer/types';
 import { ColorDropdown } from './ColorDropdown';
 import { IconDropdown } from './IconDropdown';
+import { useTranslation } from '@ftdata/core';
 
 interface MacroEditModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
   onSave,
   macro,
 }) => {
+  const { t } = useTranslation();
   const nodeRef = useRef(null);
   const [title, setTitle] = useState('');
   const [selectedColor, setSelectedColor] = useState(1);
@@ -77,32 +79,34 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
       <Modal
         isOpen={isOpen}
         onRequestClose={handleClose}
-        contentLabel="Editar Macro"
+        contentLabel={t('edit_macro')}
         style={modalStyles}
       >
         <ModalContent>
-          <ModalTitle>{macro ? 'Editar macro' : 'Nova macro'}</ModalTitle>
+          <ModalTitle>{macro ? t('edit_macro') : t('new_macro')}</ModalTitle>
 
           <FormContainer>
             <FieldContainer>
               <FieldLabel>
-                Título <Required>*</Required>
+                {t('title')} <Required>*</Required>
               </FieldLabel>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Escreva"
+                placeholder={t('write')}
                 maxLength={45}
                 error={title.trim() === ''}
-                helpText={title.trim() === '' ? 'Título é obrigatório' : ''}
+                helpText={title.trim() === '' ? t('title_required') : ''}
                 width="100%"
                 icon={<GroupDescriptionIcon width={24} height={24} />}
               />
-              <CharacterCount>Caracteres: {title.length}/45</CharacterCount>
+              <CharacterCount>
+                {t('characters')}: {title.length}/45
+              </CharacterCount>
             </FieldContainer>
 
             <FieldContainer>
-              <FieldLabel>Ícone da macro</FieldLabel>
+              <FieldLabel>{t('macro_icon')}</FieldLabel>
               <DropdownsContainer>
                 <ColorDropdown
                   selectedColor={selectedColor}
@@ -125,8 +129,8 @@ export const MacroEditModal: React.FC<MacroEditModalProps> = ({
           </FormContainer>
 
           <ModalActions>
-            <MyButton variant="secondary" title="Cancelar" action={handleClose} />
-            <MyButton variant="primary" title="Salvar" action={handleSave} />
+            <MyButton variant="secondary" title={t('cancel')} action={handleClose} />
+            <MyButton variant="primary" title={t('save')} action={handleSave} />
           </ModalActions>
         </ModalContent>
       </Modal>

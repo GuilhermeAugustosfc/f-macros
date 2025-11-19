@@ -42,7 +42,8 @@ export function MacroGroups(): JSX.Element {
       checkbox: false,
       id: item.id.toString(),
       client: item.client_description,
-      vehicle: item.total_ativos > 1 ? `${item.total_ativos} veículos` : item.ativos_ids[0]?.plate || '',
+      vehicle:
+        item.total_ativos > 1 ? `${item.total_ativos} veículos` : item.ativos_ids[0]?.plate || '',
       macroGroup: item.description,
       lastModification: item.dt_updated,
     }));
@@ -85,27 +86,27 @@ export function MacroGroups(): JSX.Element {
 
   const handleConfirmDelete = async () => {
     try {
-      const idsToDelete = itemsToDelete.map(item => parseInt(item.id));
+      const idsToDelete = itemsToDelete.map((item) => parseInt(item.id));
       await deleteMacroGroups(idsToDelete);
-      
+
       // Limpar seleção e recarregar dados
       setSelectedRows(new Set());
       refetchListMacroGroups();
-      
+
       // Mostrar toast de sucesso
       showToast({
         title: 'Sucesso',
         message: `${itemsToDelete.length} grupo(s) de macro(s) excluído(s) com sucesso!`,
-        type: 'success'
+        type: 'success',
       });
     } catch (error) {
       console.error('Erro ao excluir grupos de macros:', error);
-      
+
       // Mostrar toast de erro
       showToast({
         title: 'Erro',
         message: 'Erro ao excluir grupo(s) de macro(s). Tente novamente.',
-        type: 'error'
+        type: 'error',
       });
     } finally {
       setShowDeleteModal(false);
@@ -169,7 +170,7 @@ export function MacroGroups(): JSX.Element {
               data={filteredData}
               selectedRows={selectedRows}
               setSelectedRows={setSelectedRows}
-              allIds={filteredData.map(item => item.id)}
+              allIds={filteredData.map((item) => item.id)}
             />
           </ContainerTableGrid>
         ) : (
@@ -184,7 +185,11 @@ export function MacroGroups(): JSX.Element {
           setItemsToDelete([]);
         }}
         onConfirm={handleConfirmDelete}
-        macroName={itemsToDelete.length === 1 ? itemsToDelete[0]?.macroGroup : `${itemsToDelete.length} grupos`}
+        macroName={
+          itemsToDelete.length === 1
+            ? itemsToDelete[0]?.macroGroup
+            : `${itemsToDelete.length} grupos`
+        }
       />
     </>
   );

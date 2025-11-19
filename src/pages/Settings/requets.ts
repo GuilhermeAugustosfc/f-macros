@@ -69,7 +69,10 @@ export const getMacroGroupById = async (id: number): Promise<MacroGroupResponse[
   return response.data.data[0];
 };
 
-export const updateMacroGroup = async (id: number, data: UpdateMacroGroupRequest): Promise<void> => {
+export const updateMacroGroup = async (
+  id: number,
+  data: UpdateMacroGroupRequest,
+): Promise<void> => {
   const response = await instance.put(`/f-work/macros/v1/update/${id}`, data);
   return response.data;
 };

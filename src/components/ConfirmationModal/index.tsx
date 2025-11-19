@@ -41,7 +41,7 @@ const IconContainer = styled.div<{ $iconColor: string }>`
   align-items: center;
   background-color: rgba(225, 145, 153, 0.1);
   border-radius: 50%;
-  color: ${props => props.$iconColor};
+  color: ${(props) => props.$iconColor};
   display: flex;
   height: 6.75rem;
   justify-content: center;

@@ -107,12 +107,12 @@ export const CustomTable: React.FC<TableProps> = ({
   setVehicleTableData,
 }: TableProps) => {
   console.log(params);
-  
+
   const { data: reportData, isFetching: reportLoading } = useQuery(
     `get_report/${JSON.stringify(params)}`,
     () => getReports(params),
-    { 
-      refetchOnWindowFocus: false, 
+    {
+      refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 100,
       enabled: Boolean(params?.customer_id),
     },
@@ -123,8 +123,8 @@ export const CustomTable: React.FC<TableProps> = ({
   }, [reportData, reportLoading, setVehicleTableData]);
 
   // Extrair dados da resposta da API
-  const tableData: ReportData[] = Array.isArray(reportData?.data) 
-    ? reportData.data 
+  const tableData: ReportData[] = Array.isArray(reportData?.data)
+    ? reportData.data
     : reportData?.data?.data || [];
 
   if (reportLoading) {
@@ -138,7 +138,9 @@ export const CustomTable: React.FC<TableProps> = ({
     return <UnreachableContent openModal={handleOpenModal} />;
   }
 
-  return <TableContent data={tableData} setVehicleTableData={setVehicleTableData} params={params} />;
+  return (
+    <TableContent data={tableData} setVehicleTableData={setVehicleTableData} params={params} />
+  );
 };
 
 const ContainerTable = styled.div`

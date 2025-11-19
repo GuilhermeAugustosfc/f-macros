@@ -15,12 +15,7 @@ import {
 } from './styles';
 import { type FormProps } from './types';
 import { useFormLogic } from './useFormLogic';
-import {
-  CalendarIcon,
-  ClientIcon,
-  DriverHeaderIcon,
-  ReferencePointIcon,
-} from '../../svg';
+import { CalendarIcon, ClientIcon, DriverHeaderIcon, ReferencePointIcon } from '../../svg';
 import { addDays, format, startOfMonth } from 'date-fns';
 import { TimeSelector } from './TimeSelector';
 
@@ -61,7 +56,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
     <FormContainer>
       <FormContent height={window.innerHeight <= 730 ? '75%' : '82%'}>
         <Select
-          label="Cliente"
+          label={t('client')}
           icon={<ClientIcon width={24} height={24} />}
           width="100%"
           placeholder={t('select')}
@@ -160,13 +155,13 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
 
           <TimeRowContainer>
             <TimeSelector
-              label={t('start_time') || 'Horário de Início'}
+              label={t('start_time')}
               time={formState.startTime}
               onChange={handlers.setStartTime}
             />
 
             <TimeSelector
-              label={t('end_time') || 'Horário de Fim'}
+              label={t('end_time')}
               time={formState.endTime}
               onChange={handlers.setEndTime}
             />
@@ -191,7 +186,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
         <Select
           icon={<DriverHeaderIcon width={24} height={24} />}
           width="100%"
-          label="Motorista"
+          label={t('driver')}
           placeholder={t('select')}
           options={[{ label: t('all_drivers'), value: '0' }, ...selectOptions.motoristaOptions]}
           isError={!!errors.motorista}
@@ -203,7 +198,7 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
         />
 
         <MultiSelect
-          label={'Grupos de macros'}
+          label={t('macro_groups')}
           placeholder={t('select')}
           value={formState.selectedGruposMacros}
           options={selectOptions.gruposMacrosOptions}

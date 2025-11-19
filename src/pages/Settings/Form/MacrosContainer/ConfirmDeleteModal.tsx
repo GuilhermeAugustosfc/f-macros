@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { MyButton } from 'src/components/MyButton';
 import TrashIcon from '../../../../assets/svgs/trash.svg?react';
+import { useTranslation } from '@ftdata/core';
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   onConfirm,
   macroName,
 }) => {
+  const { t } = useTranslation();
   const nodeRef = useRef(null);
 
   const handleConfirm = () => {
@@ -32,23 +34,26 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       <Modal
         isOpen={isOpen}
         onRequestClose={onClose}
-        contentLabel="Confirmar Exclusão"
+        contentLabel={t('confirm_delete')}
         style={modalStyles}
       >
         <ModalContent>
           <CloseButton onClick={onClose}>
-          <TrashIcon width={24} height={24} />
+            <TrashIcon width={24} height={24} />
           </CloseButton>
 
-          <ModalTitle>Você tem certeza que gostaria de excluir a macro <span style={{ fontWeight: 'bold', color: '#1510b0' }}>"{macroName}"</span>?</ModalTitle>
+          <ModalTitle>
+            {t('are_you_sure_want_to_delete_macro')}{' '}
+            <span style={{ fontWeight: 'bold', color: '#1510b0' }}>"{macroName}"</span>?
+          </ModalTitle>
 
           <ModalDescription>
-            Os registros serão permanentemente excluídos e não poderão ser recuperados.
+            {t('records_will_be_permanently_deleted_and_cannot_be_recovered')}.
           </ModalDescription>
 
           <ModalActions>
-            <MyButton variant="secondary" title="Cancelar" action={onClose} />
-            <MyButton variant="danger" title="Sim, quero excluir" action={handleConfirm} />
+            <MyButton variant="secondary" title={t('cancel')} action={onClose} />
+            <MyButton variant="danger" title={t('yes_i_want_to_delete')} action={handleConfirm} />
           </ModalActions>
         </ModalContent>
       </Modal>
