@@ -14,6 +14,7 @@ import TableContent from './Table';
 import { useQuery } from 'react-query';
 import CountAccess from './CountAccess';
 import { useTranslation } from '@ftdata/core';
+import { useToast } from 'src/contexts/toast';
 import Empty from '../Empty';
 // import { Pagination } from 'src/components/Table/Pagination';
 import { ErrorIcon, SearchIcon } from 'src/pages/MacrosReport/components/svg';
@@ -33,6 +34,7 @@ interface ActivatedAccessItemWithCheckbox extends ActivatedAccessItem {
 
 export function ActiveAccess(): JSX.Element {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [filterValue, setFilterValue] = useState('');
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -111,7 +113,13 @@ export function ActiveAccess(): JSX.Element {
   };
 
   const notificationSuccess = (action: string) => {
-    return action;
+    showToast({
+      title: t('success'),
+      message: action === 'activate'
+        ? t('accesses_activated_successfully')
+        : t('accesses_deactivated_successfully'),
+      type: 'success',
+    });
   };
 
   return (

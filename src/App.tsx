@@ -1,11 +1,14 @@
 import Routes from './routes';
 import { Suspense } from 'react';
 import LoadingFallback from './components/LoadingFallback';
+import { ToastProvider } from './contexts/toast';
 
 const App = () => {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <Routes />
+      <ToastProvider>
+        <Routes />
+      </ToastProvider>
     </Suspense>
   );
 };

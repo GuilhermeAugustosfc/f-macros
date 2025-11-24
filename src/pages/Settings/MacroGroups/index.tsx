@@ -95,8 +95,8 @@ export function MacroGroups(): JSX.Element {
 
       // Mostrar toast de sucesso
       showToast({
-        title: 'Sucesso',
-        message: `${itemsToDelete.length} grupo(s) de macro(s) excluído(s) com sucesso!`,
+        title: t('success'),
+        message: `${itemsToDelete.length} ${t('macro_groups_deleted_success')}`,
         type: 'success',
       });
     } catch (error) {
@@ -104,8 +104,8 @@ export function MacroGroups(): JSX.Element {
 
       // Mostrar toast de erro
       showToast({
-        title: 'Erro',
-        message: 'Erro ao excluir grupo(s) de macro(s). Tente novamente.',
+        title: t('error'),
+        message: t('error_deleting_macro_groups'),
         type: 'error',
       });
     } finally {
@@ -121,12 +121,12 @@ export function MacroGroups(): JSX.Element {
           <ContainerInformation>
             <HeaderDescription>
               <div className="container-title">
-                <Title size="md">Grupos de macros</Title>
-                <Paragraph size="sm">Histórico de grupos de macros salvos.</Paragraph>
+                <Title size="md">{t('macro_groups')}</Title>
+                <Paragraph size="sm">{t('macro_groups_history')}</Paragraph>
               </div>
 
               <Button LeftIcon={AddCircleIcon} variant="primary" onClick={handleCreateMacroGroup}>
-                Criar novo grupo de macros
+                {t('create_new_macro_group')}
               </Button>
             </HeaderDescription>
 
