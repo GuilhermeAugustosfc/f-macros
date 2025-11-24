@@ -215,7 +215,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
   const { t } = useTranslation();
   const [editedCells, setEditedCells] = useState<Record<string, boolean>>({});
 
-  const handleSave = (rowId: string, field: string, newValue: any) => {
+  const handleSave = (rowId: string, field: string) => {
     setEditedCells((prev) => ({ ...prev, [`${rowId}-${field}`]: true }));
   };
 
@@ -248,7 +248,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
         return (
           <EditableDateCell
             value={value}
-            onSave={(newValue) => handleSave(rowId, 'inicio', newValue)}
+            onSave={() => handleSave(rowId, 'inicio')}
             isEdited={isEdited}
             rowData={rowData}
           />
@@ -270,7 +270,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
         return (
           <EditableDateCell
             value={value}
-            onSave={(newValue) => handleSave(rowId, 'fim', newValue)}
+            onSave={() => handleSave(rowId, 'fim')}
             isEdited={isEdited}
             rowData={rowData}
           />

@@ -85,7 +85,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
 
   const { data: dataAtivos, refetch: activeRefetch } = useQuery(
     ['ativos', selectedClient?.value],
-    () => getVehicles({ customer_id: Number(selectedClient?.value) }),
+    () => getVehicles({ cli_id: Number(selectedClient?.value) }),
     {
       staleTime: 1000 * 60 * 30,
       enabled: Boolean(selectedClient?.value),
