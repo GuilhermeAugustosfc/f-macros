@@ -94,7 +94,7 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
         data.data.data.map(
           (ativo): ICustomSelectOption => ({
             value: String(ativo.ativo_id),
-            label: `${ativo.plate} - ${ativo.ativo}`,
+            label: `${ativo.plate} - ${ativo.ativo || ativo.ativo_desc}`,
           }),
         ),
     },

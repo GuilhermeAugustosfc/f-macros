@@ -1,6 +1,7 @@
 import { type JSX, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Input, CustomSelect as Select, Collapse, MultiSelect } from '@ftdata/ui';
+import { Button, Input, CustomSelect as Select, Collapse } from '@ftdata/ui';
+import ReactSelect from 'react-select';
 import { ClientIcon, GroupDescriptionIcon } from 'src/pages/MacrosReport/components/svg';
 import { useTranslation } from '@ftdata/core';
 import { useQuery } from 'react-query';
@@ -77,7 +78,7 @@ export const Form = (): JSX.Element => {
         data.data.data.map(
           (veiculo): ICustomSelectOption => ({
             value: String(veiculo.ativo_id),
-            label: `${veiculo.plate} - ${veiculo.ativo}`,
+            label: `${veiculo.plate} - ${veiculo.ativo || veiculo.ativo_desc}`,
           }),
         ),
     },
@@ -94,8 +95,10 @@ export const Form = (): JSX.Element => {
   );
 
   useEffect(() => {
-    setSelectedVehicle([]);
-  }, [selectedClient]);
+    if (!isEditing) {
+      setSelectedVehicle([]);
+    }
+  }, [selectedClient, isEditing]);
 
   useEffect(() => {
     if (macroGroupData && isEditing) {
@@ -119,11 +122,9 @@ export const Form = (): JSX.Element => {
         .filter((macro) => !macro.default_macro)
         .map((macro, index) => ({
           id: `macro-${index}`,
-          macroId: macro.id,
           name: macro.description,
           color: getColorIdByHex(macro.macro_color_id),
           iconType: macro.macro_icone_id,
-          position: macro.position ?? index + 1,
           isRequired: Boolean(macro.default_macro),
           isSelected: false,
         }));
@@ -283,6 +284,9 @@ export const Form = (): JSX.Element => {
       setIsLoading(false);
     }
   };
+
+  console.log(veiculosData);
+
   const handleCancel = () => {
     navigate('/settings');
   };
@@ -338,42 +342,58 @@ export const Form = (): JSX.Element => {
                   helpText={errors.groupTitle ? t('title_required') : ''}
                 />
               </FieldWrapper>
-
-              <Select
-                label={t('client')}
-                placeholder={t('select')}
-                icon={<ClientIcon width={24} height={24} />}
-                width="100%"
-                options={clientesData ?? []}
-                required
-                t={t}
-                selected={selectedClient}
-                setSelected={(client) => {
-                  setSelectedClient(client);
-                  clearError('client');
-                }}
-                isError={errors.client}
-                helpText={errors.client ? t('client_required') : ''}
-                disabled={isEditing}
-              />
-
-              <MultiSelect
-                label={t('vehicle')}
-                placeholder={t('select')}
-                width="100%"
-                value={selectedVehicle}
-                options={veiculosData ?? []}
-                onChangeItems={(selectedOptions: ICustomSelectOption[]) => {
-                  setSelectedVehicle(selectedOptions);
-                  clearError('vehicle');
-                }}
-                required
-                translation={t}
-                selectAll
-                disabled={!selectedClient}
-                isError={errors.vehicle}
-                helpText={errors.vehicle ? t('select_at_least_one_vehicle') : ''}
-              />
+              <ContainerSelectClient>
+                <Select
+                  label={t('client')}
+                  placeholder={t('select')}
+                  icon={<ClientIcon width={24} height={24} />}
+                  width="100%"
+                  options={clientesData ?? []}
+                  required
+                  t={t}
+                  selected={selectedClient}
+                  setSelected={(client) => {
+                    setSelectedClient(client);
+                    clearError('client');
+                  }}
+                  isError={errors.client}
+                  helpText={errors.client ? t('client_required') : ''}
+                  disabled={isEditing}
+                />
+              </ContainerSelectClient>
+              <VehicleFieldContainer>
+                <VehicleLabel hasError={errors.vehicle}>{t('vehicle')} *</VehicleLabel>
+                <ReactSelect
+                  isMulti
+                  placeholder={t('select')}
+                  value={selectedVehicle}
+                  options={veiculosData ?? []}
+                  onChange={(selectedOptions) => {
+                    setSelectedVehicle(selectedOptions as ICustomSelectOption[]);
+                    clearError('vehicle');
+                  }}
+                  isDisabled={!selectedClient}
+                  styles={{
+                    control: (provided: any, state: any) => ({
+                      ...provided,
+                      borderColor: errors.vehicle ? '#dc3545' : provided.borderColor,
+                      '&:hover': {
+                        borderColor: errors.vehicle ? '#dc3545' : provided.borderColor,
+                      },
+                      boxShadow: state.isFocused
+                        ? errors.vehicle
+                          ? '0 0 0 1px #dc3545'
+                          : '0 0 0 1px #3b82f6'
+                        : provided.boxShadow,
+                    }),
+                    container: (provided: any) => ({
+                      ...provided,
+                      width: '100%',
+                    }),
+                  }}
+                />
+                {errors.vehicle && <ErrorMessage>{t('select_at_least_one_vehicle')}</ErrorMessage>}
+              </VehicleFieldContainer>
             </ContainerFieldMacros>
           </InfoFieldsContainer>
         </Collapse>
@@ -415,6 +435,24 @@ export const Form = (): JSX.Element => {
     </Container>
   );
 };
+
+const VehicleFieldContainer = styled.div`
+  width: 100%;
+`;
+
+const VehicleLabel = styled.label<{ hasError?: boolean }>`
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ hasError }) => (hasError ? '#dc3545' : '#374151')};
+`;
+
+const ErrorMessage = styled.div`
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -488,9 +526,14 @@ const ContainerFieldMacros = styled.div`
   display: flex;
   gap: 32px;
   width: 100%;
+`;
+
+const ContainerSelectClient = styled.div`
+  width: 100%;
+  display: flex;
   > div {
     width: 100%;
-    display: flex;
+    justify-content: space-between;
   }
 `;
 
@@ -504,10 +547,9 @@ const ActionButtons = styled.div`
 
 const FieldWrapper = styled.div`
   flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   > div {
     width: 100%;
   }

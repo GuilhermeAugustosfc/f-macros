@@ -13,6 +13,7 @@ export interface VehicleResponse {
   ativo_id: number;
   ativo: string;
   plate: string;
+  ativo_desc: string;
 }
 
 export interface MacrosGroupResponse {

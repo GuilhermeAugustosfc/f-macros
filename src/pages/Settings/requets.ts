@@ -36,20 +36,20 @@ export interface MacroGroupResponse {
     id: number;
     client_description: string;
     description: string;
-    dt_updated: string;
+    dt_updated: string | null;
     total_ativos: number;
     ativos_ids: Array<{
+      macro_group_id: number;
       ativo_id: number;
       ativo_desc: string;
       plate: string;
     }>;
     macros: Array<{
-      id?: number;
+      macro_group_id: number;
       description: string;
+      default_macro: string | null;
       macro_color_id: string; // HEX da cor (ex: #f3fef4)
       macro_icone_id: number;
-      position?: number;
-      default_macro?: string;
     }>;
   }>;
 }
@@ -66,7 +66,7 @@ export const deleteMacroGroups = async (ids: number[]): Promise<void> => {
 
 export const getMacroGroupById = async (id: number): Promise<MacroGroupResponse['data'][0]> => {
   const response = await instance.get(`/f-work/macros/v1/list/?id=${id}`);
-  return response.data.data[0];
+  return response.data;
 };
 
 export const updateMacroGroup = async (
