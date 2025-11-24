@@ -58,8 +58,8 @@ export const Form = (): JSX.Element => {
       select: (data) =>
         data.map(
           (cliente): ICustomSelectOption => ({
-            label: cliente.client_description,
-            value: cliente.client_id.toString(),
+            label: cliente.customer_desc,
+            value: cliente.customer_id.toString(),
           }),
         ),
     },
@@ -68,7 +68,7 @@ export const Form = (): JSX.Element => {
   // Query para buscar veículos baseado no cliente selecionado
   const { data: veiculosData } = useQuery(
     ['vehicles', selectedClient?.value],
-    () => getVehicles({ customer_id: Number(selectedClient?.value) }),
+    () => getVehicles({ cli_id: Number(selectedClient?.value) }),
     {
       staleTime: 1000 * 60 * 30, // 30 minutos
       enabled: Boolean(selectedClient?.value),

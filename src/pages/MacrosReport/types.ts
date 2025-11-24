@@ -5,8 +5,8 @@ export interface DriverResponse {
 }
 
 export interface CustomerResponse {
-  client_id: number;
-  client_description: string;
+  customer_id: number;
+  customer_desc: string;
 }
 
 export interface VehicleResponse {
@@ -68,7 +68,7 @@ export interface GetVehiclesParams {
   limit?: number;
   search?: string;
   last_id?: number;
-  customer_id?: number;
+  cli_id?: number;
   group_id?: number;
 }
 

@@ -26,7 +26,7 @@ export interface UpdateMacroGroupRequest {
 }
 
 export const createMacroGroup = async (data: CreateMacroGroupRequest) => {
-  const response = await instance.post('/f-work/macros/v1/create/', data);
+  const response = await instance.post('/f-work/macros/v1/create', data);
   return response.data;
 };
 

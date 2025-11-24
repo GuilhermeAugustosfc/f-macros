@@ -75,9 +75,9 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
       refetchOnWindowFocus: false,
       select: (data) =>
         data.map(
-          (cliente): ICustomSelectOption => ({
-            label: cliente.client_description,
-            value: cliente.client_id.toString(),
+          (customer): ICustomSelectOption => ({
+            label: customer.customer_desc,
+            value: customer.customer_id.toString(),
           }),
         ),
     },

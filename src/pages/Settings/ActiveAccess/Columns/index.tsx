@@ -90,7 +90,7 @@ export const ColumnsFunction = (
       cell: (info) => (
         <DivActive>
           <SpanActive getValue={info.getValue()}></SpanActive>
-          <div>{info.getValue().toString() ? t('activated') : t('deactivated')}</div>
+          <div>{info.getValue() ? t('activated') : t('deactivated')}</div>
         </DivActive>
       ),
       header: () => <div>{t('status')}</div>,
