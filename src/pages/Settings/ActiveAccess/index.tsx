@@ -36,7 +36,7 @@ export function ActiveAccess(): JSX.Element {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [filterValue, setFilterValue] = useState('');
-  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<'activate' | 'deactivate' | null>(null);
 
@@ -72,34 +72,49 @@ export function ActiveAccess(): JSX.Element {
   }, [listAccess, filterValue]);
 
   const handleAccess = (action: 'deactivate' | 'activate') => {
-    if (selectedRows.size === 0) return;
+    if (!selectedRow) return;
+
+    // Validar se tem acessos livres antes de ativar
+    if (action === 'activate') {
+      const availableAccess = countAccess?.available ?? 0;
+      if (availableAccess <= 0) {
+        showToast({
+          title: t('error'),
+          message: t('you_do_not_have_free_access'),
+          type: 'error',
+        });
+        return;
+      }
+    }
 
     setPendingAction(action);
     setShowConfirmModal(true);
   };
 
   const handleConfirmAction = async () => {
-    if (!pendingAction) return;
+    if (!pendingAction || !selectedRow) return;
 
-    const selectedItems = filteredData.filter((item) => selectedRows.has(item.ativo_id.toString()));
-    const ativosIds = selectedItems.map((item) => item.ativo_id);
+    const selectedItem = filteredData.find((item) => item.ativo_id.toString() === selectedRow);
+    if (!selectedItem) return;
+
+    const ativosIds = [selectedItem.ativo_id];
 
     try {
       if (pendingAction === 'activate') {
         await activateAccess({ ativos_id: ativosIds });
-        console.log('Acessos ativados com sucesso:', selectedItems);
+        console.log('Acesso ativado com sucesso:', selectedItem);
       } else {
         await deactivateAccess({ ativos_id: ativosIds });
-        console.log('Acessos desativados com sucesso:', selectedItems);
+        console.log('Acesso desativado com sucesso:', selectedItem);
       }
 
       // Limpar seleção após ação
-      setSelectedRows(new Set());
+      setSelectedRow(null);
       refetchListAccess();
       refetchCountAccess();
       notificationSuccess(pendingAction);
     } catch (error) {
-      console.error(`Erro ao ${pendingAction} acessos:`, error);
+      console.error(`Erro ao ${pendingAction} acesso:`, error);
       // Aqui você pode adicionar uma notificação de erro se necessário
     } finally {
       setShowConfirmModal(false);
@@ -121,6 +136,13 @@ export function ActiveAccess(): JSX.Element {
       type: 'success',
     });
   };
+
+  // Obter o registro selecionado para verificar seu status
+  const selectedItem = selectedRow
+    ? filteredData.find((item) => item.ativo_id.toString() === selectedRow)
+    : null;
+  
+  const isSelectedItemActive = selectedItem?.is_active === 1;
 
   return (
     <>
@@ -157,14 +179,18 @@ export function ActiveAccess(): JSX.Element {
                   <ErrorIcon className="close" onClick={() => setFilterValue('')} />
                 )}
               </ContainerInput>
-              {selectedRows.size > 0 && (
+              {selectedRow && (
                 <div className="btn-actions">
-                  <Button variant="primary" onClick={() => handleAccess('activate')}>
-                    {t('activate')}
-                  </Button>
-                  <Button variant="primary" onClick={() => handleAccess('deactivate')}>
-                    {t('deactivate')}
-                  </Button>
+                  {!isSelectedItemActive && (
+                    <Button variant="primary" onClick={() => handleAccess('activate')}>
+                      {t('activate')}
+                    </Button>
+                  )}
+                  {isSelectedItemActive && (
+                    <Button variant="ghost" style={{ backgroundColor: '#EF4444', color: '#FFFFFF' }} onClick={() => handleAccess('deactivate')}>
+                      {t('deactivate')}
+                    </Button>
+                  )}
                 </div>
               )}
             </ContainerActions>
@@ -178,8 +204,8 @@ export function ActiveAccess(): JSX.Element {
           <ContainerTableGrid>
             <TableContent
               data={filteredData}
-              selectedRows={selectedRows}
-              setSelectedRows={setSelectedRows}
+              selectedRow={selectedRow}
+              setSelectedRow={setSelectedRow}
             />
           </ContainerTableGrid>
         ) : (

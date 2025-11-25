@@ -37,7 +37,7 @@ export const Settings = (): JSX.Element => {
           />
           <Tab
             icon={GroupIcon}
-            title="Grupos de Macros"
+            title={t('macro_groups')}
             isActive={activeTab === 'groups'}
             onClick={() => handleTabClick('groups')}
           />

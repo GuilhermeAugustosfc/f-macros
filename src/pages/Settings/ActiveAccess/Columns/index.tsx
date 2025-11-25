@@ -10,33 +10,26 @@ interface ActivatedAccessItemWithCheckbox extends ActivatedAccessItem {
 const columnHelper = createColumnHelper<ActivatedAccessItemWithCheckbox>();
 
 export const ColumnsFunction = (
-  selectedRows?: Set<string>,
-  setSelectedRows?: React.Dispatch<React.SetStateAction<Set<string>>>,
+  selectedRow?: string | null,
+  setSelectedRow?: React.Dispatch<React.SetStateAction<string | null>>,
 ) => {
   const { t } = useTranslation();
 
   const handleSelectAll = () => {
-    if (!setSelectedRows) return;
-
-    if (selectedRows && selectedRows.size > 0) {
-      setSelectedRows(new Set());
-    } else {
-      // Esta função será chamada quando houver dados reais
-      // Por enquanto, não seleciona nada
-      setSelectedRows(new Set());
-    }
+    if (!setSelectedRow) return;
+    // Limpar seleção ao clicar no checkbox do header
+    setSelectedRow(null);
   };
 
   const handleSelectRow = (rowId: string) => {
-    if (!setSelectedRows) return;
+    if (!setSelectedRow) return;
 
-    const newSelected = new Set(selectedRows);
-    if (newSelected.has(rowId)) {
-      newSelected.delete(rowId);
+    // Se já está selecionado, deseleciona. Caso contrário, seleciona (substituindo qualquer seleção anterior)
+    if (selectedRow === rowId) {
+      setSelectedRow(null);
     } else {
-      newSelected.add(rowId);
+      setSelectedRow(rowId);
     }
-    setSelectedRows(newSelected);
   };
 
   const columns = [
@@ -44,7 +37,7 @@ export const ColumnsFunction = (
       cell: (info) => (
         <Checkbox
           onChange={() => handleSelectRow(info.row.original.ativo_id.toString())}
-          checked={selectedRows?.has(info.row.original.ativo_id.toString()) || false}
+          checked={selectedRow === info.row.original.ativo_id.toString()}
           label=""
         />
       ),
@@ -52,7 +45,7 @@ export const ColumnsFunction = (
         <div onClick={handleSelectAll}>
           <Checkbox
             onChange={() => null}
-            checked={Boolean(selectedRows && selectedRows.size > 0)}
+            checked={Boolean(selectedRow)}
             label=""
           />
         </div>

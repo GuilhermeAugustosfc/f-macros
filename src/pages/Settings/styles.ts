@@ -63,9 +63,17 @@ export const ContainerActions = styled.div`
   .btn-actions {
     display: flex;
     gap: 1.25rem;
+    animation: fadeInSlide 0.3s ease-out;
+  }
 
-    button:last-child {
-      background: ${styleguide.COLOR_DANGER_MEDIUM};
+  @keyframes fadeInSlide {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 

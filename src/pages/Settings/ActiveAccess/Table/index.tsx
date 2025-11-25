@@ -14,14 +14,14 @@ import styled from 'styled-components';
 
 interface TableProps {
   data: any[];
-  selectedRows: Set<string>;
-  setSelectedRows: React.Dispatch<React.SetStateAction<Set<string>>>;
+  selectedRow: string | null;
+  setSelectedRow: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const TableContent: React.FC<TableProps> = ({ data, selectedRows, setSelectedRows }) => {
+const TableContent: React.FC<TableProps> = ({ data, selectedRow, setSelectedRow }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = ColumnsFunction(selectedRows, setSelectedRows);
+  const columns = ColumnsFunction(selectedRow, setSelectedRow);
   const table = useReactTable({
     data,
     columns: columns as ColumnDef<any>[],
