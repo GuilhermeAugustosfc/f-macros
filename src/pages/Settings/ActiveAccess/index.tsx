@@ -209,7 +209,10 @@ export function ActiveAccess(): JSX.Element {
             />
           </ContainerTableGrid>
         ) : (
-          <Empty />
+          <Empty 
+            titleKey="no_access_available_for_activation"
+            paragraphKey="when_new_trackers_are_added_to_your_account_they_will_appear_in_this_list_ready_to_be_activated"
+          />
         )}
       </ContainerTabContent>
 

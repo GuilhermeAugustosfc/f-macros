@@ -1,12 +1,25 @@
 import React from 'react';
 
-import { Paragraph, Title } from '@ftdata/ui';
+import { Paragraph, Title, Button } from '@ftdata/ui';
 import styled from 'styled-components';
 import EmptListSensoresIcon from 'src/assets/svgs/emptyStates/empty-table.svg?react';
 import { useTranslation } from '@ftdata/core';
+import { AddCircleIcon } from 'src/pages/MacrosReport/components/svg';
 
-const Empty: React.FC = () => {
+interface EmptyProps {
+  titleKey?: string;
+  paragraphKey?: string;
+  onButtonClick?: () => void;
+  buttonTextKey?: string;
+}
+
+const Empty: React.FC<EmptyProps> = ({ titleKey, paragraphKey, onButtonClick, buttonTextKey }) => {
   const { t } = useTranslation();
+  
+  // Valores padrão caso não sejam passados props
+  const defaultTitleKey = titleKey || 'no_macro_groups_found';
+  const defaultParagraphKey = paragraphKey || 'click_add_macro_group_to_enter_it_manually_or_import_data_to_upload_a_csv_file_from_your_computer';
+  
   return (
     <ContainerEmpty>
       <EmptListSensoresIcon />
@@ -21,7 +34,7 @@ const Empty: React.FC = () => {
           width: '400px',
         }}
       >
-        {t('no_fuel_sensor_found')}
+        {t(defaultTitleKey)}
       </Title>
       <Paragraph
         size="caption"
@@ -35,10 +48,15 @@ const Empty: React.FC = () => {
           lineHeight: '150%',
         }}
       >
-        {t(
-          'click_add_sensor_to_enter_it_manually_or_import_data_to_upload_a_csv_file_from_your_computer',
-        )}
+        {t(defaultParagraphKey)}
       </Paragraph>
+      {onButtonClick && buttonTextKey && (
+        <ButtonContainer>
+          <Button LeftIcon={AddCircleIcon} variant="primary" onClick={onButtonClick}>
+            {t(buttonTextKey)}
+          </Button>
+        </ButtonContainer>
+      )}
     </ContainerEmpty>
   );
 };
@@ -68,6 +86,10 @@ const ContainerEmpty = styled.div`
     height: 16.875rem;
     margin-bottom: 1rem;
   }
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: 1.5rem;
 `;
 
 export default Empty;

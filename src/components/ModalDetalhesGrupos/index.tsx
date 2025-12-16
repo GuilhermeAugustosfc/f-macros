@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { CloseIcon } from '../../pages/MacrosReport/components/svg';
 import OrderIndicator from '../../pages/MacrosReport/components/OrderIndicator';
+import { useTranslation } from '@ftdata/core';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +25,7 @@ interface ModalDetalhesGruposProps {
 Modal.setAppElement('#root');
 
 export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const nodeRef = useRef(null);
   const [activeTab, setActiveTab] = useState('fazenda');
 
@@ -192,12 +194,12 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
       <Modal
         isOpen={isOpen}
         onRequestClose={onClose}
-        contentLabel="Detalhes dos Grupos"
+        contentLabel={t('group_details')}
         style={modalStyles}
       >
         <ModalContent>
           <Header>
-            <Title>Análise Detalhada dos Grupos de Macros - TWD5A23</Title>
+            <Title>{t('detailed_analysis_of_macro_groups')} - TWD5A23</Title>
             <CloseButton onClick={onClose}>
               <CloseIcon width={24} height={24} />
             </CloseButton>
@@ -240,14 +242,14 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
             </ChartSection>
 
             <HistorySection>
-              <HistoryTitle>Histórico de Alterações</HistoryTitle>
+              <HistoryTitle>{t('change_history')}</HistoryTitle>
               <TableContainer>
                 <Table>
                   <TableHead>
                     <TableRow>
                       <TableHeader>
                         <HeaderContent>
-                          <HeaderText>Parâmetro</HeaderText>
+                          <HeaderText>{t('parameter')}</HeaderText>
                           <SortIcon>
                             <OrderIndicator asc={false} desc={false} />
                           </SortIcon>
@@ -255,7 +257,7 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
                       </TableHeader>
                       <TableHeader>
                         <HeaderContent>
-                          <HeaderText>Antes</HeaderText>
+                          <HeaderText>{t('before')}</HeaderText>
                           <SortIcon>
                             <OrderIndicator asc={false} desc={false} />
                           </SortIcon>
@@ -263,7 +265,7 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
                       </TableHeader>
                       <TableHeader>
                         <HeaderContent>
-                          <HeaderText>Depois</HeaderText>
+                          <HeaderText>{t('after')}</HeaderText>
                           <SortIcon>
                             <OrderIndicator asc={false} desc={false} />
                           </SortIcon>
@@ -271,7 +273,7 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
                       </TableHeader>
                       <TableHeader>
                         <HeaderContent>
-                          <HeaderText>Alterado por</HeaderText>
+                          <HeaderText>{t('changed_by')}</HeaderText>
                           <SortIcon>
                             <OrderIndicator asc={false} desc={false} />
                           </SortIcon>
@@ -279,7 +281,7 @@ export const ModalDetalhesGrupos: React.FC<ModalDetalhesGruposProps> = ({ isOpen
                       </TableHeader>
                       <TableHeader>
                         <HeaderContent>
-                          <HeaderText>Alterado em</HeaderText>
+                          <HeaderText>{t('changed_at')}</HeaderText>
                           <SortIcon>
                             <OrderIndicator asc={false} desc={false} />
                           </SortIcon>

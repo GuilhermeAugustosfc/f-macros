@@ -3,6 +3,7 @@ import { AddCircleIcon, MinusIcon, VehicleIcon, GroupIcon, ChartIcon, ClockIcon 
 import { useContext } from 'react';
 import { ReportsContext } from '../../../../../contexts/reports';
 import { type ReportData } from '../../../requets';
+import { useTranslation } from '@ftdata/core';
 
 const columnHelper = createColumnHelper<ReportData>();
 
@@ -66,6 +67,7 @@ export const ColumnsFunction = (
   toggleAllRowsExpanded: () => void,
 ): ColumnDef<ReportData, any>[] => {
   const { setIsModalDetalhesOpen } = useContext(ReportsContext);
+  const { t } = useTranslation();
   const allColumns = [
     columnHelper.accessor('ativo_id', {
       header: () => (
@@ -101,7 +103,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <VehicleIcon width={24} height={24} stroke="white" />
-          <span>Veículo</span>
+          <span>{t('vehicle')}</span>
         </DivValue>
       ),
       cell: (info) => <CellValue>{info.row.original.plate}</CellValue>,
@@ -110,7 +112,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <GroupIcon width={24} height={24} stroke="white" />
-          <span>Quantidade de Grupos de Macros</span>
+          <span>{t('quantity_of_macro_groups')}</span>
         </DivValue>
       ),
       cell: (info) => <CellValue>{info.row.original.quantidade_grupo_macros}</CellValue>,
@@ -119,7 +121,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <ClockIcon width={24} height={24} stroke="white" />
-          <span>Duração</span>
+          <span>{t('duration')}</span>
         </DivValue>
       ),
       cell: (info) => <DurationValue>{info.row.original.duracao}</DurationValue>,
@@ -129,7 +131,7 @@ export const ColumnsFunction = (
       header: () => (
         <DivValue>
           <ChartIcon width={24} height={24} stroke="white" />
-          <span>Análise Detalhada</span>
+          <span>{t('detailed_analysis')}</span>
         </DivValue>
       ),
       cell: () => (

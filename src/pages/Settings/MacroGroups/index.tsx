@@ -174,7 +174,12 @@ export function MacroGroups(): JSX.Element {
             />
           </ContainerTableGrid>
         ) : (
-          <Empty />
+          <Empty 
+            titleKey="create_your_first_macro_group"
+            paragraphKey="start_creating_groups_by_operation_type_to_standardize_and_find_your_commands_faster"
+            onButtonClick={handleCreateMacroGroup}
+            buttonTextKey="create_new_macro_group"
+          />
         )}
       </ContainerTabContent>
 
