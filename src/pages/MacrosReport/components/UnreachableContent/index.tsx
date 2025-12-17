@@ -12,7 +12,7 @@ export const UnreachableContent: React.FC<Props> = ({ openModal }: Props) => {
   const { t } = useTranslation();
   return (
     <Container>
-      <UnreachableContentIcon />
+      <UnreachableContentIcon width={250} height={250} />
       <strong>{t('unable_to_locate')}</strong>
       <p>{t('we_did_not_find_any_data_with_the_filtered_terms_try_redoing_the_filtering')}</p>
       <Button variant="primary" onClick={openModal}>

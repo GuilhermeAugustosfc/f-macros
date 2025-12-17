@@ -87,6 +87,8 @@ export interface GetReportsParams {
   ativos_ids?: string;
   macros_group_ids?: string;
   driver_id?: number;
+  limit?: number;
+  offset?: number;
 }
 
 export interface GetSavedFiltersParams {

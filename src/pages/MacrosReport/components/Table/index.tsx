@@ -109,8 +109,8 @@ export const CustomTable: React.FC<TableProps> = ({
   console.log(params);
 
   const { data: reportData, isFetching: reportLoading } = useQuery(
-    `get_report/${JSON.stringify(params)}`,
-    () => getReports(params),
+    `get_report/${JSON.stringify({ ...params, limit: 10, offset: 0 })}`,
+    () => getReports({ ...params, limit: 10, offset: 0 }),
     {
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 100,

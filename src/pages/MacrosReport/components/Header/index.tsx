@@ -13,6 +13,7 @@ import {
   FilterIcon,
   ReferencePointIcon,
   VehicleIcon,
+  GroupIcon,
 } from '../svg';
 import { SearchIcon } from '../svg';
 import { format } from 'date-fns';
@@ -151,10 +152,10 @@ const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
                 </Tooltips>
               )}
             </div>
-            {gruposMacros && (
+            {gruposMacros.value !== '' && (
               <Tooltips position="top" text={t('grupos_macros')}>
                 <Badge>
-                  {/* <GroupIcon /> */}
+                  <GroupIcon />
                   <p>{gruposMacros.value}</p>
                 </Badge>
               </Tooltips>

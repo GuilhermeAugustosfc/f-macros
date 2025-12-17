@@ -194,7 +194,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit;
+  font-family: Inter, sans-serif;
   /* 1 */
   font-feature-settings: inherit;
   /* 1 */

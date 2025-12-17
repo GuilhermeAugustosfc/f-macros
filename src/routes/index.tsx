@@ -29,7 +29,7 @@ const Routes: React.FC = () => {
                 element: <Form />,
               },
               {
-                path: '/report',
+                path: '/reports',
                 element: <MacrosReport />,
               },
             ],
