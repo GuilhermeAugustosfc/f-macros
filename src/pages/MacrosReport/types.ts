@@ -106,3 +106,24 @@ export interface InsertSavedFilterData {
   ativos_ids: number[];
   macro_groups_ids: number[];
 }
+
+// Tipo para dados transformados de filtros salvos
+export interface TransformedSavedFilter {
+  id: number;
+  customer_id: number;
+  customer_desc: string;
+  date_created: string;
+  initial_data: string;
+  final_data: string;
+  ativo_desc: string;
+  driver_id?: number;
+  driver_desc?: string;
+  options: {
+    ativos: Array<{
+      ativo_id: number;
+      ativo_desc: string;
+      plate?: string;
+    }>;
+    ponto_referencia: number;
+  };
+}

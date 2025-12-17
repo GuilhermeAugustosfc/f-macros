@@ -207,7 +207,6 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
           }}
           isError={!!errors.gruposMacros}
           helpText={errors.gruposMacros ? t('this_field_is_required') : ''}
-          required
           selectAll
           translation={t}
         />

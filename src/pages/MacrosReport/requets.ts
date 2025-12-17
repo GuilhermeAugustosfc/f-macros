@@ -190,6 +190,7 @@ export const transformSavedFilterData = (apiData: SavedFilterResponse) => {
       ativos: apiData.ativos.map((ativo) => ({
         ativo_id: ativo.ativo_id,
         ativo_desc: ativo.ativo_desc,
+        plate: ativo.plate,
       })),
       ponto_referencia: 0, // Este valor não vem da API, pode ser definido como padrão
     },

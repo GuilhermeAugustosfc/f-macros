@@ -34,6 +34,7 @@ import {
   StyledDoubleListContainer,
 } from './styles';
 import ConfirmDelete from './ConfirmDelete';
+import type { TransformedSavedFilter } from 'src/pages/MacrosReport/types';
 interface SavedFiltersProps {
   applyFilter: (params: any, serialize?: boolean) => void;
 }
@@ -122,7 +123,7 @@ export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element =>
             <Loading size="xl" variant="light" />
           </LoadingContainer>
         ) : itemFilterSaved && itemFilterSaved.data.data.length ? (
-          itemFilterSaved.data.data.map((item: any, index: number) => (
+          itemFilterSaved.data.data.map((item: TransformedSavedFilter, index: number) => (
             <SavedFilter key={item.id} onClick={() => applySavedFilters(item)}>
               <InfoContainer>
                 <FilterIcon />
@@ -145,13 +146,6 @@ export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element =>
                   {item.initial_data} - {item.final_data}
                 </BadgeTitle>
 
-                {item.ativo_desc && (
-                  <BadgeTitle>
-                    <VehicleIcon />
-                    {item.ativo_desc}
-                  </BadgeTitle>
-                )}
-
                 {item.driver_id && (
                   <BadgeTitle>
                     <DriverHeaderIcon />
@@ -172,7 +166,7 @@ export const SavedFilters = ({ applyFilter }: SavedFiltersProps): JSX.Element =>
                   item.options.ativos.map((ativo: any) => (
                     <BadgeTitle key={ativo.ativo_desc}>
                       <VehicleIcon />
-                      {ativo.ativo_desc}
+                      {ativo.ativo_desc} - {ativo.plate}
                     </BadgeTitle>
                   ))
                 ) : (
