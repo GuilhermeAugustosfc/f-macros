@@ -26,6 +26,9 @@ interface Props {
 }
 
 const SubTable: React.FC<Props> = ({ isEven, params = {}, ativoId }: Props) => {
+  console.log('ativoId', ativoId);
+  console.log('params', params);
+  console.log('isEven', isEven);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [data, setData] = useState<any[]>([]);
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
@@ -49,7 +52,13 @@ const SubTable: React.FC<Props> = ({ isEven, params = {}, ativoId }: Props) => {
   // Query para buscar dados detalhados
   const { data: detailData, isFetching: detailLoading } = useQuery(
     `get_report_detail/${ativoId}/${JSON.stringify(params)}`,
-    () => getReportsDetail({ ...params, ativos_ids: ativoId ? ativoId.toString() : '' }),
+    () =>
+      getReportsDetail({
+        ...params,
+        ativos_ids: ativoId ? ativoId.toString() : '',
+        limit: 10,
+        offset: 0,
+      }),
     {
       enabled: Boolean(ativoId && params?.customer_id),
       refetchOnWindowFocus: false,

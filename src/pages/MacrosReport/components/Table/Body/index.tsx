@@ -65,7 +65,7 @@ const Body: React.FC<Props> = ({
                   style={{ borderBottom: '1px solid #ccc' }}
                   colSpan={row.getVisibleCells().length}
                 >
-                  <SubTable isEven={isEven} ativoId={parseInt(row.id)} params={params} />
+                  <SubTable isEven={isEven} ativoId={row.original.ativo_id} params={params} />
                 </td>
               </AnimatedTr>
             )}

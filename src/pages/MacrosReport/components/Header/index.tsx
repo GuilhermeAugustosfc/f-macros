@@ -42,16 +42,23 @@ const Header: React.FC<Props> = ({ title, openFilter }: Props) => {
 
   if (period?.startDate && period?.endDate) {
     const { startDate, endDate } = period;
-    const startHour = startTimeValue?.hour || '00';
-    const startMinute = startTimeValue?.minute || '00';
-    const startSecond = startTimeValue?.second || '00';
-    const endHour = endTimeValue?.hour || '23';
-    const endMinute = endTimeValue?.minute || '59';
-    const endSecond = endTimeValue?.second || '59';
-    range = `${format(startDate, 'dd/MM/yyyy')} ${startHour}:${startMinute}:${startSecond} - ${format(
-      endDate,
-      'dd/MM/yyyy',
-    )} ${endHour}:${endMinute}:${endSecond}`;
+    const isStartDateValid = startDate instanceof Date && !isNaN(startDate.getTime());
+    const isEndDateValid = endDate instanceof Date && !isNaN(endDate.getTime());
+
+    if (isStartDateValid && isEndDateValid) {
+      const startHour = startTimeValue?.hour || '00';
+      const startMinute = startTimeValue?.minute || '00';
+      const startSecond = startTimeValue?.second || '00';
+      const endHour = endTimeValue?.hour || '23';
+      const endMinute = endTimeValue?.minute || '59';
+      const endSecond = endTimeValue?.second || '59';
+      range = `${format(startDate, 'dd/MM/yyyy')} ${startHour}:${startMinute}:${startSecond} - ${format(
+        endDate,
+        'dd/MM/yyyy',
+      )} ${endHour}:${endMinute}:${endSecond}`;
+    } else {
+      range = '';
+    }
   }
 
   return (

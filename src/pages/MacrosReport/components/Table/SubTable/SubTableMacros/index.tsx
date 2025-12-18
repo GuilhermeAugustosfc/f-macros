@@ -46,9 +46,9 @@ const SubTableMacros: React.FC<Props> = ({ isEven, items = [] }: Props) => {
           time: item.fim.split(' ')[1] || '',
         }
       : { date: '', time: '' },
-    duracao: item.duracao || '',
+    duracao: item.duracao || '-',
     endereco: item.loc_inicial ? `${item.loc_inicial[0]}, ${item.loc_inicial[1]}` : '',
-    ponto_referencia: item.reference_points_inicial_loc?.[0] || '',
+    ponto_referencia: item.reference_points_inicial_loc?.[0] || '-',
     rota: true,
     motorista: { name: 'Motorista', isActive: false }, // Pode ser ajustado conforme dados disponíveis
   }));

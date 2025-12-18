@@ -43,7 +43,6 @@ const MacroButton = styled.button<{ color: string }>`
   font-size: 12px;
   font-weight: 500;
   color: white;
-  cursor: pointer;
 
   svg {
     width: 14px;
@@ -313,6 +312,7 @@ export const ColumnsFunction = (): ColumnDef<any>[] => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
           }}
         >
           <RouteIcon width={20} height={20} />
