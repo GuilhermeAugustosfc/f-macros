@@ -125,7 +125,7 @@ export function MacroGroups(): JSX.Element {
                 <Paragraph size="sm">{t('macro_groups_history')}</Paragraph>
               </div>
 
-              <Button LeftIcon={AddCircleIcon} variant="primary" onClick={handleCreateMacroGroup}>
+              <Button style={{ height: '40px' }} LeftIcon={AddCircleIcon} variant="primary" onClick={handleCreateMacroGroup}>
                 {t('create_new_macro_group')}
               </Button>
             </HeaderDescription>

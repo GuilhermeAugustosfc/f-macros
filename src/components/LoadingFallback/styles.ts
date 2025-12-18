@@ -12,7 +12,6 @@ export const ComponentLoading = styled.div`
   & > h2 {
     color: ${tokens.COLOR_NEUTRAL_DUSK};
     text-align: center;
-    font-family: Inter;
     font-size: 1rem;
     font-style: normal;
     font-weight: 600;

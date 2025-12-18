@@ -13,9 +13,7 @@ export const ContainerTabs = styled.div`
   box-sizing: border-box;
 `;
 
-export const ContentTabs = styled.div`
-  font-family: Inter;
-`;
+export const ContentTabs = styled.div``;
 
 export const ContainerInformation = styled.div`
   .count-access {
@@ -55,6 +53,7 @@ export const ContainerInformation = styled.div`
 export const ContainerActions = styled.div`
   display: flex;
   gap: 1.5rem;
+  height: 40px;
 
   .buttonRemove {
     background: ${styleguide.COLOR_DANGER_MEDIUM};
@@ -202,7 +201,6 @@ export const TabsContainerGrid = styled.div`
 `;
 
 export const ContentContainerGrid = styled.div`
-  font-family: Inter;
   overflow-y: auto;
   grid-area: content;
 `;

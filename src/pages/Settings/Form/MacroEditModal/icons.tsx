@@ -43,7 +43,7 @@ export interface IconOption {
   name: string;
   icon: React.ReactElement;
 }
-
+import * as tokens from '@ftdata/f-tokens';
 // Mapeamento dos ícones
 const iconComponents = [
   Icone1,
@@ -103,7 +103,7 @@ export const getIconById = (id: number, iconSize: number = 16): React.ReactEleme
     return <Icone1 width={iconSize} height={iconSize} />;
   }
 
-  return <IconComponent width={iconSize} height={iconSize} />;
+  return <IconComponent stroke={tokens.COLOR_NEUTRAL_DAY} width={iconSize} height={iconSize} />;
 };
 
 // Exportar o ícone padrão

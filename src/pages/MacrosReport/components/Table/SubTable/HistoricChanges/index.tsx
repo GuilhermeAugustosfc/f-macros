@@ -106,7 +106,6 @@ const HeaderIcon = styled.div`
 `;
 
 const HeaderText = styled.h3`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 1.2;
@@ -116,7 +115,6 @@ const HeaderText = styled.h3`
 `;
 
 const ViewMoreLink = styled.span`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 1.2;
@@ -160,7 +158,6 @@ const HistoryList = styled.ul`
 `;
 
 const HistoryItem = styled.li`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 1.5;
@@ -197,7 +194,6 @@ const HideButton = styled.div`
 `;
 
 const HideLabel = styled.span`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 1.2;

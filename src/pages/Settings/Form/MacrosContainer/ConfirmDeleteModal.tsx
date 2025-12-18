@@ -93,7 +93,6 @@ const CloseButton = styled.button`
 
 const ModalTitle = styled.h2`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 500;
   line-height: 1.2;
@@ -103,7 +102,6 @@ const ModalTitle = styled.h2`
 
 const ModalDescription = styled.p`
   color: #6b757c;
-  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.5;

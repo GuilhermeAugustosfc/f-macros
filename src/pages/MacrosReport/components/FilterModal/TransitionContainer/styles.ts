@@ -10,7 +10,6 @@ export const Wrapper = styled.div`
 `;
 
 export const ContainerModal = styled.div`
-  font-family: Inter, sans-serif;
   display: flex;
   position: fixed;
   top: 0;
@@ -21,7 +20,6 @@ export const ContainerModal = styled.div`
 `;
 
 export const ContentModal = styled.div`
-  font-family: Inter, sans-serif;
   display: flex;
   overflow: hidden;
   overflow-y: auto;

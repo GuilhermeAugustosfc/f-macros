@@ -14,7 +14,10 @@ import { getColorById } from '../MacroEditModal/colorMapping';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import type { Macro, MacrosContainerProps } from './types';
 import { useTranslation } from '@ftdata/core';
-
+import { Tooltips } from '@ftdata/ui';
+import ArrowCircleRightIcon from 'src/assets/svgs/arrow-circle-right.svg?react';
+import ArrowCircleLeftIcon from 'src/assets/svgs/arrow-circle-left.svg?react';
+import * as tokens from '@ftdata/f-tokens';
 export const MacrosContainer = ({
   maxMacros = 15,
   onMacrosChange,
@@ -73,6 +76,14 @@ export const MacrosContainer = ({
 
   // Função para renderizar o ícone correto baseado no iconType
   const renderMacroIcon = (macro: Macro) => {
+    // Ícones específicos para início e fim de jornada
+    if (macro.id === 'inicio-jornada') {
+      return <ArrowCircleRightIcon width={18} height={18} />;
+    }
+    if (macro.id === 'fim-jornada') {
+      return <ArrowCircleLeftIcon width={18} height={18} />;
+    }
+    // Para outras macros, usar o iconType
     if (macro.iconType) {
       return getIconById(macro.iconType, 16);
     }
@@ -301,7 +312,9 @@ export const MacrosContainer = ({
                         handleEditMacro(macro.id);
                       }}
                     >
-                      <EditIcon width={24} height={24} />
+                      <Tooltips text={t('edit_macro')}>
+                        <EditIcon width={24} height={24} />
+                      </Tooltips>
                     </DragHandle>
                     <DragHandle
                       onClick={(e) => {
@@ -309,7 +322,9 @@ export const MacrosContainer = ({
                         handleDeleteMacro(macro.id);
                       }}
                     >
-                      <TrashIcon width={24} height={24} />
+                      <Tooltips text={t('delete_macro')}>
+                        <TrashIcon width={24} height={24} />
+                      </Tooltips>
                     </DragHandle>
                   </>
                 )}
@@ -333,7 +348,7 @@ export const MacrosContainer = ({
 
       <AddMacroButton onClick={handleAddMacro}>
         <AddCircleIcon width={24} height={24} />
-        {t('add_new_status')}
+        {t('add_new_macro')}
       </AddMacroButton>
 
       {/* Drag Ghost - elemento que segue o mouse */}
@@ -402,7 +417,6 @@ const MacrosHeader = styled.div`
 `;
 
 const MacrosTitle = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: #26333b;
@@ -411,7 +425,6 @@ const MacrosTitle = styled.div`
 `;
 
 const MacrosCount = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: #6b757c;
@@ -482,8 +495,7 @@ const MacroTag = styled.div<{ color: string }>`
   padding: 4px 8px;
   background: ${({ color }) => color};
   border-radius: 4px;
-  color: white;
-  font-family: 'Inter', sans-serif;
+  color: ${tokens.COLOR_NEUTRAL_DAY};
   font-weight: 500;
   font-size: 12px;
   white-space: nowrap;
@@ -491,7 +503,6 @@ const MacroTag = styled.div<{ color: string }>`
 `;
 
 const MacroRequired = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: #6b757c;
@@ -508,7 +519,6 @@ const AddMacroButton = styled.button`
   border: none;
   cursor: pointer;
   color: #316ee8;
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 14px;
   white-space: nowrap;
@@ -536,7 +546,6 @@ const DragGhost = styled.div`
 `;
 
 const ErrorMessage = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: #c13e4a;

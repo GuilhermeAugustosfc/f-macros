@@ -14,6 +14,7 @@
   /* 2 */
   border-color: #e5e7eb;
   /* 2 */
+  font-family: 'Inter', sans-serif !important;
 }
 
 /*
@@ -37,9 +38,7 @@ html,
   -o-tab-size: 4;
   tab-size: 4;
   /* 3 */
-  font-family:
-    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  font-family: 'Inter', sans-serif !important;
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -49,17 +48,14 @@ html,
   /* 7 */
 }
 
+body {
+  font-family: 'Inter', sans-serif !important;
+}
+
 /*
 1. Remove the margin in all browsers.
 2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
 */
-
-body {
-  margin: 0;
-  /* 1 */
-  line-height: inherit;
-  /* 2 */
-}
 
 /*
 1. Add the correct height in Firefox.
@@ -194,8 +190,6 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: Inter, sans-serif;
-  /* 1 */
   font-feature-settings: inherit;
   /* 1 */
   font-variation-settings: inherit;
@@ -443,10 +437,6 @@ video {
 }
 
 /* Chrome, Safari and Opera */
-
-body {
-  font-family: 'Inter', sans-serif;
-}
 
 @media (prefers-color-scheme: dark) {
   :root {

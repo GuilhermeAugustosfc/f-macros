@@ -166,7 +166,7 @@ export function ActiveAccess(): JSX.Element {
 
             <ContainerActions>
               <ContainerInput>
-                <div>
+                <div >
                   <SearchIcon width={24} height={24} />
                   <input
                     onChange={(value) => setFilterValue(value.target.value)}

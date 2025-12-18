@@ -25,15 +25,17 @@ export const TabIcon = styled.div<{ isActive?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  svg {
+  svg,
+  path {
     stroke: ${({ isActive }) => (isActive ? '#C13E4A' : '#6B757C')};
+  }
+  svg {
     width: 18px;
     height: 18px;
   }
 `;
 
 export const TabText = styled.p<{ isActive?: boolean }>`
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;

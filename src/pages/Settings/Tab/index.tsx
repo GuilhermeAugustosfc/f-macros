@@ -17,7 +17,7 @@ export const Tab = ({ icon: Icon, title, isActive = false, onClick }: TabProps):
     <TabComponent isActive={isActive} onClick={onClick}>
       <TabHeader>
         <TabIcon isActive={isActive}>
-          <Icon stroke={isActive ? '#C13E4A' : '#6B757C'} />
+          <Icon />
         </TabIcon>
         <TabText isActive={isActive}>{title}</TabText>
       </TabHeader>

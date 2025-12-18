@@ -354,7 +354,6 @@ const Header = styled.div`
 
 const Title = styled.h2`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 500;
   line-height: 1.2;
@@ -387,7 +386,6 @@ const FilterTabs = styled.div`
 
 const FilterTab = styled.div<{ active?: boolean }>`
   color: ${(props) => (props.active ? '#316ee8' : '#6b757c')};
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -414,7 +412,6 @@ const ChartSection = styled.div`
 
 const ChartTitle = styled.h3`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.2;
@@ -452,7 +449,6 @@ const Tooltip = styled.div`
 
 const TooltipText = styled.div`
   color: white;
-  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
@@ -486,7 +482,6 @@ const LegendColor = styled.div<{ cor: string }>`
 
 const LegendLabel = styled.span`
   color: #6b757c;
-  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.5;
@@ -500,7 +495,6 @@ const HistorySection = styled.div`
 
 const HistoryTitle = styled.h3`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.2;
@@ -533,7 +527,6 @@ const TableRow = styled.tr<{ even?: boolean }>`
 
 const TableHeader = styled.th`
   color: #6b757c;
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -559,7 +552,6 @@ const HeaderContent = styled.div`
 
 const HeaderText = styled.span`
   color: #6b757c;
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -581,7 +573,6 @@ const SortIcon = styled.div`
 
 const TableCell = styled.td`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -602,7 +593,6 @@ const DateContainer = styled.div`
 
 const DateText = styled.div`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -610,7 +600,6 @@ const DateText = styled.div`
 
 const TimeText = styled.div`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.5;

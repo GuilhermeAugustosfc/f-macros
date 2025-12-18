@@ -1,6 +1,7 @@
 import React from 'react';
 import { type SortingState, type Table, flexRender } from '@tanstack/react-table';
 import styled from 'styled-components';
+import OrderIndicator from '../../../../MacrosReport/components/OrderIndicator';
 
 interface Props {
   table: Table<any>;
@@ -39,13 +40,10 @@ const Head: React.FC<Props> = ({ table, setSorting }: Props) => {
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </StyledHeaderContent>
                   {index !== 0 && header.column.getCanSort() && (
-                    <StyledSortIndicator>
-                      {header.column.getIsSorted() === 'asc'
-                        ? '↑'
-                        : header.column.getIsSorted() === 'desc'
-                          ? '↓'
-                          : '↕'}
-                    </StyledSortIndicator>
+                    <OrderIndicator
+                      asc={header.column.getIsSorted() === 'asc'}
+                      desc={header.column.getIsSorted() === 'desc'}
+                    />
                   )}
                 </StyledContainerOrderIndicatorHeader>
               )}
@@ -97,7 +95,6 @@ const StyledHeaderContent = styled.div<{ isFirstColumn: boolean }>`
   text-overflow: ellipsis;
   color: #26333b;
   font-weight: 600;
-
   ${({ isFirstColumn }) =>
     isFirstColumn &&
     `
@@ -107,12 +104,6 @@ const StyledHeaderContent = styled.div<{ isFirstColumn: boolean }>`
         justify-content: center;
         align-items: center;
     `}
-`;
-
-const StyledSortIndicator = styled.span`
-  font-size: 0.75rem;
-  color: #6b757c;
-  margin-left: 0.25rem;
 `;
 
 export default Head;

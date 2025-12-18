@@ -15,11 +15,13 @@ interface EmptyProps {
 
 const Empty: React.FC<EmptyProps> = ({ titleKey, paragraphKey, onButtonClick, buttonTextKey }) => {
   const { t } = useTranslation();
-  
+
   // Valores padrão caso não sejam passados props
   const defaultTitleKey = titleKey || 'no_macro_groups_found';
-  const defaultParagraphKey = paragraphKey || 'click_add_macro_group_to_enter_it_manually_or_import_data_to_upload_a_csv_file_from_your_computer';
-  
+  const defaultParagraphKey =
+    paragraphKey ||
+    'click_add_macro_group_to_enter_it_manually_or_import_data_to_upload_a_csv_file_from_your_computer';
+
   return (
     <ContainerEmpty>
       <EmptListSensoresIcon />
@@ -27,7 +29,6 @@ const Empty: React.FC<EmptyProps> = ({ titleKey, paragraphKey, onButtonClick, bu
         size="section"
         style={{
           marginBottom: '1rem',
-          fontFamily: 'Inter',
           fontStyle: 'normal',
           fontWeight: 500,
           whiteSpace: 'nowrap',
@@ -41,7 +42,6 @@ const Empty: React.FC<EmptyProps> = ({ titleKey, paragraphKey, onButtonClick, bu
         style={{
           // width: '400px',
           color: '#6B757C',
-          fontFamily: 'Inter',
           fontSize: '14px',
           fontStyle: 'normal',
           fontWeight: 500,

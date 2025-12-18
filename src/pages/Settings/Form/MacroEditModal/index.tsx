@@ -149,7 +149,6 @@ const ModalContent = styled.div`
 
 const ModalTitle = styled.h2`
   color: #26333b;
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 500;
   line-height: 1.2;
@@ -170,7 +169,6 @@ const FieldContainer = styled.div`
 `;
 
 const FieldLabel = styled.label`
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #26333b;
@@ -182,7 +180,6 @@ const Required = styled.span`
 `;
 
 const CharacterCount = styled.span`
-  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
   color: #6b757c;

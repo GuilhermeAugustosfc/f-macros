@@ -328,23 +328,25 @@ export const Form = (): JSX.Element => {
                 <FieldLabel>
                   {t('macro_group_title')} <Required>*</Required>
                 </FieldLabel>
-                <Input
-                  width="100%"
-                  style={{ width: '100%' }}
-                  placeholder="Fazenda 4 Estações"
-                  icon={<GroupDescriptionIcon width={24} height={24} />}
-                  value={groupTitle}
-                  onChange={(e) => {
-                    setGroupTitle(e.target.value);
-                    clearError('groupTitle');
-                  }}
-                  error={errors.groupTitle}
-                  helpText={errors.groupTitle ? t('title_required') : ''}
-                />
+                <MacroGroupTitleInput>
+                  <Input
+                    width="100%"
+                    style={{ width: '100%' }}
+                    placeholder="Fazenda 4 Estações"
+                    icon={<GroupDescriptionIcon width={24} height={24} />}
+                    value={groupTitle}
+                    onChange={(e) => {
+                      setGroupTitle(e.target.value);
+                      clearError('groupTitle');
+                    }}
+                    error={errors.groupTitle}
+                    helpText={errors.groupTitle ? t('title_required') : ''}
+                  />
+                </MacroGroupTitleInput>
               </FieldWrapper>
               <ContainerSelectClient>
                 <Select
-                  label={t('client')}
+                  label={t('client') + ' *'}
                   placeholder={t('select')}
                   icon={<ClientIcon width={24} height={24} />}
                   width="100%"
@@ -484,7 +486,6 @@ const TitleContainer = styled.div`
 
 const Title = styled.p`
   grid-area: 1 / 1;
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   margin: 0;
   position: relative;
@@ -496,7 +497,6 @@ const Title = styled.p`
 
 const Subtitle = styled.p`
   grid-area: 1 / 1;
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   margin: 28px 0 0 0;
   position: relative;
@@ -548,7 +548,7 @@ const ActionButtons = styled.div`
 const FieldWrapper = styled.div`
   flex-direction: column;
   display: flex;
-  justify-content: space-between;
+  gap: 13px;
   width: 100%;
   > div {
     width: 100%;
@@ -556,7 +556,6 @@ const FieldWrapper = styled.div`
 `;
 
 const FieldLabel = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: #26333b;
@@ -566,4 +565,14 @@ const FieldLabel = styled.div`
 
 const Required = styled.span`
   color: #c13e4a;
+`;
+
+const MacroGroupTitleInput = styled.div`
+  height: 35.95px;
+  > div > div {
+    height: 100%;
+  }
+  > div {
+    height: 100%;
+  }
 `;

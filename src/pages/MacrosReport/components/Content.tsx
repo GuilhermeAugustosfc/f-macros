@@ -99,7 +99,6 @@ const HeaderContent = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 16px;
   line-height: 1.2;
@@ -109,7 +108,6 @@ const Title = styled.h1`
 `;
 
 const Description = styled.p`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 1.5;
@@ -139,7 +137,6 @@ const InfoBadge = styled.div`
 `;
 
 const BadgeText = styled.div`
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 1.5;
