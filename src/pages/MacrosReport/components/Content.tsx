@@ -6,6 +6,7 @@ import { ReportsContext } from '../../../contexts/reports';
 import { type Table } from '@tanstack/react-table';
 import { UserIcon } from './svg';
 import { ModalDetalhesGrupos } from '../../../components/ModalDetalhesGrupos';
+import { useTranslation } from '@ftdata/core';
 export interface ContentHandle {
   prepareGraphicsForExport: () => Promise<void>;
   resetExportStyles: () => void;
@@ -19,6 +20,7 @@ interface Props {
 
 const Content = forwardRef<ContentHandle, Props>(
   ({ params, handleOpenModal, setHasTable }: Props) => {
+    const { t } = useTranslation();
     const { hasFilter, isModalDetalhesOpen, setIsModalDetalhesOpen } = useContext(ReportsContext);
     const [vehicleTableData, setVehicleTableData] = useState<Table<any> | null>(null);
 
@@ -35,16 +37,13 @@ const Content = forwardRef<ContentHandle, Props>(
         <Container>
           <PageHeader>
             <HeaderContent>
-              <Title>Relatório de Macros Personalizadas</Title>
-              <Description>
-                Acompanhe a jornada e status personalizados da sua frota a qualquer momento e em
-                tempo real.
-              </Description>
+              <Title>{t('custom_macros_report')}</Title>
+              <Description>{t('track_journey_status_description')}</Description>
             </HeaderContent>
             <VehicleTypeContainer>
               <InfoBadge>
                 <UserIcon />
-                <BadgeText>Admin - Permissão de Edição Total</BadgeText>
+                <BadgeText>{t('admin_full_edit_permission')}</BadgeText>
               </InfoBadge>
             </VehicleTypeContainer>
           </PageHeader>
@@ -151,7 +150,7 @@ const BadgeText = styled.div`
 const ContainerContent = styled.div`
   // Esconde a barra de rolagem no Firefox
   scrollbar-width: none;
-
+  height: 100%;
   // Esconde a barra de rolagem no Chrome, Safari e outros navegadores baseados em WebKit
   &::-webkit-scrollbar {
     display: none;

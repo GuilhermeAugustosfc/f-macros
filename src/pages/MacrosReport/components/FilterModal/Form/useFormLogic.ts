@@ -40,8 +40,6 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
   const [errors, setErrors] = useState({
     client: false,
     vehicle: false,
-    motorista: false,
-    gruposMacros: false,
   });
   const [referencePointSelected, setReferencePointSelected] = useState<ReferencePoint>({
     isChecked: false,
@@ -217,8 +215,6 @@ export const useFormLogic = (applyFilter: (params: any) => void): UseFormLogicRe
     const newErrors = {
       client: !selectedClient?.value,
       vehicle: selectedVehicle.length === 0,
-      motorista: !selectedMotorista?.value,
-      gruposMacros: selectedGruposMacros.length === 0,
     };
     setErrors(newErrors);
 

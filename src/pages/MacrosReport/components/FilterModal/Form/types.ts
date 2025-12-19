@@ -29,8 +29,6 @@ export interface FormState {
 export interface FormErrors {
   client: boolean;
   vehicle: boolean;
-  motorista: boolean;
-  gruposMacros: boolean;
 }
 
 export interface FormHandlers {

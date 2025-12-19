@@ -189,8 +189,6 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
           label={t('driver')}
           placeholder={t('select')}
           options={[{ label: t('all_drivers'), value: '0' }, ...selectOptions.motoristaOptions]}
-          isError={!!errors.motorista}
-          helpText={errors.motorista ? t('this_field_is_required') : ''}
           required
           t={t}
           selected={formState.selectedMotorista}
@@ -205,8 +203,6 @@ export const Form: React.FC<FormProps> = React.memo(({ applyFilter, close }: For
           onChangeItems={(selectedOptions: any) => {
             handlers.setSelectedGruposMacros(selectedOptions);
           }}
-          isError={!!errors.gruposMacros}
-          helpText={errors.gruposMacros ? t('this_field_is_required') : ''}
           selectAll
           translation={t}
         />

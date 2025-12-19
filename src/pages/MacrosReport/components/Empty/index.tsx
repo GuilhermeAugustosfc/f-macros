@@ -3,23 +3,24 @@ import React from 'react';
 import { Button, Paragraph, Title } from '@ftdata/ui';
 import styled from 'styled-components';
 import { EmptyReportIcon } from '../svg';
+import { useTranslation } from '@ftdata/core';
 
 interface Props {
   openModal: () => void;
 }
 
 const Empty: React.FC<Props> = ({ openModal }: Props) => {
+  const { t } = useTranslation();
   return (
     <ContainerEmpty>
       <EmptyReportIcon />
       <div>
-        <Title size="md">Nenhum filtro aplicado</Title>
+        <Title size="md">{t('no_filters_applied')}</Title>
         <Paragraph size="caption" style={{ width: '338px', textAlign: 'center' }}>
-          Aplique os filtros para gerar relatórios e verificar as jornadas com macros personalizadas
-          da sua frota.
+          {t('apply_filters_macros_description')}
         </Paragraph>
         <Button variant="primary" onClick={openModal}>
-          Aplicar filtros
+          {t('apply_filters')}
         </Button>
       </div>
     </ContainerEmpty>
@@ -32,9 +33,9 @@ const ContainerEmpty = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  height: 100%;
   svg {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     width: 150px;
     height: 150px;
   }
